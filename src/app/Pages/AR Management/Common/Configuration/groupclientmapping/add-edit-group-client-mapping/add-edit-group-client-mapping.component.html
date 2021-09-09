@@ -1,0 +1,212 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h4 class="modal-title mb-0" [ngSwitch]="modalFor">
+      <ng-container *ngSwitchCase="'add'"
+        >Add Group Client Mapping</ng-container
+      >
+      <ng-container *ngSwitchCase="'edit'"
+        >Edit Group Client Mapping</ng-container
+      >
+      <ng-container *ngSwitchCase="'details'"
+        >Group Client Mapping Details</ng-container
+      >
+    </h4>
+    <button
+      type="button"
+      class="close p-0 m-0"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="onCloseClick()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addEditMappingForm">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong *ngIf="modalFor == 'add'" class="text-danger">*</strong
+              >Group</label
+            >
+            <ng-container *ngIf="modalFor == 'add'; else editGroupLabel">
+              <kendo-dropdownlist
+                class="form-control form-control-sm"
+                formControlName="fcGroup"
+                [class.is-invalid]="fbcGroup.invalid && fbcGroup.touched"
+                [data]="groups"
+                textField="groupname"
+                valueField="groupid"
+                [valuePrimitive]="true"
+                filterable="true"
+                (filterChange)="handleFilter($event)"
+              >
+              </kendo-dropdownlist>
+              <div *ngIf="(fbcGroup.touched || submitted) && fbcGroup.invalid">
+                <small *ngIf="!!fbcGroup.errors?.required" class="text-danger"
+                  >Group is required</small
+                >
+              </div>
+            </ng-container>
+            <ng-template #editGroupLabel>
+              <b class="h5">{{ groupName }}</b>
+            </ng-template>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong *ngIf="modalFor == 'add'" class="text-danger">*</strong
+              >Group Type</label
+            >
+            <ng-container *ngIf="modalFor == 'add'; else editGroupTypeLabel">
+              <kendo-dropdownlist
+                class="form-control form-control-sm"
+                formControlName="fcMappingType"
+                [class.is-invalid]="
+                  fbcMappingType.invalid && fbcMappingType.touched
+                "
+                [data]="grouptypes"
+                textField="mappingtypename"
+                valueField="mappingtypeid"
+                [valuePrimitive]="true"
+                (selectionChange)="groupTypeChange($event)"
+              >
+              </kendo-dropdownlist>
+              <div
+                *ngIf="
+                  (fbcMappingType.touched || submitted) &&
+                  fbcMappingType.invalid
+                "
+              >
+                <small
+                  *ngIf="!!fbcMappingType.errors?.required"
+                  class="text-danger"
+                  >Group Type is required</small
+                >
+              </div>
+            </ng-container>
+            <ng-template #editGroupTypeLabel>
+              <b class="h5">{{ mappingTypeName }}</b>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- <label class="ml-2 mt-2">Selectable Mode:</label
+          ><strong>
+            {{ fbcMappingType.value == 1 ? "SINGLE" : "MULTIPLE" }}</strong
+          > -->
+          <label class="form-label"
+            ><strong *ngIf="modalFor != 'details'" class="text-danger">*</strong
+            >Client
+            <span *ngIf="modalFor != 'details'"
+              >(Selectable Mode:
+              {{ fbcMappingType.value == 1 ? "SINGLE" : "MULTIPLE" }})</span
+            >
+            <div *ngIf="modalFor != 'details'" class="float-right">
+              <span class="text-muted">No. of selected client : </span
+              ><span> {{ clientSelected.length }}</span>
+            </div>
+          </label>
+          <kendo-grid
+            [data]="clientGridView"
+            class="w-100 filter-grid"
+            style="max-height: 40vh;"
+            [pageSize]="pageSize"
+            [pageable]="true"
+            [skip]="pageSkip"
+            (pageChange)="onPageChange($event)"
+            [sortable]="true"
+            [sort]="sort"
+            (sortChange)="onSortChange($event)"
+            [selectable]="{
+              checkboxOnly: true,
+              mode: fbcMappingType.value == 1 ? 'single' : 'multiple'
+            }"
+            [kendoGridSelectBy]="selectedCallback"
+            [selectedKeys]="clientSelected"
+            [loading]="loadingClientGrid"
+            [filter]="filter"
+            [filterable]="true"
+            (filterChange)="gridFilter($event)"
+          >
+            <!-- filterable="true"
+          (filterChange)="handleClientFilter($event)" -->
+            <kendo-grid-checkbox-column
+              *ngIf="modalFor != 'details'"
+              width="10"
+              showSelectAll="true"
+            >
+            </kendo-grid-checkbox-column>
+            <kendo-grid-column
+              field="clientcode"
+              title="Client Code"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="sclientname"
+              title="Client Name"
+              width="80"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <ng-template kendoGridNoRecordsTemplate>
+              No records available.
+            </ng-template>
+          </kendo-grid>
+          <div *ngIf="submitted && clientSelected.length == 0">
+            <small class="text-danger">Please select at least one client</small>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="onCloseClick()"
+    >
+      Close
+    </button>
+    <button
+      *ngIf="modalFor != 'details'"
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="onSaveClick()"
+      appNoDblClick
+    >
+      Save
+    </button>
+  </div>
+  <div class="black-box" *ngIf="loader">
+    <div class="k-i-loading"></div>
+  </div>
+  <!--Confirmation Model -->
+  <div
+    class="modal fade"
+    data-backdrop="static"
+    data-keyboard="false"
+    id="selectionConfirmation"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <app-custom-confirmation
+        [ConfirmationTitle]="'Selection Confirmation'"
+        [ConfirmationMessage]="
+          'Selection will be discarded. Do you want to continue ?'
+        "
+        (OutputCustomConfirmation)="OutputConfirmationResult($event)"
+      >
+        <!--  -->
+      </app-custom-confirmation>
+    </div>
+  </div>
+  <!--Confirmation Model -->
+</div>

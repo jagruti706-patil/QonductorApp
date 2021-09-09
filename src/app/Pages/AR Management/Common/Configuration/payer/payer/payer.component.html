@@ -1,0 +1,163 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Payer</h4>
+    <div class="row ml-auto">
+      <button
+        class="ml-auto"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#addpayerModal"
+        (click)="AddPayer()"
+      >
+        Add Payer
+      </button>
+    </div>
+  </div>
+  <div class="card-body" style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridPayer"
+        [data]="PayergridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="PayerpageSize"
+        [pageable]="true"
+        [skip]="Payerskip"
+        (pageChange)="pageChangePayer($event)"
+        [sortable]="true"
+        [sort]="Payersort"
+        (sortChange)="sortPayerChange($event)"
+        [selectable]="true"
+        (edit)="EditPayer($event)"
+        (remove)="DeletePayer($event)"
+      >
+        <kendo-grid-column
+          field="spayername"
+          title="Name"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bisactive"
+          title="Status"
+          width="2"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bisactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.bisactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="1"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editpayerconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <!-- <button kendoGridRemoveCommand title="Delete" data-toggle="modal"
+              data-target="#deletepayerconfirmationModal"><i class="fe fe-x"></i></button> -->
+            <button
+              *ngIf="dataItem.bisactive == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnPayerStatus(dataItem.npayerid, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnPayerStatus(dataItem.npayerid, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.PayergridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Payer -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addpayerModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addpayer
+      [InputPayerEditid]="EditPayerid"
+      (OutputPayerEditResult)="OutputPayerEditResult($event)"
+      #AddPayerChild
+    ></app-addpayer>
+  </div>
+</div>
+<!-- Add Payer -->
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editpayerconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+
+<!--Delete Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deletepayerconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-deleteconfirmation
+      [InputDeleteMessage]="InputDeleteMessage"
+      (OutputDeleteResult)="OutputDeleteResult($event)"
+    >
+    </app-deleteconfirmation>
+  </div>
+</div>
+<!--Delete Confirmation Model -->

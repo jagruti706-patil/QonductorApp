@@ -1,0 +1,79 @@
+.grid-wrapper {
+  position: relative;
+}
+
+.k-i-loading {
+  position: initial;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  bottom: 30;
+  font-size: 64px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #ff6757;
+}
+.card-profile-img {
+  max-width: 5rem;
+  text-align: center;
+  line-height: 4.5rem;
+}
+.card-body h3 {
+  font-size: 14px;
+}
+
+.star {
+  font-size: 1.5rem;
+  color: #8b939c;
+}
+.filled {
+  color: #ffdd00;
+}
+.work-color {
+  color: #000;
+  font-size: 1.2em;
+  font-weight: 700;
+  line-height: 1em;
+  font-family: Roboto, sans-serif;
+}
+.work-text-color {
+  color: #707070;
+}
+.work-top-border {
+  border-top: 1px solid rgba(0, 40, 100, 0.12);
+  background-color: #f6f6f6;
+}
+.work-right-border {
+  border-right: 1px solid rgba(0, 40, 100, 0.12);
+}
+
+.card-profile-agent .card-header-agent {
+  height: 5rem;
+  background-size: cover;
+}
+.text-black {
+  color: #000;
+}
+.bg-blue {
+  background-color: #007aff;
+}
+.bg-orange {
+  background-color: #ff9500;
+}
+.bg-pink {
+  background-color: #ff2d55;
+}
+.bg-purple {
+  background-color: #5856d6;
+}
+.bg-aqua {
+  background-color: #5ac8fa;
+}
+.bg-yellow {
+  background-color: #ffcc00;
+}
+.bg-green {
+  background-color: #4cd964;
+}
+.alert-red {
+  text-decoration-color: red;
+}

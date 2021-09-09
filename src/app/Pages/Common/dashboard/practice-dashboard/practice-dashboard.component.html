@@ -1,0 +1,320 @@
+<div class="row row-cards">
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ userWiseResult.totalencounters }}</div>
+        <div class="text-muted mb-2">Total Encounters</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ userWiseResult.new }}</div>
+        <div class="text-muted mb-2">New</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ userWiseResult.inprocess }}</div>
+        <div class="text-muted mb-2">In Process</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ userWiseResult.todaysassigned }}</div>
+        <div class="text-muted mb-2">Todays Assigned</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">
+          {{ userWiseResult.individualassigned }} ({{
+            userWiseResult.totalindividualassigned
+          }})
+        </div>
+        <div style="font-size: 13.8px" class="text-muted mb-2">
+          Individual Assigned(Total)
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ userWiseResult.groupassigned }}</div>
+        <div class="text-muted mb-2">Group Assigned</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="vwShowAllGroupDataFilter" class="row mb-2">
+  <div class="col-md-12">
+    <b class="mr-2">Show All Groups Data:</b>
+    <kendo-switch
+      [(ngModel)]="isviewall"
+      (ngModelChange)="switchChange($event)"
+      [disabled]="disableSwitch"
+    ></kendo-switch>
+    <small *ngIf="disableSwitch" class="ml-2 p-1 alert alert-primary"
+      >*Please contact system administrator to enable this filter</small
+    >
+  </div>
+</div>
+
+<div *ngIf="vwShowAllGroupDataFilter && vwGroupWiseCards" class="row row-cards">
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseResult.totalencounters }}</div>
+        <div class="text-muted mb-2">Total Encounters</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseResult.new }}</div>
+        <div class="text-muted mb-2">New</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseResult.inprocess }}</div>
+        <div class="text-muted mb-2">In Process</div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseResult.todaysassigned }}</div>
+        <div class="text-muted mb-2">Todays Assigned</div>
+      </div>
+    </div>
+  </div> -->
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">
+          {{ practiceWiseResult.individualassigned }}
+        </div>
+        <div class="text-muted mb-2">Individual Assigned</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseResult.groupassigned }}</div>
+        <div class="text-muted mb-2">Group Assigned</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="vwPracticeAssignedAgingBucket" class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-status bg-cyan"></div>
+      <div class="card-header pl-2 border-0 d-flex">
+        <h5 class="mb-0">Practice Assigned Aging Bucket</h5>
+        <div class="ml-auto mr-1">
+          <form [formGroup]="filterFormGroup">
+            <input
+              placeholder="Search practice"
+              kendoTextBox
+              formControlName="fcSearchBy"
+              (input)="onFilter($event.target.value)"
+              [title]="fbcSearchBy.value.trim()"
+            />
+          </form>
+        </div>
+      </div>
+      <kendo-grid
+        class="w-100 filter-grid"
+        style="max-height: 67vh"
+        [data]="practiceDashboardGridView"
+        [sortable]="true"
+        [sort]="state.sort"
+        [filter]="state.filter"
+        (dataStateChange)="dataStateChange($event)"
+        [selectable]="true"
+      >
+        <!-- [pageable]="true"
+      [pageSize]="state.take"
+      [skip]="state.skip" -->
+        <!-- [filterable]="true"
+      [filter]="state.filter" -->
+        <kendo-grid-column
+          field="practicename"
+          title="Practice"
+          [width]="80"
+          [headerStyle]="{
+            'font-weight': 'bold'
+          }"
+        >
+          <ng-template kendoGridFooterTemplate>Total</ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket1"
+          title="0-15"
+          [width]="30"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [footerClass]="'text-center'"
+          [class]="'text-center'"
+        >
+          <ng-template kendoGridFooterTemplate let-column>
+            {{ sumDocumentCount(column.field) }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket2"
+          title="16-60"
+          [width]="30"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [footerClass]="'text-center'"
+          [class]="'text-center'"
+        >
+          <ng-template kendoGridFooterTemplate let-column>
+            {{ sumDocumentCount(column.field) }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket3"
+          title="60+"
+          [width]="30"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [footerClass]="'text-center'"
+          [class]="'text-center'"
+        >
+          <ng-template kendoGridFooterTemplate let-column>
+            {{ sumDocumentCount(column.field) }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="total"
+          title="Total"
+          [width]="30"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [footerClass]="'text-center'"
+          [class]="'text-center'"
+        >
+          <ng-template kendoGridFooterTemplate let-column>
+            {{ sumDocumentCount(column.field) }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="contactdetails"
+          title="Contact Details"
+          [width]="90"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [footerClass]="'text-center'"
+          [class]="'text-center'"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.contactname
+            }}<br *ngIf="dataItem.contactname || dataItem.contactemail" /><a
+              href="mailto:{{ dataItem.contactemail }}"
+              [title]="'Mail to: ' + dataItem.contactemail"
+              ><i
+                *ngIf="!!dataItem.contactemail"
+                class="fas fa-envelope pointer text-primary mr-1"
+              ></i></a
+            >{{ dataItem.contactemail }}
+            <br *ngIf="dataItem.contactemail" />
+            <span class="ml-1">
+              <i
+                *ngIf="dataItem.phoneno1 || dataItem.phoneno2"
+                class="fas fa-phone pointer text-success mr-1"
+              ></i>
+              {{ dataItem.phoneno1 }}
+              <label *ngIf="dataItem.phoneno2 && dataItem.phoneno1">/</label
+              >{{ dataItem.phoneno2 }}
+            </span>
+            <!-- (click)="onOpenViewdetails(dataItem)" -->
+            <!-- <a
+            [href]=""
+            (click)="onOpenViewdetails(dataItem)"
+            data-toggle="modal"
+            data-target="#viewdetailsModal"
+            class="text-info pointer view-btn pr-1"
+            >Change</a
+          > -->
+          </ng-template>
+          <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.contactdetails }}
+            <a
+              href="mailto:{{ dataItem.email }}"
+              [title]="'Mail to: ' + dataItem.email"
+              ><i
+                *ngIf="!!dataItem.contactdetails"
+                class="fas fa-envelope pointer"
+              ></i
+            ></a>
+            <span class="ml-2">
+              <i
+                *ngIf="dataItem.phoneno1 || dataItem.phoneno2"
+                class="fas fa-phone pointer"
+              ></i>
+              {{ dataItem.phoneno1 }}
+              <label *ngIf="dataItem.phoneno2 && dataItem.phoneno1">/</label
+              >{{ dataItem.phoneno2 }}
+            </span>
+            (click)="onOpenViewdetails(dataItem)"
+             <a
+              [href]=""
+              (click)="onOpenViewdetails(dataItem)"
+              data-toggle="modal"
+              data-target="#viewdetailsModal"
+              class="text-info pointer view-btn pr-1"
+              >Change</a
+            > 
+          </ng-template> -->
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loader" class="k-i-loading"></div>
+
+<!-- <div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-add-edit-client-provider-mapping
+      #PracticeProviderMapping
+    ></app-add-edit-client-provider-mapping>
+  </div>
+</div> -->

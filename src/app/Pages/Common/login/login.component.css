@@ -1,0 +1,302 @@
+  /* .mt-40{
+      margin-top: 40px;
+  }
+  .middle-card {
+    width: 450px;
+    height: 400px;
+    position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+    font-size: 24px;
+    background-color: #fefefe;
+  }
+  .bg-blue{
+      background-color: #00274e;
+  }
+  .header{
+      display: block;
+      height: 45px;
+      background-color: #00274e;
+      color: #fff;
+      line-height: 45px;
+      border-bottom: 4px solid #e7762c;
+  }
+  .form-control{
+      background-color: #e6e6e6 !important;
+  }
+  label{
+      font-size: 18px !important;
+      font-weight: 500;
+  }
+  .custom-control-label{
+      font-size: 15px !important;
+      font-weight: normal;
+  }
+  .font-15{
+      font-size: 15px;
+  }
+  .pointer{
+      cursor: pointer;
+  }
+  .button{
+    border: none;
+    background: #e7762c;
+    color: #f2f2f2;
+    height: 35px;
+    width: 100%;
+    font-size: 15px;
+    border-radius: 3px;
+    position: relative;
+    box-sizing: border-box;
+    transition: .6s;
+    cursor: pointer;
+    z-index: 1;
+}
+.forgot-text{
+    font-size: 15px;
+    padding-top: 0.4rem;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.logo{
+    display: block;
+    margin: 13% auto 0;
+}
+
+@media only screen and (max-width: 750px){
+    .middle-card{
+        width: 100%;
+        height: 55%;
+    }
+}
+
+.showhim{
+    position: relative;
+}
+.showme {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 0;
+    color: #e6e6e6;
+    z-index: 100;
+    background-color: #00274e;
+    height: 65px;
+    width: auto;
+    padding: 15px;
+  }
+  
+  .showhim:hover .showme {
+    display: block;
+  } */
+
+  .bg-color {
+    background-color: #00274e;
+}
+
+.text-white {
+    color: #fff;
+}
+
+.card {
+    border-radius: 0px !important;
+    box-shadow: 0 22px 33px rgba(0, 0, 0, 0.5) !important;
+    border: none !important;
+}
+
+.card-header {
+    border-bottom: 4px solid #e7762c !important;
+    border-radius: 0px !important;
+    padding: 0.5rem 43%;
+}
+
+.login-text {
+    font-size: 18px;
+    margin-bottom: 0 !important;
+    color: #fff;
+}
+
+.form-control {
+    border: 1px solid rgba(0, 40, 100, 0.12) !important;
+    background-color: #e6e6e6 !important;
+}
+
+.form-label {
+    font-size: 18px !important;
+}
+
+.form-label-1 {
+    font-size: inherit !important;
+}
+
+.col-login {
+    max-width: 28rem !important;
+}
+
+.sign-up {
+    color: #e7762c !important;
+    cursor: pointer;
+}
+button {
+    border: none;
+    background: #e7762c;
+    color: #f2f2f2;
+    height: 35px;
+    width: 100%;
+    border-radius: 3px;
+    position: relative;
+    box-sizing: border-box;
+    transition: all 600ms ease;
+    cursor: pointer;
+    z-index: 1;
+}
+
+button:before {
+    content: '';
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 0px;
+    height: 35px;
+    color: #fff !important;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    transition: all 1s ease;
+}
+
+button:hover:before {
+    width: 100%;
+    color: #e7762c;
+}
+button:disabled {
+    background-color: #ffc9a4;
+    color: #6b6868;
+    cursor: not-allowed;
+}
+.background {
+    background-image: url('../../../../assets/img/handshake-image.png') !important;
+    background-size: cover;
+    overflow: hidden;
+    height: 100%;
+    background-repeat: no-repeat;
+}
+
+.img {
+    height: 59px;
+    width: 240px;
+}
+
+.shade {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.limiter {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.container-login100 {
+    width: 100%;
+    min-height: 100vh;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+}
+
+.wrap-login100 {
+    width: 100%;
+    background: #fff;
+    overflow: hidden;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    flex-direction: row-reverse;
+}
+
+.login100-more {
+    width: calc(100% - 560px);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    background-image: url('../../../../assets/img/handshake-image.png') !important;
+}
+
+.login100-more::before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.login100-form {
+    width: 560px;
+    min-height: 100vh;
+    display: block;
+    background-color: #fff;
+    padding: 173px 55px 55px 55px;
+}
+
+
+/*--------------[ Responsive ]--------------*/
+
+@media screen and (min-width: 1920px) {
+    .login100-more {
+        background-image: url('../../../../assets/img/login.png') !important;
+    }
+}
+
+@media screen and (max-width: 1280px) {
+    .login100-more {
+        background-image: url('../../../../assets/img/handshake-image.png') !important;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .login100-form {
+        width: 50%;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .login100-more {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .login100-form {
+        width: 100%;
+    }
+    .login100-more {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    .login100-form {
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 70px;
+    }
+}

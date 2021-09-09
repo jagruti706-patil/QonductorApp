@@ -1,0 +1,343 @@
+<div class="card">
+  <form [formGroup]="FilterFormGroup">
+    <div class="card-body p-2">
+      <div class="w-100 border-top-0">
+        <div class="row">
+          <div class="col-md-11">
+            <div class="row">
+              <div class="form-group col-md-3 mb-0">
+                <label for="" class="form-label">Practice</label>
+                <kendo-multiselect
+                  class="msFilter inputLoader"
+                  id="ddlPractice"
+                  [kendoMultiSelectSummaryTag]="1"
+                  formControlName="fcPractice"
+                  [data]="lstPractice"
+                  [textField]="'client'"
+                  [valueField]="'clientid'"
+                  [valuePrimitive]="true"
+                  [autoClose]="false"
+                  [filterable]="true"
+                  (filterChange)="handleGenericSearchFilter($event, 'practice')"
+                  [placeholder]="'All'"
+                  [loading]="practiceFilterLoader"
+                >
+                  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                    <span class="pr-1"><input
+                      type="checkbox"
+                      class="k-checkbox"
+                      [checked]="
+                        isItemSelected(fbcPractice.value, dataItem.clientid)
+                      "
+                    /></span>
+                    <label class="k-checkbox-label">{{
+                      dataItem.client
+                    }}</label>
+                  </ng-template>
+                  <ng-template kendoMultiSelectNoDataTemplate>
+                    <h4>
+                      <span class="k-icon k-i-warning"></span><br /><br />
+                      No data here
+                    </h4>
+                  </ng-template>
+                  <ng-template kendoMultiSelectTagTemplate let-dataItem>
+                    <div
+                      [title]="dataItem.client"
+                      class="text-truncate text-left mb-0"
+                      style="width: 70px"
+                    >
+                      {{ dataItem.client }}
+                    </div>
+                  </ng-template>
+                  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                    <span
+                      [title]="summaryTagSelectedValues(dataItems, 'client')"
+                      >+{{ dataItems.length }}</span
+                    >
+                  </ng-template>
+                </kendo-multiselect>
+                <!-- <kendo-dropdownlist
+                  id="ddlPractice"
+                  class="w-100 inputLoader"
+                  [data]="lstPractice"
+                  formControlName="fcPractice"
+                  textField="client"
+                  [valuePrimitive]="true"
+                  valueField="clientid"
+                  [defaultItem]="PracticeDefaultValue"
+                  filterable="true"
+                  (filterChange)="handleGenericSearchFilter($event, 'practice')"
+                  [loading]="practiceFilterLoader"
+                >
+                </kendo-dropdownlist> -->
+                <!-- [loading]="ddPracticeLoader" -->
+              </div>
+              <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Year/Cabinet</label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="years"
+                  formControlName="fcYear"
+                  textField="year"
+                  [valuePrimitive]="true"
+                  valueField="year"
+                  (selectionChange)="yearChanged($event)"
+                  [defaultItem]="yearDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div>
+              <!--  <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Folder </label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="folders"
+                  formControlName="fcFolder"
+                  textField="foldername"
+                  [valuePrimitive]="true"
+                  valueField="foldername"
+                  [defaultItem]="folderDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div> -->
+              <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Category</label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="categories"
+                  formControlName="fcCategory"
+                  textField="displayname"
+                  [valuePrimitive]="true"
+                  valueField="categorytype"
+                  [defaultItem]="categoryDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div>
+              <!-- <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Sub-Category</label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="subcategories"
+                  formControlName="fcSubCategory"
+                  textField="categoryname"
+                  [valuePrimitive]="true"
+                  valueField="categoryname"
+                  [defaultItem]="subcategoryDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div> -->
+              <!-- <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Provider</label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="providersList"
+                  formControlName="fcProvider"
+                  textField="providername"
+                  [valuePrimitive]="true"
+                  valueField="npi"
+                  [defaultItem]="providerDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div> -->
+              <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Insurance</label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="insuranceType"
+                  formControlName="fcInsuranceType"
+                  textField="insurancetype"
+                  [valuePrimitive]="true"
+                  valueField="id"
+                  [defaultItem]="insuranceTypeDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div>
+              <div class="form-group col-md-3 mb-0">
+                <label for="" class="form-label">Provider</label>
+                <kendo-multiselect
+                  class="msFilter inputLoader"
+                  id="ddProvider"
+                  [kendoMultiSelectSummaryTag]="1"
+                  formControlName="fcProvider"
+                  [data]="providersList"
+                  [textField]="'providername'"
+                  [valueField]="'npi'"
+                  [valuePrimitive]="true"
+                  [autoClose]="false"
+                  [filterable]="true"
+                  (filterChange)="handleGenericSearchFilter($event, 'provider')"
+                  [placeholder]="'All'"
+                  [loading]="providerFilterLoader"
+                >
+                  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+                    <span class="pr-1"><input
+                      type="checkbox"
+                      class="k-checkbox"
+                      [checked]="
+                        isItemSelected(fbcProvider.value, dataItem.npi)
+                      "
+                    /></span>
+                    <label class="k-checkbox-label">{{
+                      dataItem.providername
+                    }}</label>
+                  </ng-template>
+                  <ng-template kendoMultiSelectNoDataTemplate>
+                    <h4>
+                      <span class="k-icon k-i-warning"></span><br /><br />
+                      No data here
+                    </h4>
+                  </ng-template>
+                  <ng-template kendoMultiSelectTagTemplate let-dataItem>
+                    <div
+                      [title]="dataItem.providername"
+                      class="text-truncate text-left mb-0"
+                      style="width: 70px"
+                    >
+                      {{ dataItem.providername }}
+                    </div>
+                  </ng-template>
+                  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+                    <span
+                      [title]="
+                        summaryTagSelectedValues(dataItems, 'providername')
+                      "
+                      >+{{ dataItems.length }}</span
+                    >
+                  </ng-template>
+                </kendo-multiselect>
+                <!-- <kendo-dropdownlist
+                  class="w-100 inputLoader"
+                  [data]="providersList"
+                  formControlName="fcProvider"
+                  textField="providername"
+                  [valuePrimitive]="true"
+                  valueField="npi"
+                  [defaultItem]="providerDefaultValue"
+                  [filterable]="true"
+                  (filterChange)="handleGenericSearchFilter($event, 'provider')"
+                  [loading]="providerFilterLoader"
+                >
+                </kendo-dropdownlist> -->
+              </div>
+              <!-- <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label">Insurance </label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="orderInsurance"
+                  formControlName="fcOrderInsurance"
+                  textField="insurancecompanyname"
+                  [valuePrimitive]="true"
+                  valueField="insurancecompanyname"
+                  [defaultItem]="insuranceDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div> -->
+              <!-- <div
+                class="form-group col-md-3 mb-0"
+                *ngIf="bIsFromSubmittedAndPrinted"
+              >
+                <label for="" class="form-label">Group </label>
+                <kendo-dropdownlist
+                  class="form-control form-control-sm"
+                  formControlName="fcOrderGroup"
+                  [data]="loginUserGroup"
+                  textField="groupname"
+                  valueField="groupid"
+                  [valuePrimitive]="true"
+                  [defaultItem]="ordergroupDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div>
+
+              <div
+                class="form-group col-md-3 mb-0"
+                *ngIf="bIsFromSubmittedAndPrinted"
+              >
+                <label for="" class="form-label">Agent </label>
+                <kendo-dropdownlist
+                  class="form-control form-control-sm"
+                  formControlName="fcOrderUser"
+                  [data]="GroupUsers"
+                  textField="displayname"
+                  valueField="userid"
+                  [valuePrimitive]="true"
+                  [defaultItem]="orderuserDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div> -->
+              <!-- <div
+                class="form-group col-md-2 mb-0"
+                *ngIf="bIsFromSubmittedAndPrinted"
+              >
+                <label for="" class="form-label">Batch </label>
+                <kendo-dropdownlist
+                  class="form-control form-control-sm"
+                  formControlName="fcBatch"
+                  [data]="batchArray"
+                  textField="displayname"
+                  valueField="batchcode"
+                  [valuePrimitive]="true"
+                  [defaultItem]="orderuserDefaultValue"
+                >
+                </kendo-dropdownlist>
+              </div> -->
+              <div class="form-group col-md-3 mb-0">
+                <label for="" class="form-label">Accession #</label>
+                <input
+                  kendoTextBox
+                  type="text"
+                  formControlName="fcAccessionNumber"
+                  class="w-100"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="col-md-1 border-left">
+            <div class="mt-5">
+              <button
+                class="col-md-12"
+                type="button"
+                kendoButton
+                [primary]="true"
+                id="btnApplyFilter"
+                (click)="btnApplyFilter_Click()"
+                data-toggle="collapse"
+                data-target="#collapseExample"
+              >
+                Apply
+              </button>
+              <button
+                class="col-md-12 mt-2"
+                type="button"
+                kendoButton
+                (click)="ClearFilter()"
+                data-toggle="collapse"
+                data-target="#collapseExample"
+                id="btnClearFilter"
+              >
+                Clear Filter
+              </button>
+            </div>
+            <!-- <button
+                class="col-md-12"
+                type="button"
+                kendoButton
+                [primary]="true"
+                (click)="btnApplyFilter_Click()"
+              >
+                Apply
+              </button>
+              <button
+                class="col-md-12 mt-2"
+                type="button"
+                kendoButton
+                (click)="ClearFilter()"
+              >
+                Clear Filter
+              </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<div *ngIf="loader" class="k-i-loading filter-black-box"></div>

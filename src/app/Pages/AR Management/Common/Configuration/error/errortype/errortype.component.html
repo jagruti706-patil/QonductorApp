@@ -1,0 +1,141 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Error Type</h4>
+    <div class="row ml-auto">
+      <button
+        class="ml-auto"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#adderrortypeModal"
+        (click)="AddErrortype()"
+      >
+        Add Error
+      </button>
+    </div>
+  </div>
+  <div class="card-body"  style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridErrortype"
+        [data]="ErrortypegridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="ErrortypepageSize"
+        [pageable]="true"
+        [skip]="Errortypeskip"
+        (pageChange)="pageChangeErrortype($event)"
+        [sortable]="true"
+        [sort]="Errortypesort"
+        (sortChange)="sortErrortypeChange($event)"
+        [selectable]="true"
+        (edit)="EditErrortype($event)"
+      >
+        <kendo-grid-column
+          field="serrordescription"
+          title="Description"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bisactive"
+          title="Status"
+          width="1"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bisactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.bisactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="1"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editerrortypeconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnErrortypeStatus(dataItem.nerrorid, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnErrortypeStatus(dataItem.nerrorid, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.ErrortypegridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Errortype -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="adderrortypeModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-adderrortype
+      [InputErrortypeEditid]="EditErrortypeid"
+      (OutputErrortypeEditResult)="OutputErrortypeEditResult($event)"
+      #AddErrortypeChild
+    >
+    </app-adderrortype>
+  </div>
+</div>
+<!-- Add Errortype -->
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editerrortypeconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

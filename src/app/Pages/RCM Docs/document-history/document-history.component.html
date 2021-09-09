@@ -1,0 +1,345 @@
+<div class="row">
+  <div class="col-md-12">
+    <i
+      [ngClass]="{ 'fa-spin': loadingGrid }"
+      class="fa fa-lg fa-refresh float-right text-success pointer mb-2"
+      title="Refresh Data"
+      (click)="refreshData()"
+    ></i>
+  </div>
+</div>
+<div class="row row-cards">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-status-top bg-success"></div>
+      <div class="card-body p-3 text-center">
+        <div class="h2 m-0">{{ queAnswersCount.questions }}</div>
+        <!-- Todays assign task -->
+        <div class="text-muted mb-2">Questions Count</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-status-top bg-cyan"></div>
+      <div class="card-body p-3 text-center">
+        <div class="h2 m-0">{{ queAnswersCount.answeredquestions }}</div>
+        <div class="text-muted mb-2">Answered Count</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-status-top bg-warning"></div>
+      <div class="card-body p-3 text-center">
+        <div class="h2 m-0">{{ queAnswersCount.unansweredquestions }}</div>
+        <div class="text-muted mb-2">Unanswered Count</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card p-0 m-0 border-0">
+  <div class="card-body p-0 m-0">
+    <kendo-grid
+      #kendoGridInstance
+      class="w-100 filter-grid disableDropdownOperator wrap-grid"
+      [data]="documentHistoryGridView"
+      [selectable]="true"
+      [sortable]="true"
+      [sort]="sort"
+      (sortChange)="sortChange($event)"
+      [filter]="filter"
+      [filterable]="true"
+      (filterChange)="gridFilter($event)"
+      style="max-height: 82vh;"
+      [loading]="loadingGrid"
+      (remove)="onDeleteNote($event)"
+      [rowClass]="rowCallback"
+    >
+      <kendo-grid-column
+        field="page"
+        title="Page"
+        width="65"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+        <ng-template kendoGridHeaderTemplate>
+          Page
+          <button
+            class="d-none"
+            id="historyCollapseBtn"
+            (click)="collapseAll(kendoGridInstance)"
+          ></button>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dateItem>
+          {{ dateItem.page }}&nbsp;<i
+            *ngIf="dateItem.page"
+            class="fa fa-info-circle"
+            [title]="dateItem.supplementarypagenos"
+          ></i>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="notetype"
+        title="Note For"
+        width="70"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+        <ng-template kendoGridCellTemplate let-dateItem>
+          {{ dateItem.notetype == 0 ? "Page" : "Document" }}
+        </ng-template>
+        <ng-template kendoGridFilterCellTemplate>
+          <kendo-dropdownlist
+            class="h-100 w-100"
+            [data]="[
+              { displayname: 'Page', value: 0 },
+              { displayname: 'Document', value: 1 }
+            ]"
+            [textField]="'displayname'"
+            [valueField]="'value'"
+            (valueChange)="noteTypeChange($event)"
+            [defaultItem]="{ displayname: 'All', value: -1 }"
+          >
+          </kendo-dropdownlist>
+        </ng-template>
+        <!-- <ng-template kendoGridFilterCellTemplate let-filter let-column="column">
+      <kendo-grid-string-filter-cell [column]="column" [filter]="filter" operator="eq">
+        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+      </kendo-grid-string-filter-cell>
+    </ng-template> -->
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="commenttype"
+        title="Note Type"
+        width="80"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.commenttype }} &nbsp;
+          <span
+            *ngIf="dataItem.answerscount > 0"
+            class="custom-badge bg-success"
+            title="Answers Count"
+            ><label class="mb-0 ml-1 mr-1">{{
+              dataItem.answerscount
+            }}</label></span
+          >
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="note"
+        title="Note"
+        width="110"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="createdbyusername"
+        title="Note By"
+        width="80"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="createdon"
+        title="Note On"
+        width="116"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.createdon | date: "MM-dd-yyyy hh:mm:ss a" }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        *ngIf="calledFrom != 'encounteraction'"
+        field="currentaccessionno"
+        title="Current Accession #"
+        width="80"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+      <kendo-grid-command-column
+        *ngIf="vwDeleteRcmDocNote && calledFrom !== 'viewmasterdocument'"
+        field=""
+        title="Action"
+        width="52"
+        class="text-center"
+        [headerStyle]="{ 'font-weight': 'bold', 'text-align': 'center' }"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem let-index>
+          <button
+            *ngIf="dataItem.notestatus"
+            kendoGridRemoveCommand
+            title="Delete"
+            data-toggle="modal"
+            data-target="#deleteNoteConfirmationModal"
+          >
+            <i class="fe fe-delete text-danger"></i>
+          </button>
+          <!-- <a
+      class="text-primary pointer"
+      (click)="onExpandQuestion(dataItem,index)"
+      >Answer</a
+    > -->
+        </ng-template>
+      </kendo-grid-command-column>
+      <ng-template
+        kendoGridDetailTemplate
+        let-dataItem
+        let-rowIndex="rowIndex"
+        [kendoGridDetailTemplateShowIf]="showExpandOnlyForQuestion"
+      >
+        <div class="card">
+          <div class="card-body p-2">
+            <div
+              class="row"
+              *ngIf="
+                dataItem.notestatus == true &&
+                calledFrom != 'viewmasterdocument'
+              "
+            >
+              <div class="col-md-12 mb-1">
+                <a
+                  class="col-md-3 text-primary pointer"
+                  [style.opacity]="
+                    dataItem.ispracticebucket && calledFrom != 'encounteraction'
+                      ? '0.7'
+                      : '1'
+                  "
+                  (click)="
+                    dataItem.ispracticebucket && calledFrom != 'encounteraction'
+                      ? false
+                      : onAddAnswer(dataItem)
+                  "
+                  [title]="
+                    dataItem.ispracticebucket && calledFrom != 'encounteraction'
+                      ? 'Page is added to practice bucket hence can\'t add answer'
+                      : 'Click here to add answer'
+                  "
+                >
+                  <!-- id="collapseId" -->
+                  Click here to add answer
+                </a>
+                <a
+                  *ngIf="showAddtoPracticeBucket"
+                  class="col-md-3 text-primary pointer"
+                  [style.opacity]="dataItem.currentaccessionno ? '0.7' : '1'"
+                  (click)="
+                    dataItem.currentaccessionno
+                      ? false
+                      : onAddtoPracticeBucket(
+                          dataItem,
+                          dataItem.ispracticebucket
+                        )
+                  "
+                  [title]="
+                    dataItem.currentaccessionno
+                      ? 'Question is being used in another encounter : ' +
+                        dataItem.currentaccessionno
+                      : 'Click here to add this page to practice bucket for more information'
+                  "
+                >
+                  <!-- id="collapseId" -->
+                  <span *ngIf="!dataItem.ispracticebucket"
+                    >Add page to practice bucket</span
+                  >
+                  <span *ngIf="dataItem.ispracticebucket"
+                    >Remove page from practice bucket</span
+                  >
+                </a>
+              </div>
+            </div>
+            <div class="card mt-3" *ngIf="dataItem.isExpand">
+              <app-add-comment
+                (iscommentsaved)="outputCommentResult($event)"
+                [isFromRcmDocs]="true"
+                [isAnswerNote]="true"
+                [questionDataItem]="dataItem"
+                #AddCommentComponent
+              ></app-add-comment>
+            </div>
+            <kendo-grid
+              [data]="dataItem.answers"
+              (remove)="onDeleteAnswer($event)"
+              [rowClass]="rowCallback"
+            >
+              <kendo-grid-column
+                field="note"
+                title="Answer"
+                width="40"
+                [headerStyle]="{ 'font-weight': '600' }"
+              >
+                <!-- <ng-template kendoGridCellTemplate let-dataItem>
+        
+      </ng-template> -->
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="createdbyusername"
+                title="Answered By"
+                width="20"
+                [headerStyle]="{ 'font-weight': '600' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="createdon"
+                title="Answered On"
+                width="30"
+                [headerStyle]="{ 'font-weight': '600' }"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{ dataItem.createdon | date: "MM-dd-yyyy hh:mm:ss a" }}
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-command-column
+                *ngIf="
+                  vwDeleteRcmDocAnswer && calledFrom !== 'viewmasterdocument'
+                "
+                field=""
+                title="Action"
+                width="10"
+                class="text-center"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem let-index>
+                  <button
+                    *ngIf="dataItem.notestatus"
+                    kendoGridRemoveCommand
+                    title="Delete"
+                    data-toggle="modal"
+                    data-target="#deleteNoteConfirmationModal"
+                  >
+                    <i class="fe fe-delete text-danger"></i>
+                  </button>
+                  <!-- <a
+            class="text-primary pointer"
+            (click)="onExpandQuestion(dataItem,index)"
+            >Answer</a
+          > -->
+                </ng-template>
+              </kendo-grid-command-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </ng-template>
+    </kendo-grid>
+  </div>
+</div>
+
+<!--Delete Confirmation Modal -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deleteNoteConfirmationModal"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-custom-confirmation
+      [ConfirmationTitle]="'Delete'"
+      [ConfirmationMessage]="inputDeleteMsg"
+      (OutputCustomConfirmation)="OutputDeleteResult($event)"
+    >
+    </app-custom-confirmation>
+  </div>
+</div>
+<!--Delete Confirmation Modal -->

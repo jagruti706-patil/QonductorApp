@@ -1,0 +1,245 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newFtpdetails">
+      Add FTP Details
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newFtpdetails">
+      Update FTP Details
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="FtpdetailsGroup" autocomplete="off">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>FTP Name
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="FTPName.invalid && FTPName.touched"
+              formControlName="fcFTPName"
+              type="text"
+              id="FTPName"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (FTPName.invalid && FTPName.touched)">
+              <small *ngIf="FTPName.errors?.required" class="text-danger"
+                >FTP Name is required</small
+              >
+              <small *ngIf="FTPName.errors?.maxlength" class="text-danger"
+                >FTP Name allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Host
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="Host.invalid && Host.touched"
+              formControlName="fcHost"
+              type="text"
+              id="Host"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (Host.invalid && Host.touched)">
+              <small *ngIf="Host.errors?.required" class="text-danger"
+                >Host is required</small
+              >
+              <small *ngIf="Host.errors?.maxlength" class="text-danger"
+                >Host allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>User Name
+            </label>
+            <!-- this hidden input added to avoid autocomplete username & password fron chrome -->
+            <input
+              kendoTextBox
+              [class.is-invalid]="UserName.invalid && UserName.touched"
+              type="text"
+              id="UserName"
+              class="form-control form-control-sm"
+              hidden
+            />
+            <input
+              kendoTextBox
+              [class.is-invalid]="UserName.invalid && UserName.touched"
+              formControlName="fcUserName"
+              type="text"
+              id="txtUserName"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (UserName.invalid && UserName.touched)">
+              <small *ngIf="UserName.errors?.required" class="text-danger"
+                >UserName is required</small
+              >
+              <small *ngIf="UserName.errors?.maxlength" class="text-danger"
+                >UserName allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Password</label
+            >
+            <!-- this hidden input added to avoid autocomplete username & password fron chrome -->
+            <input
+              kendoTextBox
+              [class.is-invalid]="Password.invalid && Password.touched"
+              type="password"
+              id="Password"
+              class="form-control form-control-sm"
+              hidden
+            />
+            <input
+              kendoTextBox
+              [class.is-invalid]="Password.invalid && Password.touched"
+              formControlName="fcPassword"
+              type="password"
+              id="txtPassword"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="submitted || (Password.invalid && Password.touched)"
+              class="text-danger"
+            >
+              <small *ngIf="Password.errors?.required"
+                >Password is required.</small
+              >
+              <!-- <small *ngIf="Password.errors?.minlength"
+                >Password must have 8 characters</small
+              > -->
+              <small *ngIf="Password.errors?.maxlength"
+                >Password allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Working Directory
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                Workingdirectory.invalid && Workingdirectory.touched
+              "
+              formControlName="fcWorkingdirectory"
+              type="text"
+              id="Workingdirectory"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted ||
+                (Workingdirectory.invalid && Workingdirectory.touched)
+              "
+            >
+              <small
+                *ngIf="Workingdirectory.errors?.required"
+                class="text-danger"
+                >Workingdirectory is required</small
+              >
+              <small
+                *ngIf="Workingdirectory.errors?.maxlength"
+                class="text-danger"
+                >Workingdirectory allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Port
+            </label>
+            <div class="row">
+              <div class="col-md-9">
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="Port.invalid && Port.touched"
+                  formControlName="fcPort"
+                  type="text"
+                  id="Port"
+                  class="form-control form-control-sm"
+                />
+              </div>
+              <div class="col-md-3">
+                <button
+                  id="btnCheckFTPConnection"
+                  kendoButton
+                  [primary]="true"
+                  title="Check FTP Connection"
+                  (click)="OnCheckFTPConnection()"
+                >
+                  <i class="fe fe-check-square"></i>
+                </button>
+              </div>
+            </div>
+
+            <div
+              *ngIf="submitted || (Port.invalid && Port.touched)"
+              class="text-danger"
+            >
+              <small *ngIf="Port.errors?.required">Port is required</small>
+              <small *ngIf="Port.errors?.pattern"
+                >Only number is allowed.</small
+              >
+              <small *ngIf="Port.errors?.maxlength"
+                >Port must have maximum 4 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-md-12">
+          <span *ngIf="IsConnectionExists === 0" class="text-success"
+            >FTP connection established.</span
+          >
+          <span *ngIf="IsConnectionExists === 1" class="text-danger"
+            >Unable to establish ftp connection.</span
+          >
+        </div> -->
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddFtpdetails"
+      (click)="saveFtpdetails()"
+    >
+      Save
+    </button>
+  </div>
+</div>

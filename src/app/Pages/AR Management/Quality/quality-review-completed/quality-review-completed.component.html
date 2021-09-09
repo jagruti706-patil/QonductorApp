@@ -1,0 +1,147 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Completed AR Review</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="DropDownGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Agent
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcRepName"
+              id="ddAgents"
+              [class.is-invalid]="RepName.invalid && RepName.touched"
+              [data]="lstClients"
+              textField="agentname"
+              valueField="agentid"
+              [defaultItem]="AgentDefaultValue"
+              [valuePrimitive]="true"
+              [disabled]="loadingqualityreviewcompleted"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="RepName.invalid && RepName.touched">
+              <small *ngIf="RepName.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="row mb-1">
+      <div *ngIf="QualityReviewCompletedGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+    </div>
+
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridARReviewCompleted"
+        [data]="QualityReviewCompletedGridView"
+        class="w-100 wrap-grid"
+        [height]="350"
+        [sortable]="true"
+        [sort]="QualityReviewCompletedSort"
+        (sortChange)="sortQualityReviewChange($event)"
+        [selectable]="true"
+        [loading]="loadingqualityreviewcompletedGrid"
+      >
+        <kendo-grid-column
+          field="staskcode"
+          title="Task Code"
+          width="9"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sworkqueuegroupcode"
+          title="Work Group#"
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="agentname"
+          title="Agent"
+          width="9"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="reviewstatus"
+          title="Status"
+          width="4"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="serrordescription"
+          title="Description"
+          width="15"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="breworkrequired"
+          title="Rework Required"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="reviewedby"
+          title="Reviewed"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="reviewedon"
+          title="Date"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.reviewedon | date: "MM-dd-yyyy hh:mm:ss a" }}
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="black-box" *ngIf="loadingqualityreviewcompleted">
+  <div class="k-i-loading"></div>
+</div> -->

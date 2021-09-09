@@ -1,0 +1,1446 @@
+<kendo-grid
+  id="productsGrid"
+  class="alt-grid"
+  (cellClick)="cellClickHandler($event)"
+  [data]="view"
+  (dataStateChange)="onStateChange($event)"
+  (cellClick)="cellClickHandler($event)"
+  (cellClose)="cellCloseHandler($event)"
+  #IncompleteOrderGrid
+>
+  <!-- <kendo-grid-column
+        field="status"
+        editor="boolean"
+        title=""
+      ></kendo-grid-column> -->
+  <!-- <kendo-grid-column
+    field="serialno"
+    title=""
+    width="10"
+    [headerStyle]="{ display: 'none' }"
+    class="bg-white "
+  >
+    <ng-template kendoGridCellTemplate let-dataItem>
+      <div
+        style="padding-left: 20px; margin-top: -36px; font-weight: bold;"
+        *ngIf="dataItem.status == true"
+      >
+        {{ dataItem.serialno - 1 }}
+      </div>
+    </ng-template></kendo-grid-column
+  > -->
+  <!-- <kendo-grid-column
+    field="title"
+    title=""
+    width="80"
+    [headerStyle]="{ display: 'none' }"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem>
+      <label for="" class="form-label mb-0">
+        {{ dataItem.title }}
+      </label>
+    </ng-template>
+  </kendo-grid-column> -->
+
+  <kendo-grid-column
+    field="description"
+    [headerStyle]="{ display: 'none' }"
+    width="250"
+    class="bg-white"
+  >
+    <ng-template kendoGridCellTemplate let-dataItem>
+      <form [formGroup]="IncompleteInfoGroup">
+        <div *ngIf="dataItem.status == true">
+          <!-- <div *ngIf="dataItem.serialno == 2">
+            <input formControlName="fcIsMiscInfo" type="checkbox" />
+          </div> -->
+          <!-- <div *ngIf="dataItem.serialno == 2" class="d-flex">
+            <input
+              id="chkfcIsMiscInfo"
+              formControlName="fcIsMiscInfo"
+              type="checkbox"
+            />
+            <label for="chkfcIsMiscInfo" class="form-label ml-2">
+              {{ dataItem.serialno - 1 }}. {{ dataItem.title }}:
+            </label>
+          </div> -->
+          <div
+            *ngIf="dataItem.serialno == 5"
+            class="d-flex"
+            [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+          >
+            <input
+              id="chkfcIsNoDiagnosis"
+              formControlName="fcIsNoDiagnosis"
+              type="checkbox"
+              class="checkBoxSize"
+            />
+            <label for="chkfcIsNoDiagnosis" class="form-label ml-2">
+              {{ dataItem.serialno - 1 }}. {{ dataItem.title }}
+            </label>
+          </div>
+          <div
+            *ngIf="dataItem.serialno == 6"
+            class="d-flex"
+            [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+          >
+            <input
+              id="chkfcIsMedicarePatient"
+              formControlName="fcIsMedicarePatient"
+              type="checkbox"
+              class="checkBoxSize"
+            />
+            <label for="chkfcIsMedicarePatient" class="form-label ml-2">
+              {{ dataItem.serialno - 1 }}. {{ dataItem.title }}
+            </label>
+          </div>
+          <!-- <div *ngIf="dataItem.serialno == 7" class="d-flex">
+            <input
+              id="chkfcIsAdditionalInsurance"
+              formControlName="fcIsAdditionalInsurance"
+              type="checkbox"
+              disabled
+              class="checkBoxSize"
+            />
+            <label for="chkfcIsAdditionalInsurance" class="form-label ml-2">
+              {{ dataItem.serialno - 1 }}. {{ dataItem.title }}
+            </label>
+          </div> -->
+          <div
+            *ngIf="dataItem.serialno == 7"
+            class="d-flex"
+            [ngClass]="{ 'pointer-evt-none': !isSubmittingAnswer }"
+          >
+            <input
+              id="chkfcIsDoctorInfo"
+              formControlName="fcIsDoctorInfo"
+              type="checkbox"
+              class="checkBoxSize"
+            />
+            
+            <label
+              for="chkfcIsDoctorInfo"
+              class="form-label ml-2"
+            >
+              {{ dataItem.serialno - 1 }}. {{ dataItem.title }}
+            </label>
+          </div>
+        </div>
+        <div *ngIf="dataItem.serialno == -1">
+          <div class="row">
+            <div class="col-md-10">
+              <div class="row">
+                <div class="col-md-6">
+                  <div
+                    class="d-flex"
+                    [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+                  >
+                    <!-- <label class="form-label mr-2">
+                      {{ dataItem.description }}
+                    </label> -->
+                    <input
+                      id="idIsToxicologyCategory"
+                      formControlName="fcOrderCategory"
+                      name="fcOrderCategory"
+                      type="radio"
+                      class="ml-3 mr-1"
+                      value="Toxicology"
+                    /><label
+                      for="idIsToxicologyCategory"
+                      class="form-label mr-6"
+                    >
+                      TOX
+                    </label>
+                    <input
+                      id="idIsBloodCategory"
+                      formControlName="fcOrderCategory"
+                      name="fcOrderCategory"
+                      type="radio"
+                      class="mr-1 ml-6"
+                      value="Blood"
+                    /><label for="idIsBloodCategory" class="form-label mr-6">
+                      BLOOD
+                    </label>
+                    <div
+                      *ngIf="!this.fbcOrderCategory.value"
+                      class="text-danger"
+                      style="margin-left: 38px"
+                    >
+                      Please select TOX or BLOOD
+                    </div>
+                  </div>
+                  <div
+                    class="d-flex"
+                    *ngIf="!isReadonlyCoverpage && !isSubmittingAnswer"
+                  >
+                    <!-- <label class="form-label mr-2">
+                      {{ dataItem.description }}
+                    </label> -->
+                    <input
+                      id="idIsMedicare"
+                      formControlName="fcIsMedicare"
+                      name="fcIsMedicare"
+                      type="radio"
+                      class="ml-3 mr-1"
+                      value="true"
+                    /><label for="idIsMedicare" class="form-label mr-6">
+                      Medicare
+                    </label>
+                    <input
+                      id="idIsCommercial"
+                      formControlName="fcIsMedicare"
+                      name="fcIsMedicare"
+                      type="radio"
+                      class="mr-1"
+                      value="false"
+                    /><label for="idIsCommercial" class="form-label mr-6">
+                      Commercial
+                    </label>
+                    <div
+                      *ngIf="!this.fbcIsMedicare.value"
+                      class="text-danger"
+                      style="margin-left: 9px"
+                    >
+                      Please select one from Medicare or Commercial
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="d-flex">
+                      <div class="form-label mr-2">Requested Date:</div>
+                      <!-- <div class="flex-fill">
+                        <textarea
+                          class="textarea-to-lable  w-50"
+                          readonly
+                          formControlName="fcTodayDate"
+                        ></textarea>
+                      </div> -->
+                      <div>
+                        {{ this.fbcTodayDate.value }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <img
+                class="float-right"
+                style="width: 62%"
+                alt="Biotech logo"
+                src="../../../../../assets/img/biotechlogo.png"
+              />
+            </div>
+          </div>
+          <!-- <div class="row">
+            <span class="h5 ml-3">
+              HELP!! MISSING INFO...
+            </span>
+          </div> -->
+        </div>
+        <div *ngIf="dataItem.serialno == 0">
+          <div class="row">
+            <span class="h5 ml-3">
+              HELP!! MISSING INFO...<br />
+              {{ dataItem.description }}
+            </span>
+            <!-- <div class="col-md-6">
+              <div class="form-group">
+                <div class="d-flex">
+                  <div class="form-label mr-2">
+                    Requisition #
+                  </div>
+                  <div class="flex-fill">
+                    <input
+                      formControlName="fcRequisitionNo"
+                      type="text"
+                      class="w-100"
+                      kendoTextBox
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              
+            </div> -->
+          </div>
+        </div>
+        <div *ngIf="dataItem.serialno == 1">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group mb-1">
+                <div class="d-flex">
+                  <label for="" class="form-label mr-2">
+                    Requisition Date:
+                  </label>
+                  <!-- <input
+                    *ngIf="!isReadonlyCoverpage"
+                    formControlName="fcRequisitionDate"
+                    type="date"
+                    class="w-75"
+                    kendoTextBox
+                  /> -->
+                  <kendo-datepicker
+                    *ngIf="!isReadonlyCoverpage && !isSubmittingAnswer"
+                    formControlName="fcRequisitionDate"
+                    [format]="'MMM dd, yyyy'"
+                    class="w-75"
+                  ></kendo-datepicker>
+                  <div *ngIf="isReadonlyCoverpage || isSubmittingAnswer">
+                    {{ fbcRequisitionDate.value | date: "MMM dd, yyyy" }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group mb-1">
+                <div class="d-flex">
+                  <label for="" class="form-label mr-2"> Accession#: </label>
+                  <!-- <textarea
+                    class="textarea-to-lable w-100"
+                    readonly
+                    formControlName="fcOrderAccessionNo"
+                  ></textarea> -->
+                  <div style="word-break: break-word">
+                    {{ this.fbcOrderAccessionNo.value }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-5">
+              <div class="form-group mb-1">
+                <div class="d-flex">
+                  <label for="" class="form-label mr-2"> Provider: </label>
+                  <!-- <textarea
+                    class="textarea-to-lable w-100"
+                    readonly
+                    formControlName="fcOrderProvider"
+                  ></textarea> -->
+                  <div>
+                    {{ this.fbcOrderProvider.value }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="dataItem.serialno == 2">
+          <!-- <input
+                formControlName="fcMiscInfo"
+                type="text"
+                class="w-100"
+              /> -->
+          <div class="d-flex">
+            <!-- <input
+              formControlName="fcIsMiscInfo"
+              type="checkbox"
+              class="mr-2"
+            /> -->
+            <div>
+              <input
+                formControlName="fcIsMiscInfo"
+                type="checkbox"
+                class="checkBoxSize"
+                [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+              />
+            </div>
+            <label
+              for="chkfcIsMiscInfo"
+              class="form-label ml-2 w-100px"
+              [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+            >
+              {{ dataItem.serialno - 1 }}. {{ dataItem.title }}:
+            </label>
+            <textarea
+              *ngIf="!isReadonlyCoverpage && !isSubmittingAnswer"
+              id="txtNote"
+              formControlName="fcMiscInfo"
+              kendoTextArea
+              style="height: 50px"
+              cols="21"
+              class="w-100"
+            ></textarea>
+
+            <!-- <div *ngIf="isReadonlyCoverpage" class="card w-100 border-0">
+                <div class="card-body p-1">
+                  <p class="mb-0">{{ fbcMisscInfo.value }}</p>
+                </div>
+              </div> -->
+            <div
+              *ngIf="isReadonlyCoverpage || isSubmittingAnswer"
+              class="w-100 border-0"
+            >
+              <p class="mb-2">{{ fbcMisscInfo.value }}</p>
+              <textarea
+                *ngIf="isSubmittingAnswer && fbcIsMiscInfo.value"
+                id="txtNote"
+                formControlName="fcMiscInfoAnswer"
+                kendoTextArea
+                style="height: 50px"
+                cols="21"
+                class="w-100"
+                (focusout)="onFocusOutEvent($event)"
+              ></textarea>
+              <p
+                class="mb-2 font-italic text-danger h6"
+                *ngIf="isReadonlyCoverpage"
+              >
+                {{ fbcMiscInfoAnswer.value }}
+              </p>
+            </div>
+          </div>
+          <div
+            *ngIf="errMiscInfo"
+            class="text-danger"
+            style="margin-left: 6.9rem"
+          >
+            Please fill misc info
+          </div>
+          <div
+            *ngIf="errAnsSubMiscInfo && isSubmittingAnswer"
+            class="text-danger"
+            style="margin-left: 6.9rem"
+          >
+            Please fill requested misc info
+          </div>
+        </div>
+        <div *ngIf="dataItem.serialno == 3">
+          <div class="d-flex">
+            <input
+              formControlName="fcIsInsuranceInfo"
+              type="checkbox"
+              class="mr-2 checkBoxSize"
+              [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+            />
+            <div class="mr-2 flex-fill">
+              <label class="form-label mr-2">
+                {{ dataItem.serialno - 1 }}. Insurance Information:
+              </label>
+              <!-- <hr
+                        [ngClass]="{
+                          hrlineanswer: isSubmittingAnswer,
+                          hrline: !isSubmittingAnswer
+                        }"
+                      /> -->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="d-flex">
+                    <div class="col-md-8 pr-1 pl-1">
+                      <input
+                        *ngIf="isSubmittingAnswer && fbcIsInsuranceInfo.value"
+                        type="text"
+                        formControlName="fcInsurancePlanName"
+                        class="w-100"
+                        kendoTextBox
+                        (focusout)="onFocusOutEvent($event)"
+                      />
+                      <p
+                        class="mb-2 font-italic text-danger h6"
+                        *ngIf="isReadonlyCoverpage"
+                      >
+                        {{ fbcInsurancePlanName.value }}
+                      </p>
+                      <hr
+                        class="hrline"
+                        [ngClass]="{
+                          answer:
+                            (isSubmittingAnswer || isReadonlyCoverpage) &&
+                            fbcIsInsuranceInfo.value
+                        }"
+                      />
+                      <label class="form-label pt-1 pb-0 text-center">
+                        Insurance Plan
+                      </label>
+                    </div>
+                    <div class="col-md-4 pr-1 pl-1">
+                      <input
+                        *ngIf="isSubmittingAnswer && fbcIsInsuranceInfo.value"
+                        type="text"
+                        formControlName="fcSubscriberID"
+                        class="w-100"
+                        kendoTextBox
+                        (focusout)="onFocusOutEvent($event)"
+                      />
+                      <p
+                        class="mb-2 font-italic text-danger h6"
+                        *ngIf="isReadonlyCoverpage"
+                      >
+                        {{ fbcSubscriberID.value }}
+                      </p>
+                      <hr
+                        class="hrline"
+                        [ngClass]="{
+                          answer:
+                            (isSubmittingAnswer || isReadonlyCoverpage) &&
+                            fbcIsInsuranceInfo.value
+                        }"
+                      />
+                      <label class="form-label pt-1 pb-0 text-center">
+                        Subscriber ID
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <input
+                type="text"
+                formControlName="fcInsurancePlanName"
+                class="w-100"
+                kendoTextBox
+              /> -->
+            </div>
+            <!-- <div class="mr-2 w-35">
+              <label class="form-label mr-2">
+                Subscriber ID
+              </label>
+              <input
+                type="text"
+                formControlName="fcSubscriberID"
+                kendoTextBox
+                class="w-100"
+              />
+            </div> -->
+          </div>
+          <div
+            *ngIf="isSubmittingAnswer && errAnsSubInsurancePlanInfo"
+            class="text-danger"
+          >
+            Please fill requested insurance info
+          </div>
+          <!-- <div *ngIf="fbcIsInsuranceInfo.value" class="small ml-5">
+            <textarea
+                    class="textarea-to-lable w-100"
+                    readonly
+                    formControlName="fcInsuranceInfoLabel"
+                    value="Insurance Plan & Subscriber ID is missing."
+                    style="height: 2vh;"
+                  ></textarea>
+          </div> -->
+        </div>
+        <div *ngIf="dataItem.serialno == 4">
+          <div class="d-flex">
+            <input
+              formControlName="fcIsSubscriberInfo"
+              type="checkbox"
+              class="mr-2 checkBoxSize"
+              [ngClass]="{ 'pointer-evt-none': isSubmittingAnswer }"
+            />
+            <div class="mr-2 flex-fill">
+              <label class="form-label mr-2">
+                {{ dataItem.serialno - 1 }}. Subscriber information:
+              </label>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="d-flex">
+                    <div class="col-md-6 pr-1 pl-1">
+                      <input
+                        *ngIf="isSubmittingAnswer && fbcIsSubscriberInfo.value"
+                        type="text"
+                        formControlName="fcSubscriberName"
+                        class="w-100"
+                        kendoTextBox
+                        (focusout)="onFocusOutEvent($event)"
+                      />
+                      <p
+                        class="mb-2 font-italic text-danger h6"
+                        *ngIf="isReadonlyCoverpage"
+                      >
+                        {{ fbcSubscriberName.value }}
+                      </p>
+                      <hr
+                        class="hrline"
+                        [ngClass]="{
+                          answer:
+                            (isSubmittingAnswer || isReadonlyCoverpage) &&
+                            fbcIsSubscriberInfo.value
+                        }"
+                      />
+                      <label class="form-label pt-1 pb-0 text-center">
+                        Subscriber Name
+                      </label>
+                    </div>
+                    <div class="col-md-3 pr-1 pl-1">
+                      <input
+                        *ngIf="isSubmittingAnswer && fbcIsSubscriberInfo.value"
+                        type="text"
+                        formControlName="fcSubscriberDOB"
+                        class="w-100"
+                        kendoTextBox
+                        (focusout)="onFocusOutEvent($event)"
+                      />
+                      <p
+                        class="mb-2 font-italic text-danger h6"
+                        *ngIf="isReadonlyCoverpage"
+                      >
+                        {{ fbcSubscriberDOB.value }}
+                      </p>
+                      <hr
+                        class="hrline"
+                        [ngClass]="{
+                          answer:
+                            (isSubmittingAnswer || isReadonlyCoverpage) &&
+                            fbcIsSubscriberInfo.value
+                        }"
+                      />
+                      <label class="form-label pt-1 pb-0 text-center">
+                        DOB
+                      </label>
+                    </div>
+                    <div class="col-md-3 pr-1 pl-1">
+                      <input
+                        *ngIf="isSubmittingAnswer && fbcIsSubscriberInfo.value"
+                        type="text"
+                        formControlName="fcSubscriberRelationToPatient"
+                        class="w-100"
+                        kendoTextBox
+                        (focusout)="onFocusOutEvent($event)"
+                      />
+                      <p
+                        class="mb-2 font-italic text-danger h6"
+                        *ngIf="isReadonlyCoverpage"
+                      >
+                        {{ fbcSubscriberRelationToPatient.value }}
+                      </p>
+                      <hr
+                        class="hrline"
+                        [ngClass]="{
+                          answer:
+                            (isSubmittingAnswer || isReadonlyCoverpage) &&
+                            fbcIsSubscriberInfo.value
+                        }"
+                      />
+                      <label class="form-label pt-1 pb-0 text-center">
+                        Patient Relationship to Subscriber
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- <input
+                type="text"
+                formControlName="fcSubscriberName"
+                class="w-100"
+                kendoTextBox
+              /> -->
+            </div>
+            <!-- <div class="mr-2 w-25">
+              <label class="form-label mr-2">
+                Subscriber DOB
+              </label>
+
+              <input
+                type="text"
+                formControlName="fcSubscriberDOB"
+                class="w-100"
+                kendoTextBox
+              />
+            </div>
+            <div class="mr-2 w-35">
+              <label class="form-label mr-2">
+                Patient Relationship to Subscriber
+              </label>
+
+              <input
+                type="text"
+                formControlName="fcSubscriberRelationToPatient"
+                class="w-100"
+                kendoTextBox
+              />
+            </div> -->
+          </div>
+          <div
+            *ngIf="isSubmittingAnswer && errAnsSubSubscriberInfo"
+            class="text-danger"
+          >
+            Please fill requested subscriber info
+          </div>
+          <!-- <div *ngIf="fbcIsSubscriberInfo.value" class="small ml-5">
+            <textarea
+                    class="textarea-to-lable w-100"
+                    readonly
+                    formControlName="fcSubscriberInfoLabel"
+                    value="Subscriber Name, DOB & Patient Relationship to Subscriber is missing."
+                    style="height: 2vh;"
+                  ></textarea>
+          </div> -->
+        </div>
+        <div *ngIf="dataItem.serialno == 5">
+          <div class="d-flex">
+            <textarea
+              *ngIf="isSubmittingAnswer && fbcIsNoDiagnosis.value"
+              id="txtnoDXNote"
+              formControlName="fcNoDXGivenAnswer"
+              kendoTextArea
+              style="height: 50px"
+              cols="21"
+              class="w-100"
+              (focusout)="onFocusOutEvent($event)"
+            ></textarea>
+            <div *ngIf="isReadonlyCoverpage" class="w-100 border-0">
+              <p class="mb-2 font-italic text-danger h6">
+                {{ fbcNoDXGivenAnswer.value }}
+              </p>
+            </div>
+          </div>
+          <div
+            *ngIf="isSubmittingAnswer && errAnsSubNoDXGivenInfo"
+            class="text-danger"
+          >
+            Please fill no diagnosis info
+          </div>
+        </div>
+        <div *ngIf="dataItem.serialno == 6.1" class="d-flex">
+          <table class="diagnosistable">
+            <tr>
+              <td>
+                <label class="form-label mr-2"> Lab Test </label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareProcedure1"
+                  [readOnly]="isSubmittingAnswer"
+                  class="w-100 h-100"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareProcedure2"
+                  [readOnly]="isSubmittingAnswer"
+                  class="w-100 h-100"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareProcedure3"
+                  [readOnly]="isSubmittingAnswer"
+                  class="w-100 h-100"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareProcedure4"
+                  [readOnly]="isSubmittingAnswer"
+                  class="w-100 h-100"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareProcedure5"
+                  [readOnly]="isSubmittingAnswer"
+                  class="w-100 h-100"
+                  kendoTextBox
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="form-label mr-2"> Diagnosis Code </label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareDiagnosis1"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareDiagnosis2"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareDiagnosis3"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareDiagnosis4"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcMedicareDiagnosis5"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="form-label mr-2"> Lab Test </label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalProcedure1"
+                  class="w-100 h-100"
+                  [readOnly]="isSubmittingAnswer"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalProcedure2"
+                  class="w-100 h-100"
+                  [readOnly]="isSubmittingAnswer"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalProcedure3"
+                  class="w-100 h-100"
+                  [readOnly]="isSubmittingAnswer"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalProcedure4"
+                  class="w-100 h-100"
+                  [readOnly]="isSubmittingAnswer"
+                  kendoTextBox
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalProcedure5"
+                  class="w-100 h-100"
+                  [readOnly]="isSubmittingAnswer"
+                  kendoTextBox
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="form-label mr-2"> Diagnosis Code </label>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalDiagnosis1"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalDiagnosis2"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalDiagnosis3"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalDiagnosis4"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  formControlName="fcAdditionalDiagnosis5"
+                  class="w-100 h-100"
+                  [ngClass]="{
+                    'font-italic text-danger h6': isReadonlyCoverpage
+                  }"
+                  kendoTextBox
+                  (focusout)="onFocusOutEvent($event)"
+                  [readOnly]="
+                    (isSubmittingAnswer && !fbcIsMedicarePatient.value) ||
+                    !isSubmittingAnswer
+                  "
+                />
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div
+          *ngIf="dataItem.serialno == 6.1 && errMedicarePatient"
+          class="text-danger"
+        >
+          Please fill minimum one lab test
+        </div>
+        <div
+          *ngIf="
+            dataItem.serialno == 6.1 &&
+            isSubmittingAnswer &&
+            errAnsSubMedicarePatient
+          "
+          class="text-danger"
+        >
+          Please fill requested diagnosis code for lab test
+        </div>
+        <!-- <div *ngIf="dataItem.serialno == 6.1" class="d-flex">
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareProcedure1"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareProcedure2"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareProcedure3"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareProcedure4"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareProcedure5"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+        </div>
+        <div
+          *ngIf="dataItem.serialno == 6.1 && errMedicarePatient"
+          class="text-danger"
+        >
+          Please fill minimum one lab test
+        </div>
+        <div *ngIf="dataItem.serialno == 6.2" class="d-flex">
+          <div class="mr-2"><input
+            type="text"
+            formControlName="fcMedicareDiagnosis1"
+            class="w-100"
+            kendoTextBox
+          /></div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareDiagnosis2"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareDiagnosis3"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareDiagnosis4"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcMedicareDiagnosis5"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+        </div>
+        <div *ngIf="dataItem.serialno == 7.1" class="d-flex">
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalProcedure1"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalProcedure2"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalProcedure3"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalProcedure4"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalProcedure5"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+        </div>
+        <div
+          *ngIf="dataItem.serialno == 7.1 && errAdditionalInsurance"
+          class="text-danger"
+        >
+          Please fill minimum one lab test
+        </div>
+        <div *ngIf="dataItem.serialno == 7.2" class="d-flex">
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalDiagnosis1"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalDiagnosis2"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalDiagnosis3"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalDiagnosis4"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+          <div class="mr-2">
+            <input
+              type="text"
+              formControlName="fcAdditionalDiagnosis5"
+              class="w-100"
+              kendoTextBox
+            />
+          </div>
+        </div> -->
+        <div class="mt-2" *ngIf="dataItem.serialno == 7">
+          <div class="form-group">
+            <label *ngIf="isSubmittingAnswer" class="form-label">
+              Note (Provide additional information if any)
+            </label>
+            <textarea
+              *ngIf="isSubmittingAnswer"
+              id="txtExtraNote"
+              formControlName="fcExtraNote"
+              kendoTextArea
+              style="height: 50px"
+              cols="21"
+              class="w-100"
+              (focusout)="onFocusOutEvent($event)"
+            ></textarea>
+            <div *ngIf="isReadonlyCoverpage" class="w-100 border-0">
+              <p class="mb-2 font-italic text-danger h6">
+                {{ fbcExtraNote.value ? "Note: " + fbcExtraNote.value : "" }}
+              </p>
+            </div>
+          </div>
+          <!-- <div class="d-flex">
+            <label *ngIf="isSubmittingAnswer" class="form-label ml-2 w-100px">
+              Note
+            </label>
+            <textarea
+              *ngIf="isSubmittingAnswer"
+              id="txtExtraNote"
+              formControlName="fcExtraNote"
+              kendoTextArea
+              style="height: 50px"
+              cols="21"
+              class="w-100"
+              (focusout)="onFocusOutEvent($event)"
+            ></textarea>
+            <div *ngIf="isReadonlyCoverpage" class="w-100 border-0">
+              <p class="mb-2 font-italic text-danger h6">
+                {{ fbcExtraNote.value ? "Note: " + fbcExtraNote.value : "" }}
+              </p>
+            </div>
+          </div> -->
+        </div>
+        <div *ngIf="dataItem.serialno == 9">
+          <div class="row">
+            <div class="h6">
+              ***SIGNATURE IS REQUIRED FOR ALL ICD CODES PROVIDED***
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="d-flex">
+                <div class="form-label col-md-2 pr-1 pl-1">Completed by</div>
+                <div class="col-md-4 pr-1 pl-1">
+                  <!-- <textarea
+                    formControlName="fcCompletedBy"
+                    kendoTextArea
+                    style="height: 50px;"
+                    cols="21"
+                    class="w-100"
+                    readonly
+                  ></textarea> -->
+                  <div
+                    *ngIf="
+                      isSubmittingAnswer ||
+                      (isReadonlyCoverpage && fbcCompletedBy.value != '')
+                    "
+                    class="w-100 border-0 text-center"
+                  >
+                    <input
+                      *ngIf="
+                        isSubmittingAnswer &&
+                        (fbcIsNoDiagnosis.value || fbcIsMedicarePatient.value)
+                      "
+                      type="text"
+                      formControlName="fcSignature"
+                      class="w-100"
+                      kendoTextBox
+                      (focusout)="onFocusOutEvent($event)"
+                    />
+                    <p
+                      *ngIf="
+                        isReadonlyCoverpage ||
+                        (!fbcIsNoDiagnosis.value && !fbcIsMedicarePatient.value)
+                      "
+                      class="mb-3 h4"
+                      [ngClass]="{
+                        'font-italic text-danger h6': isReadonlyCoverpage
+                      }"
+                    >
+                      {{ fbcSignature.value }}
+                    </p>
+                  </div>
+                  <hr
+                    class="hrline"
+                    [ngClass]="{
+                      answer: isSubmittingAnswer || isReadonlyCoverpage
+                    }"
+                  />
+                  <label class="form-label pt-1 text-center"> Signature </label>
+                  <div
+                    *ngIf="isSubmittingAnswer && errAnsSignature"
+                    class="text-danger"
+                  >
+                    Please fill signature
+                  </div>
+                </div>
+                <div class="col-md-4 pr-1 pl-1">
+                  <!-- <textarea
+                    formControlName="fcCompletedBy"
+                    kendoTextArea
+                    style="height: 50px;"
+                    cols="21"
+                    class="w-100"
+                    readonly
+                  ></textarea> -->
+                  <div
+                    *ngIf="
+                      isSubmittingAnswer ||
+                      (isReadonlyCoverpage && fbcCompletedBy.value != '')
+                    "
+                    class="w-100 border-0 text-center"
+                  >
+                    <p
+                      class="mb-3 h4"
+                      [ngClass]="{
+                        'font-italic text-danger h6': isReadonlyCoverpage
+                      }"
+                    >
+                      {{ fbcCompletedBy.value }}
+                    </p>
+                  </div>
+                  <hr
+                    class="hrline"
+                    [ngClass]="{
+                      answer: isSubmittingAnswer || isReadonlyCoverpage
+                    }"
+                  />
+                  <label class="form-label pt-1 text-center">
+                    (Print name)
+                  </label>
+                </div>
+                <div class="col-md-2 pr-1 pl-1">
+                  <!-- <textarea
+                    formControlName="fcCompletedBy"
+                    kendoTextArea
+                    style="height: 50px;"
+                    cols="21"
+                    class="w-100"
+                    readonly
+                  ></textarea> -->
+                  <div
+                    *ngIf="
+                      isSubmittingAnswer ||
+                      (isReadonlyCoverpage && fbcCompletedBy.value != '')
+                    "
+                    class="w-100 border-0 text-center"
+                  >
+                    <p
+                      class="mb-3 h4"
+                      [ngClass]="{
+                        'font-italic text-danger h6': isReadonlyCoverpage
+                      }"
+                    >
+                      {{ fbcCompletedOn.value }}
+                    </p>
+                  </div>
+                  <hr
+                    class="hrline"
+                    [ngClass]="{
+                      answer: isSubmittingAnswer || isReadonlyCoverpage
+                    }"
+                  />
+                  <label class="form-label pt-1 text-center"> Date </label>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-md-4">
+              <div class="d-flex">
+                <div class="form-label mr-2">
+                  Date
+                </div>
+                <div class="flex-fill">
+                  <input
+                    formControlName="fcCompletedOn"
+                    type="text"
+                    class="w-100"
+                    kendoTextBox
+                    readonly
+                  />
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+        <!-- <div *ngIf="dataItem.serialno == 9">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="d-flex">
+                <div class="form-label mr-2">
+                  Completed by (Print name)
+                </div>
+                <div class="flex-fill">
+                  <textarea
+                    formControlName="fcCompletedBy"
+                    kendoTextArea
+                    style="height: 50px;"
+                    cols="21"
+                    class="w-100"
+                    readonly
+                  ></textarea>
+                  <div class="small strong">
+                    * SIGNATURE IS REQUIRED FOR ALL ICD CODES PROVIDED
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="d-flex">
+                <div class="form-label mr-2">
+                  Date
+                </div>
+                <div class="flex-fill">
+                  <input
+                    formControlName="fcCompletedOn"
+                    type="text"
+                    class="w-100"
+                    kendoTextBox
+                    readonly
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!-- <div *ngIf="dataItem.serialno == 7">
+              <input
+                formControlName="fcCompletedOn"
+                type="text"
+                class="w-50 form-control form-control-sm"
+              />
+            </div> -->
+        <!-- <div
+          *ngIf="dataItem.serialno == 10 && isSubmittingAnswer"
+          class="float-right"
+        >
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm m-1"
+            (click)="onCloseClick()"
+            data-dismiss="modal"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-sm m-1"
+            (click)="onOkClick()"
+            appNoDblClick
+          >
+            
+            OK
+          </button>
+        </div> -->
+      </form>
+    </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-pdf
+    fileName="Products.pdf"
+    [allPages]="true"
+    paperSize="A4"
+    [repeatHeaders]="true"
+    [scale]="0.7"
+  >
+    <kendo-grid-pdf-margin
+      top="2cm"
+      left="1cm"
+      right="1cm"
+      bottom="2cm"
+    ></kendo-grid-pdf-margin>
+  </kendo-grid-pdf>
+</kendo-grid>
+<div *ngIf="loader" class="black-box">
+  <div class="k-i-loading"></div>
+</div>

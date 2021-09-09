@@ -1,0 +1,18 @@
+.status .table td {
+  padding: 0.35rem;
+}
+.card-title {
+  font-weight: 600;
+}
+.text-teal {
+  color: #01bfab !important;
+}
+.text-info {
+  color: #0682da !important;
+}
+.text-warning {
+  color: #ff770b !important;
+}
+.text-green {
+  color: #5eba00 !important;
+}

@@ -1,0 +1,140 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Reprocess Folder</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="FolderProcessForm">
+      <div class="row" style="margin-top: -5px; margin-bottom: 15px;">
+        <!-- <div class="col-md-1 text-center">
+        <button class="ml-auto" type="button" kendoButton [primary]="true" (click)="getlistofcabinets()">
+          Load Cabinet
+        </button>
+      </div> -->
+        <div class="col-md-1 text-center" style="margin-top: 4px;">
+          Cabinets
+        </div>
+        <div class="col-md-2">
+          <kendo-dropdownlist
+            class="w-100"
+            [data]="cabinets"
+            formControlName="fcCabinet"
+            textField="cabinetname"
+            [valuePrimitive]="true"
+            valueField="externalid"
+            (selectionChange)="selectionChange($event)"
+          >
+            <!-- [defaultItem]="folderDefaultValue" -->
+          </kendo-dropdownlist>
+        </div>
+
+        <div class="col-md-1 text-center" style="margin-top: 4px;">
+          Folders
+        </div>
+        <div class="col-md-2">
+          <kendo-dropdownlist
+            class="w-100"
+            [data]="folders"
+            formControlName="fcFolder"
+            textField="foldername"
+            [valuePrimitive]="true"
+            valueField="externalid"
+          >
+            <!-- [defaultItem]="folderDefaultValue" -->
+          </kendo-dropdownlist>
+        </div>
+
+        <div class="col-md-1 text-center">
+          <button
+            class="ml-auto"
+            type="button"
+            kendoButton
+            [primary]="true"
+            (click)="getQueue()"
+            [disabled]="loadingGrid"
+          >
+            Get Queue
+          </button>
+        </div>
+
+        <div class="col-md-1 text-center">
+          <button
+            class="ml-auto"
+            type="button"
+            kendoButton
+            [primary]="true"
+            (click)="processFolder()"
+            [disabled]="loadingGrid"
+          >
+            Process Queue
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <kendo-grid
+          [data]="OrderGridView"
+          class="w-100"
+          style="height: 60vh;"
+          [selectable]="selectableSettings"
+          [kendoGridSelectBy]="selectedCallback"
+          [selectedKeys]="OrderSelected"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="OrderSort"
+          (sortChange)="OrderSortChange($event)"
+          [loading]="loadingGrid"
+          [skip]="OrderSkip"
+          [pageable]="true"
+          [pageSize]="pagesize"
+          (pageChange)="OrderPageChange($event)"
+        >
+          <!-- <ng-template *ngIf="vwExportButton" kendoGridToolbarTemplate>
+          <button class="pull-right mr-1" type="button" kendoGridExcelCommand>
+            Export to Excel
+          </button>
+        </ng-template> -->
+          <kendo-grid-checkbox-column width="8" showSelectAll="true">
+          </kendo-grid-checkbox-column>
+          <kendo-grid-column
+            field="accessionnumber"
+            title="Accession #"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="cabinet"
+            title="Cabinet"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="folder"
+            title="Folder"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="status"
+            title="Status"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+        </kendo-grid>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="black-box" *ngIf="loading">
+  <div class="k-i-loading"></div>
+</div>

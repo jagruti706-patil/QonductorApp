@@ -1,0 +1,242 @@
+<div class="modal-content">
+  <!-- [ngClass]="{
+  'pointer-evt-none': loader || checkConfirmationModalOpen() == true
+}" -->
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title">
+      Delete Documents
+    </h5>
+    <button
+      type="button"
+      class="close p-0 m-0"
+      (click)="onClose()"
+      data-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="DeleteDocsFormGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card mb-0">
+            <div class="card-header p-1">
+              <div class="form-group col-md-4 mb-0">
+                <label for="" class="form-label"
+                  ><strong class="text-danger">*</strong>Client</label
+                >
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="lstEncounterClients"
+                  formControlName="fcEncounterClient"
+                  textField="clientcodename"
+                  [valuePrimitive]="true"
+                  valueField="nclientid"
+                  [defaultItem]="EncounterClientDefaultValue"
+                  id="ddlEncounterClients"
+                  (selectionChange)="clientChanged($event)"
+                  filterable="true"
+                  (filterChange)="handleClientFilter($event)"
+                  [ngClass]="{
+                    disableFilters:
+                      lstEncounterClients && lstEncounterClients.length == 1
+                  }"
+                >
+                </kendo-dropdownlist>
+                <div
+                  [ngClass]="{
+                    invisible: !fbcEncounterClient?.errors?.required
+                  }"
+                >
+                  <small class="text-danger">Client is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label"
+                  ><strong class="text-danger">*</strong>Year/Cabinet</label
+                >
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="years"
+                  formControlName="fcYear"
+                  textField="year"
+                  [valuePrimitive]="true"
+                  valueField="year"
+                  (selectionChange)="yearChanged($event)"
+                >
+                </kendo-dropdownlist>
+                <div [ngClass]="{ invisible: !fbcYear?.errors?.required }">
+                  <small class="text-danger">Year is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-2 mb-0">
+                <label for="" class="form-label"
+                  ><strong class="text-danger">*</strong>Month</label
+                >
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="months"
+                  formControlName="fcMonth"
+                  textField="displayname"
+                  [valuePrimitive]="true"
+                  valueField="month"
+                  [defaultItem]="monthDefaultValue"
+                  (selectionChange)="monthChanged($event)"
+                >
+                </kendo-dropdownlist>
+                <div [ngClass]="{ invisible: !fbcMonth?.errors?.required }">
+                  <small class="text-danger">Month is required</small>
+                </div>
+              </div>
+              <div class="form-group col-md-4 mb-0">
+                <label for="" class="form-label"
+                  ><strong class="text-danger">*</strong>Category</label
+                >
+                <kendo-dropdownlist
+                  class="w-100"
+                  [data]="categories"
+                  formControlName="fcCategory"
+                  textField="category"
+                  [valuePrimitive]="true"
+                  valueField="category"
+                  (selectionChange)="categoryChanged($event)"
+                  filterable="true"
+                  (filterChange)="handleCategoryFilter($event)"
+                >
+                </kendo-dropdownlist>
+                <div [ngClass]="{ invisible: !fbcCategory?.errors?.required }">
+                  <small class="text-danger">Category is required</small>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-2">
+              <label
+                >No. of documents selected for delete :
+                <strong>{{ selectedDocs.length }}</strong></label
+              >
+              <kendo-grid
+                class="w-100 filter-grid"
+                style="height: 50vh;"
+                [selectable]="selectableSettings"
+                [kendoGridSelectBy]="selectedCallback"
+                [selectedKeys]="selectedDocs"
+                [data]="documentGridView"
+                [sort]="state.sort"
+                [filter]="state.filter"
+                [sortable]="true"
+                [filterable]="true"
+                (dataStateChange)="dataStateChange($event)"
+              >
+                <kendo-grid-checkbox-column width="5" showSelectAll="true">
+                </kendo-grid-checkbox-column>
+                <kendo-grid-column
+                  width="95"
+                  field="documentname"
+                  title="Document Name"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                </kendo-grid-column>
+                <!-- <ng-template kendoPagerTemplate>
+                  <kendo-pager-info></kendo-pager-info>
+                </ng-template> -->
+              </kendo-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="onClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-danger btn-sm"
+      (click)="onDeleteClick()"
+      [ngClass]="{ readonlybtn: this.selectedDocs.length == 0 }"
+      appNoDblClick
+    >
+      <!-- [class.readonlybtn]="true" -->
+      Delete
+    </button>
+  </div>
+  <div class="black-box" *ngIf="loader">
+    <div class="k-i-loading"></div>
+  </div>
+  <!--Confirmation Modal -->
+  <div
+    class="modal fade"
+    data-backdrop="static"
+    data-keyboard="false"
+    id="deleteDocConfirmationModal"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content box-shadow">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            {{
+              confirmation == "selection"
+                ? "Selection Confirmation"
+                : "Delete Confirmation"
+            }}
+          </h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="
+              confirmation == 'selection'
+                ? onCloseSelectionConfirmation()
+                : onCloseDeleteConfirmation()
+            "
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div
+            [innerHTML]="
+              confirmation == 'selection'
+                ? 'Selection will be discarded. Do you want to continue ?'
+                : 'Encounters associated with document will also get deleted.<br> Do you want to continue ?'
+            "
+          ></div>
+        </div>
+        <div class="modal-footer">
+          <ng-container>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="
+                confirmation == 'selection'
+                  ? onCloseSelectionConfirmation()
+                  : onCloseDeleteConfirmation()
+              "
+            >
+              No
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="
+                confirmation == 'selection'
+                  ? onYesSelectionConfirmation()
+                  : onYesDeleteConfirmation()
+              "
+            >
+              <!-- appNoDblClick -->
+              Yes
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Confirmation Modal -->
+</div>

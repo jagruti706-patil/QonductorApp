@@ -1,0 +1,142 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="mb-0">Mail Configuration</h4>
+    <div class="row ml-auto">
+      <div>
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#addmailconfigurationModal"
+          (click)="AddMailConfiguration()"
+        >
+          Add Mail Configuration
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" style="height: 72vh;">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridMailConfiguration"
+        [data]="MailConfigurationgridView"
+        style="width: 100%; max-height: 68vh;"
+        [pageSize]="MailConfigurationpageSize"
+        [pageable]="true"
+        [skip]="MailConfigurationskip"
+        (pageChange)="pageChangeMailConfiguration($event)"
+        [sortable]="true"
+        [sort]="MailConfigurationsort"
+        (sortChange)="sortMailConfigurationChange($event)"
+        [selectable]="true"
+        (edit)="EditMailConfigurationTemplate($event)"
+      >
+        <kendo-grid-column
+          field="emailfrom"
+          title="From"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="title"
+          title="Title"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field="emailtoreceive"
+          title="To"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="emailccreceive"
+          title="CC"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sendsms"
+          title="SMS"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="text-success" *ngIf="dataItem.sendsms == true"
+              >Yes</span
+            >
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-command-column
+          title="Action"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editmailconfigurationconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.MailConfigurationgridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px;"
+      ></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addmailconfigurationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addmailconfiguration
+      [InputMailConfigurationEditid]="EditMailConfigurationid"
+      (OutputMailConfigurationEditResult)="
+        OutputMailConfigurationEditResult($event)
+      "
+      #AddMailConfigurationChild
+    ></app-addmailconfiguration>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editmailconfigurationconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

@@ -1,0 +1,644 @@
+<div class="card" [ngClass]="{ 'card-fullscreen': fullscreen }">
+  <!-- <div class="card-header">
+    <div class="d-flex align-items-center w-100">
+      <h3 class="card-title">RCM Documents View</h3>
+      <div class="ml-auto">
+        <i
+          class="fa fa-expand pointer text-dark"
+          title="Card fullscreen"
+          (click)="this.fullscreen = !this.fullscreen"
+        ></i>
+      </div>
+    </div>
+  </div> -->
+  <div class="card-header font-weight-bold">
+    <div class="d-flex align-items-center w-100">
+      <h4 class="mb-0">RCM Docs</h4>
+      <div class="ml-auto">
+        <i
+          class="fa fa-expand pointer text-dark"
+          title="Card fullscreen"
+          (click)="this.fullscreen = !this.fullscreen"
+        ></i>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-2">
+    <div class="d-flex mb-2">
+      <button
+        type="button"
+        *ngIf="vwImportDocumentsBtn"
+        kendoButton
+        [primary]="true"
+        class="mr-2"
+        data-target="#importDocumentsModal"
+        data-toggle="modal"
+        (click)="onImportDocuments()"
+      >
+        Import Documents
+      </button>
+      <button
+        type="button"
+        *ngIf="vwMoveDocumentsBtn"
+        kendoButton
+        [primary]="true"
+        class="mr-2"
+        data-toggle="modal"
+        data-target="#moveDocumentsModal"
+        (click)="onMoveDocuments()"
+      >
+        Move Documents
+      </button>
+      <button
+        type="button"
+        *ngIf="vwDeleteDocumentsBtn"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#deleteDocumentsModal"
+        (click)="onDeleteDocuments()"
+      >
+        Delete Documents
+      </button>
+    </div>
+    <form [formGroup]="FilterFormGroup">
+      <div
+        class="row"
+        [ngClass]="{
+          disableFilters:
+            lstEncounterClients == null || lstEncounterClients.length == 0
+        }"
+      >
+        <div class="col-md-12">
+          <div class="card-header border p-1 d-flex">
+            <div>
+              <span class="font-weight-bold mr-4"
+                >Client:
+                <span class="font-weight-normal ml-1">{{
+                  this.fbcEncounterClient.value?.toString() == "0"
+                    ? "All"
+                    : this.clientname
+                }}</span></span
+              >
+              <span class="font-weight-bold mr-4"
+                >Year/Cabinet:
+                <span class="font-weight-normal ml-1"
+                  >{{ this.fbcYear.value ? this.fbcYear.value : "" }}
+                </span></span
+              >
+              <span class="font-weight-bold mr-4"
+                >Month:
+                <span class="font-weight-normal ml-1">{{
+                  this.fbcMonth.value == 0 ? "All" : this.monthname
+                }}</span></span
+              >
+            </div>
+            <div class="ml-auto">
+              <i
+                class="fa px-2 pointer"
+                [ngClass]="
+                  showFilters
+                    ? 'fa-chevron-circle-up'
+                    : 'fa-chevron-circle-down'
+                "
+                (click)="showFilters = !showFilters"
+              ></i>
+            </div>
+          </div>
+          <!-- <app-filters
+          [ngClass]="{ 'd-none': !showFilters }"
+          [CallingPage]="'RcmDocsView'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters> -->
+          <div class="card mb-0" [ngClass]="{ 'd-none': !showFilters }">
+            <div class="card-body p-2">
+              <div class="row">
+                <div class="form-group col-md-3 mb-0">
+                  <label for="" class="form-label">Client</label>
+                  <kendo-dropdownlist
+                    class="w-100"
+                    [data]="lstEncounterClients"
+                    formControlName="fcEncounterClient"
+                    textField="clientcodename"
+                    [valuePrimitive]="true"
+                    valueField="nclientid"
+                    [defaultItem]="EncounterClientDefaultValue"
+                    id="ddlEncounterClients"
+                    (selectionChange)="clientChanged($event)"
+                    filterable="true"
+                    (filterChange)="handleClientFilter($event)"
+                    [ngClass]="{
+                      disableFilters:
+                        lstEncounterClients && lstEncounterClients.length == 1
+                    }"
+                  >
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-group col-md-2 mb-0">
+                  <label for="" class="form-label">Year/Cabinet</label>
+                  <kendo-dropdownlist
+                    class="w-100"
+                    [data]="years"
+                    formControlName="fcYear"
+                    textField="year"
+                    [valuePrimitive]="true"
+                    valueField="year"
+                    (selectionChange)="yearChanged($event)"
+                  >
+                    <!-- [defaultItem]="defaultYear" -->
+                  </kendo-dropdownlist>
+                </div>
+                <div class="form-group col-md-2 mb-0">
+                  <label for="" class="form-label">Month</label>
+                  <kendo-dropdownlist
+                    class="w-100"
+                    [data]="months"
+                    formControlName="fcMonth"
+                    textField="displayname"
+                    [valuePrimitive]="true"
+                    valueField="month"
+                    [defaultItem]="monthDefaultValue"
+                    (selectionChange)="monthChanged($event)"
+                  >
+                  </kendo-dropdownlist>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4" style="height: 100vh;">
+        <div *ngIf="!showGrids" class="col-md-1 pr-0">
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="card border-0">
+                <div class="card-body p-3" style="height: 96vh;">
+                  <div class="row">
+                    <div class="col-md-12 text-center">
+                      <i
+                        class="fe fe-menu pointer"
+                        (click)="showGrids = true"
+                      ></i>
+                      <div
+                        style="
+                          writing-mode: vertical-rl;
+                          text-orientation: mixed;
+                        "
+                        class="h4 mx-auto"
+                      >
+                        {{ verticalText }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          [ngStyle]="{ display: showGrids == false ? 'none' : 'block' }"
+          class="col-md-3 pr-0"
+          style="height: 96%;"
+        >
+          <div class="card p-0" style="height: 100%;">
+            <div class="card-body p-0 o-auto">
+              <div class="d-flex">
+                <div class="ml-auto">
+                  <i
+                    class="fe fe-menu pointer px-2"
+                    (click)="showGrids = false"
+                  ></i>
+                </div>
+              </div>
+              <div class="card" style="border: none;">
+                <div class="pl-2 pt-2 pb-2 alert-primary">
+                  <h6 class="mb-0">
+                    Category
+                    <i
+                      class="fa px-2 pointer float-right"
+                      [ngClass]="
+                        showCategories
+                          ? 'fa-chevron-circle-up'
+                          : 'fa-chevron-circle-down'
+                      "
+                      (click)="showCategories = !showCategories"
+                    ></i>
+                  </h6>
+                </div>
+                <div
+                  class="card-body p-0"
+                  [ngClass]="{ 'd-none': !showCategories }"
+                >
+                  <kendo-grid
+                    id="category-grid"
+                    [data]="categoryGridItems"
+                    class="w-100 border-right-0 border-left-0"
+                    style="height: 23vh;"
+                    hideHeader="true"
+                    [loading]="categoryLoader"
+                  >
+                    <ng-template kendoGridToolbarTemplate>
+                      <div class="p-1">
+                        <input
+                          type="text"
+                          placeholder="Search by category"
+                          kendoTextBox
+                          class="w-100"
+                          formControlName="fcCategorySearch"
+                        />
+                      </div>
+                    </ng-template>
+                    <kendo-grid-column
+                      field="category"
+                      title=""
+                      width="100"
+                      [headerStyle]="{ 'font-weight': 'bold' }"
+                    >
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <!-- <button
+                          class="btn btn-link p-0"
+                          (click)="onCategoryClick(dataItem.category)"
+                        >
+                          <i class="fe fe-link mr-2 font-12"></i
+                          >{{ dataItem.category }}
+                        </button> -->
+                        <a
+                          class="text-primary pointer"
+                          (click)="onCategoryClick(dataItem.category)"
+                          ><i class="fe fe-link mr-2 font-12"></i
+                          >{{ dataItem.category }}</a
+                        >
+                      </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column
+                      field="ackcount"
+                      title=""
+                      width="25"
+                      [headerStyle]="{ 'font-weight': 'bold' }"
+                    >
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <!-- <span class="badge badge-success">
+                          <h6 class="mb-0">
+                            {{ dataItem.ackcount ? dataItem.ackcount : 0 }}
+                          </h6>
+                        </span> -->
+                        <span
+                          class="custom-badge bg-success"
+                          title="Acknowledge Count"
+                          ><label class="mb-0 ml-1 mr-1">{{
+                            dataItem.ackcount ? dataItem.ackcount : 0
+                          }}</label></span
+                        >
+                      </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column
+                      field="pendingackcount"
+                      title=""
+                      width="25"
+                      [headerStyle]="{ 'font-weight': 'bold' }"
+                    >
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <!-- <span class="badge badge-danger">
+                          <h6 class="mb-0">
+                            {{
+                              dataItem.pendingackcount
+                                ? dataItem.pendingackcount
+                                : 0
+                            }}
+                          </h6>
+                        </span> -->
+                        <span
+                          class="custom-badge bg-danger"
+                          title="Pending for Acknowledge Count"
+                          ><label class="mb-0 ml-1 mr-1">{{
+                            dataItem.pendingackcount
+                              ? dataItem.pendingackcount
+                              : 0
+                          }}</label></span
+                        >
+                      </ng-template>
+                    </kendo-grid-column>
+                    <ng-template kendoGridNoRecordsTemplate>
+                      No records available.
+                    </ng-template>
+                  </kendo-grid>
+                </div>
+              </div>
+              <!-- <div class="dimmer" [ngClass]="{ active: loader == true }">
+              <div class="loader"></div>
+            </div> -->
+              <div class="card" style="border: none; height: 65%;">
+                <div class="p-2 alert-primary">
+                  <h6 class="mb-0">
+                    Documents&nbsp;-&nbsp;<span
+                      class="h5 font-italic font-weight-bolder"
+                      >{{ category }}</span
+                    >
+                  </h6>
+                </div>
+                <div class="card-body p-0" style="height: 80%;">
+                  <kendo-grid
+                    id="encounters-grid"
+                    #kendoGridInstance
+                    [data]="folderGridItems"
+                    class="w-100 border-0"
+                    style="height: 100%;"
+                    hideHeader="true"
+                    [loading]="folderLoader"
+                  >
+                    <!-- (detailExpand)="onExpandDetail($event)" -->
+                    <ng-template kendoGridToolbarTemplate>
+                      <div class="d-flex p-1">
+                        <!-- <input
+                          type="text"
+                          placeholder="Search by Date"
+                          kendoTextBox
+                          formControlName="fcFolderSearch"
+                          class="w-100"
+                        />
+                        <div class="ml-auto" style="display: none;">
+                          <button
+                            id="collapseBtn"
+                            (click)="collapseAll(kendoGridInstance)"
+                          ></button>
+                        </div> -->
+                        <input
+                          type="text"
+                          placeholder="Search by document"
+                          kendoTextBox
+                          formControlName="fcFolderSearch"
+                          class="w-100"
+                        />
+                        <div class="ml-auto" style="display: none;">
+                          <button
+                            id="expandBtn"
+                            (click)="expandAll(kendoGridInstance)"
+                          ></button>
+                        </div>
+                      </div>
+                      <div class="ml-2 mb-1">
+                        <div class="custom-control custom-checkbox">
+                          <input
+                            type="checkbox"
+                            class="custom-control-input"
+                            id="acknowledge"
+                            formControlName="fcViewAck"
+                          />
+                          <label
+                            class="custom-control-label mt-1"
+                            for="acknowledge"
+                            >View Acknowledged</label
+                          >
+                        </div>
+
+                        <!-- <input type="checkbox" kendoCheckBox /> View Acknowledged -->
+                      </div>
+                    </ng-template>
+                    <kendo-grid-column
+                      field="createdon"
+                      title=""
+                      width="130"
+                      [headerStyle]="{ 'font-weight': 'bold' }"
+                      filterable="true"
+                    >
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <i class="fa fa-folder mr-1 text-yellow"></i>
+                        {{ dataItem.createdon }}
+                      </ng-template>
+                      <!-- <ng-template kendoGridHeaderTemplate let-dataItem>
+                      <button
+                        style="display: none;"
+                        id="collapseBtn"
+                        (click)="collapseAll(kendoGridInstance)"
+                      ></button>
+                    </ng-template> -->
+                    </kendo-grid-column>
+                    <kendo-grid-column
+                      field="ackcount"
+                      title=""
+                      width="40"
+                      [headerStyle]="{ 'font-weight': 'bold' }"
+                    >
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <!-- <span class="badge badge-success">
+                          <h6 class="mb-0">
+                            {{ dataItem.ackcount ? dataItem.ackcount : 0 }}
+                          </h6>
+                        </span> -->
+                        <span
+                          class="custom-badge bg-success"
+                          title="Acknowledge Count"
+                          ><label class="mb-0 ml-1 mr-1">{{
+                            dataItem.ackcount ? dataItem.ackcount : 0
+                          }}</label></span
+                        >
+                      </ng-template>
+                    </kendo-grid-column>
+                    <kendo-grid-column
+                      field="pendingackcount"
+                      title=""
+                      width="40"
+                      [headerStyle]="{ 'font-weight': 'bold' }"
+                    >
+                      <ng-template kendoGridCellTemplate let-dataItem>
+                        <!-- <span class="badge badge-danger">
+                          <h6 class="mb-0">
+                            {{
+                              dataItem.pendingackcount
+                                ? dataItem.pendingackcount
+                                : 0
+                            }}
+                          </h6>
+                        </span> -->
+                        <span
+                          class="custom-badge bg-danger"
+                          title="Pending for Acknowledge Count"
+                          ><label class="mb-0 ml-1 mr-1">{{
+                            dataItem.pendingackcount
+                              ? dataItem.pendingackcount
+                              : 0
+                          }}</label></span
+                        >
+                      </ng-template>
+                    </kendo-grid-column>
+                    <ng-template
+                      kendoGridDetailTemplate
+                      let-dataItem
+                      let-rowIndex="rowIndex"
+                    >
+                      <kendo-grid
+                        [data]="dataItem.documentlist"
+                        hideHeader="true"
+                        class="border-0"
+                      >
+                        <kendo-grid-column
+                          field="documentname"
+                          title="Document Name"
+                          width="100"
+                          [headerStyle]="{ 'font-weight': '600' }"
+                        >
+                          <ng-template kendoGridCellTemplate let-dataItem>
+                            <!-- <button
+                              class="btn btn-link p-0"
+                              (click)="onDocumentClick(dataItem)"
+                            >
+                              <i
+                                class="fa fa-file-pdf"
+                                [ngClass]="{
+                                  'text-green': dataItem.isacknowledged == true
+                                }"
+                              ></i>
+                              <label
+                                class="mb-0 w-100 pointer"
+                                title="{{ dataItem.documentname }}"
+                                >{{ dataItem.documentname }}</label
+                              >
+                            </button> -->
+                            <a
+                              class="text-primary pointer w-100 text-truncate"
+                              (click)="onDocumentClick(dataItem)"
+                              title="{{ dataItem.documentname }}"
+                            >
+                              <i
+                                class="fas fa-file-pdf mr-1"
+                                [ngClass]="
+                                  dataItem.isacknowledged
+                                    ? 'text-green'
+                                    : 'text-danger'
+                                "
+                              ></i>
+                              {{ dataItem.documentname }}</a
+                            >
+                          </ng-template>
+                        </kendo-grid-column>
+                        <!-- <kendo-grid-column
+                          field="isacknowledged"
+                          title=""
+                          width="15"
+                          [headerStyle]="{ 'font-weight': '600' }"
+                        >
+                          <ng-template kendoGridCellTemplate let-dataItem>
+                            <i
+                              class="fa fa-flag"
+                              [ngClass]="{
+                                'text-green': dataItem.isacknowledged == true,
+                                'text-red': dataItem.isacknowledged == false
+                              }"
+                            ></i>
+                          </ng-template>
+                        </kendo-grid-column> -->
+                        <!-- <kendo-grid-column
+                        field="pagecount"
+                        title="Page Count"
+                        width="30"
+                        [headerStyle]="{ 'font-weight': '600' }"
+                      >
+                      </kendo-grid-column> -->
+                      </kendo-grid>
+                    </ng-template>
+                    <ng-template kendoGridNoRecordsTemplate>
+                      No records available.
+                    </ng-template>
+                  </kendo-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          [ngClass]="{
+            'col-md-9': showGrids == true,
+            'col-md-11': showGrids == false
+          }"
+        >
+          <kendo-tabstrip>
+            <kendo-tabstrip-tab title="Documents" selected="true">
+              <ng-template kendoTabContent>
+                <app-rcm-encounter-documents
+                  #RcmDocumentComponent
+                ></app-rcm-encounter-documents>
+              </ng-template>
+            </kendo-tabstrip-tab>
+            <kendo-tabstrip-tab title="Document Notes"
+              ><ng-template kendoTabContent>
+                <div style="height: 91vh;">
+                  <app-document-history></app-document-history>
+                </div>
+              </ng-template>
+            </kendo-tabstrip-tab>
+          </kendo-tabstrip>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="black-box" *ngIf="masterLoader">
+  <div class="k-i-loading"></div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="moveDocumentsModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+  *ngIf="vwMoveDocumentsBtn"
+>
+  <div class="modal-dialog modal-xl">
+    <app-move-rcm-documents
+      #moveDocuments
+      (onSaveMoveDocuments)="onMoveOrDeleteDocuments($event)"
+    ></app-move-rcm-documents>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deleteDocumentsModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+  *ngIf="vwDeleteDocumentsBtn"
+>
+  <div class="modal-dialog modal-lg">
+    <app-delete-rcmdocs
+      #deleteDocuments
+      (onDeleteDocs)="onMoveOrDeleteDocuments($event)"
+    ></app-delete-rcmdocs>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="importDocumentsModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+  *ngIf="vwImportDocumentsBtn"
+>
+  <div class="modal-dialog modal-lg">
+    <app-import-documents
+      #importDocuments
+      (onSubmitDocuments)="onSubmitDocuments($event)"
+    ></app-import-documents>
+  </div>
+</div>
+<!-- report modal -->
+<div
+  *ngIf="vwImportDocumentsBtn"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="docStatusReport"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <app-status-report [title]="'Import Documents Status Report'"></app-status-report>
+</div>
+<!-- report modal -->

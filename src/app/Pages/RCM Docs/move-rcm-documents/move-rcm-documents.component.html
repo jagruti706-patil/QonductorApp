@@ -1,0 +1,239 @@
+<div class="modal-content">
+  <!-- [ngClass]="{
+  'pointer-evt-none': loader || checkConfirmationModalOpen() == true
+}" -->
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title">
+      Move Documents
+    </h5>
+    <button
+      type="button"
+      class="close p-0 m-0"
+      (click)="onClose()"
+      data-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="MoveDocumentsFormGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="" class="form-label"
+              ><strong class="text-danger">*</strong>Client</label
+            >
+            <kendo-dropdownlist
+              class="w-100"
+              [data]="lstEncounterClients"
+              formControlName="fcEncounterClient"
+              textField="clientcodename"
+              [valuePrimitive]="true"
+              valueField="nclientid"
+              (selectionChange)="clientChanged($event)"
+              filterable="true"
+              (filterChange)="handleClientFilter($event)"
+              [ngClass]="{
+                disableFilters:
+                  lstEncounterClients && lstEncounterClients.length == 1
+              }"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="!!fbcEncounterClient?.errors?.required">
+              <small class="text-danger">Client is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 text-right"></div>
+        <div
+          class="col-md-6"
+          *ngFor="let item of [{ filter: 1 }, { filter: 2 }]"
+        >
+          <div class="card mb-0">
+            <div class="row pl-2 pt-2 pr-2">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="" class="form-label"
+                    ><strong class="text-danger">*</strong>Year/Cabinet</label
+                  >
+                  <kendo-dropdownlist
+                    class="w-100"
+                    [data]="this['years_'+item.filter]"
+                    formControlName="fcYear_{{ item.filter }}"
+                    textField="year"
+                    [valuePrimitive]="true"
+                    valueField="year"
+                    (selectionChange)="yearChanged($event, item.filter)"
+                  >
+                  </kendo-dropdownlist>
+                  <div
+                    [ngClass]="{'invisible':!this['fbcYear_'+item.filter]?.errors?.required}"
+                  >
+                    <small class="text-danger">Year is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="" class="form-label"
+                    ><strong class="text-danger">*</strong>Month</label
+                  >
+                  <kendo-dropdownlist
+                    class="w-100"
+                    [data]="months"
+                    formControlName="fcMonth_{{ item.filter }}"
+                    textField="displayname"
+                    [valuePrimitive]="true"
+                    valueField="month"
+                    [defaultItem]="monthDefaultValue"
+                    (selectionChange)="monthChanged($event, item.filter)"
+                  >
+                  </kendo-dropdownlist>
+                  <div
+                    [ngClass]="{'invisible':!this['fbcMonth_'+item.filter]?.errors?.required}"
+                  >
+                    <small class="text-danger">Month is required</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group mb-0">
+                  <label for="" class="form-label"
+                    ><strong class="text-danger">*</strong>Category</label
+                  >
+                  <kendo-dropdownlist
+                    class="w-100"
+                    [data]="this['categories_'+item.filter]"
+                    formControlName="fcCategory_{{ item.filter }}"
+                    textField="category"
+                    [valuePrimitive]="true"
+                    valueField="category"
+                    (selectionChange)="categoryChanged($event, item.filter)"
+                    filterable="true"
+                    (filterChange)="handleCategoryFilter($event, item.filter)"
+                  >
+                  </kendo-dropdownlist>
+                  <div
+                    [ngClass]="{'invisible':!this['fbcCategory_'+item.filter]?.errors?.required}"
+                  >
+                    <small class="text-danger">Category is required</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr class="mb-0" />
+            <div class="card-body p-2">
+              <input
+                type="text"
+                kendoTextBox
+                style="border-radius: 5px;"
+                class="w-100 mb-2"
+                formControlName="fcSearchByDoc_{{ item.filter }}"
+                placeholder="Search by document"
+              />
+              <ul
+                class="list-group o-auto"
+                [dragula]="'drag-bag'"
+                id="side{{ item.filter }}"
+                [(dragulaModel)]="this['documentList_'+item.filter]"
+                [ngClass]="{
+                  'pointer-evt-none':
+                    this.fbcCategory_1.value == this.fbcCategory_2.value
+                }"
+              >
+                <li
+                  class="list-group-item p-2 grab"
+                  [ngClass]="{ 'bg-green text-white': ele.ismoved == true }"
+                  *ngFor="let ele of this['documentList_'+item.filter]"
+                >
+                  <!-- ele.category!=this['fbcCategory_'+item.filter]?.value -->
+                  <div class="float-left">
+                    <span class="d-block">{{ ele.documentname }}</span>
+                  </div>
+                  <div class="float-right">
+                    <i class="fe fe-move" aria-hidden="true"></i>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <!-- <span class="alert alert-warning p-0 mb-0 mr-auto"
+      >Drag & drop document name to move in between categories</span
+    > -->
+    <small class="mr-auto"
+    ><b>*Note</b>: Drag & drop document name to move in between categories
+  </small>
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="onClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="onSaveClick()"
+      [ngClass]="{ readonlybtn: this.saveJsonArray.length == 0 }"
+      appNoDblClick
+    >
+      <!-- [class.readonlybtn]="true" -->
+      Save
+    </button>
+  </div>
+  <div class="black-box" *ngIf="loader">
+    <div class="k-i-loading"></div>
+  </div>
+  <!--Confirmation Modal -->
+  <div
+    class="modal fade"
+    data-backdrop="static"
+    data-keyboard="false"
+    id="confirmationModal"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content box-shadow">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="onCloseConfirmation()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          Moved documents will be discarded. Do you want to continue ?
+        </div>
+        <div class="modal-footer">
+          <ng-container>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              (click)="onCloseConfirmation()"
+            >
+              No
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="onYesClick()"
+            >
+              <!-- appNoDblClick -->
+              Yes
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Confirmation Modal -->
+</div>

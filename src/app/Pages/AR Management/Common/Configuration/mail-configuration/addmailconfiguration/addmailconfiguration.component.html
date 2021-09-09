@@ -1,0 +1,379 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h4
+      class="modal-title mb-0"
+      id="exampleModalLabel"
+      *ngIf="newMailConfiguration"
+    >
+      Add Mail Configuration
+    </h4>
+    <h4
+      class="modal-title mb-0"
+      id="exampleModalLabel"
+      *ngIf="!newMailConfiguration"
+    >
+      Update Mail Configuration
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="AddMailConfigurationGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header p-2 pl-3">
+              <h5 class="mb-0">From</h5>
+            </div>
+            <div class="card-body p-2">
+              <div class="form-group">
+                <label class="form-label"
+                  ><span class="text-danger">* </span>Username</label
+                >
+                <div class="">
+                  <input
+                    kendoTextBox
+                    [class.is-invalid]="
+                      fbcUsername.invalid && fbcUsername.touched
+                    "
+                    type="text"
+                    id="Username"
+                    class="form-control form-control-sm w-100"
+                    hidden
+                  />
+                  <input
+                    kendoTextBox
+                    [class.is-invalid]="
+                      fbcUsername.invalid && fbcUsername.touched
+                    "
+                    formControlName="fcUsername"
+                    type="text"
+                    id="txtUsername"
+                    class="form-control form-control-sm w-100"
+                  />
+                  <div
+                    *ngIf="
+                      submitted || (fbcUsername.invalid && fbcUsername.touched)
+                    "
+                    class="text-danger"
+                  >
+                    <small
+                      *ngIf="fbcUsername.errors?.required"
+                      class="text-danger"
+                      >Username is required</small
+                    >
+                    <small
+                      *ngIf="fbcUsername.errors?.maxlength"
+                      class="text-danger"
+                      >Username allows 50 characters</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  ><span class="text-danger">* </span>Password</label
+                >
+                <div class="">
+                  <input
+                    kendoTextBox
+                    [class.is-invalid]="
+                      fbcPassword.invalid && fbcPassword.touched
+                    "
+                    type="password"
+                    id="Password"
+                    class="form-control form-control-sm w-100"
+                    hidden
+                  />
+                  <input
+                    kendoTextBox
+                    [class.is-invalid]="
+                      fbcPassword.invalid && fbcPassword.touched
+                    "
+                    formControlName="fcPassword"
+                    type="password"
+                    id="txtPassword"
+                    class="form-control form-control-sm w-100"
+                  />
+                  <div
+                    *ngIf="
+                      submitted || (fbcPassword.invalid && fbcPassword.touched)
+                    "
+                    class="text-danger"
+                  >
+                    <small *ngIf="fbcPassword.errors?.required"
+                      >Password is required.</small
+                    >
+                    <small *ngIf="fbcPassword.errors?.maxlength"
+                      >Password allows 50 characters</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="form-label"
+            ><span class="text-danger">* </span>Title</label
+          >
+          <div class="">
+            <input
+              *ngIf="newMailConfiguration"
+              kendoTextBox
+              [class.is-invalid]="fbcTitle.invalid && fbcTitle.touched"
+              formControlName="fcTitle"
+              type="text"
+              id="txttiltle"
+              class="form-control form-control-sm w-100"
+            />
+            <input
+              *ngIf="!newMailConfiguration"
+              kendoTextBox
+              [class.is-invalid]="fbcTitle.invalid && fbcTitle.touched"
+              formControlName="fcTitle"
+              type="text"
+              id="txttiltle"
+              class="form-control form-control-sm w-100"
+              readonly
+            />
+            <div *ngIf="submitted || (fbcTitle.invalid && fbcTitle.touched)">
+              <small *ngIf="fbcTitle.errors?.required" class="text-danger"
+                >Title is required</small
+              >
+              <small *ngIf="fbcTitle.errors?.maxlength" class="text-danger"
+                >Title allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="form-label"
+            ><span class="text-danger">* </span>To</label
+          >
+          <div class="">
+            <kendo-multiselect
+              [allowCustom]="true"
+              id="cmbAgent"
+              formControlName="fcTo"
+              [valueNormalizer]="fcToValueNormalizer"
+              [data]="Agentdetail"
+              [textField]="'username'"
+              [valueField]="'username'"
+              [valuePrimitive]="false"
+              [autoClose]="false"
+              (blur)="blurTo()"
+              [filterable]="true"
+              (filterChange)="handleFilter($event)"
+              #TO
+            >
+            </kendo-multiselect>
+            <div
+              *ngIf="submitted || (fbcTo.invalid && fbcTo.touched)"
+              class="text-danger"
+            >
+              <small *ngIf="fbcTo.errors?.required">To is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <label class="form-label">&nbsp;CC</label>
+          <div class="">
+            <kendo-multiselect
+              [allowCustom]="true"
+              id="cmbReasonCode"
+              formControlName="fcCC"
+              [valueNormalizer]="fcCCValueNormalizer"
+              [data]="Agentdetail"
+              [textField]="'username'"
+              [valueField]="'username'"
+              [valuePrimitive]="false"
+              [autoClose]="false"
+              (blur)="blurCc()"
+              [filterable]="true"
+              (filterChange)="handleFilter($event)"
+              #CC
+            >
+            </kendo-multiselect>
+          </div>
+        </div>
+        <div class="form-group col-md-12">
+          <div class="custom-control custom-checkbox">
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="sms"
+              formControlName="fcSendSMS"
+            />
+            <label class="custom-control-label" for="sms">Allow SMS</label>
+          </div>
+        </div>
+        <!-- <div class="card">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">*</strong>From
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">* </strong>Username</label
+                >
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="Username.invalid && Username.touched"
+                  type="text"
+                  id="Username"
+                  class="form-control form-control-sm"
+                  hidden
+                />
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="Username.invalid && Username.touched"
+                  formControlName="fcUsername"
+                  type="text"
+                  id="txtUsername"
+                  class="form-control form-control-sm"
+                />
+                <div
+                  *ngIf="submitted || (Username.invalid && Username.touched)"
+                  class="text-danger"
+                >
+                  <small *ngIf="Username.errors?.required" class="text-danger"
+                    >Username is required</small
+                  >
+                  <small *ngIf="Username.errors?.maxlength" class="text-danger"
+                    >Username allows 50 characters</small
+                  >
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">* </strong>Password</label
+                >
+
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="Password.invalid && Password.touched"
+                  type="password"
+                  id="Password"
+                  class="form-control form-control-sm"
+                  hidden
+                />
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="Password.invalid && Password.touched"
+                  formControlName="fcPassword"
+                  type="password"
+                  id="txtPassword"
+                  class="form-control form-control-sm"
+                />
+                <div
+                  *ngIf="submitted || (Password.invalid && Password.touched)"
+                  class="text-danger"
+                >
+                  <small *ngIf="Password.errors?.required"
+                    >Password is required.</small
+                  >
+                  <small *ngIf="Password.errors?.maxlength"
+                    >Password allows 50 characters</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!-- <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Title
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="Title.invalid && Title.touched"
+              formControlName="fcTitle"
+              type="text"
+              id="txttiltle"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (Title.invalid && Title.touched)">
+              <small *ngIf="Title.errors?.required" class="text-danger"
+                >Title is required</small
+              >
+              <small *ngIf="Title.errors?.maxlength" class="text-danger"
+                >Title allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label"
+            ><strong class="text-danger">* </strong>To</label
+          >
+          <kendo-multiselect
+            id="cmbReasonCode"
+            formControlName="fcTo"
+            [data]="Agentdetail"
+            [textField]="'displayname'"
+            [valueField]="'ngcpuserid'"
+            [valuePrimitive]="true"
+            [autoClose]="false"
+          >
+          </kendo-multiselect>
+          <div
+            *ngIf="submitted || (To.invalid && To.touched)"
+            class="text-danger"
+          >
+            <small *ngIf="To.errors?.required">To is required</small>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label"
+            ><strong class="text-danger">* </strong>CC</label
+          >
+          <kendo-multiselect
+            id="cmbReasonCode"
+            formControlName="fcCC"
+            [data]="Agentdetail"
+            [textField]="'displayname'"
+            [valueField]="'ngcpuserid'"
+            [valuePrimitive]="true"
+            [autoClose]="false"
+          >
+          </kendo-multiselect>
+        </div> -->
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddMailConfiguration"
+      (click)="saveMailConfiguration()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingMailConfiguration">
+  <div class="k-i-loading"></div>
+</div>

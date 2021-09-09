@@ -1,0 +1,939 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-4">
+    <h4
+      class="modal-title mb-0"
+      id="exampleModalLabel"
+      *ngIf="newClientProviderMapping"
+    >
+      Add Practice Mapping
+    </h4>
+    <h4
+      class="modal-title mb-0"
+      id="exampleModalLabel"
+      *ngIf="!newClientProviderMapping"
+    >
+      Update Practice Mapping
+    </h4>
+    <button
+      type="button"
+      class="close p-0 m-0"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body p-2" style="max-height: 100vh">
+    <kendo-tabstrip
+      style="height: 78vh"
+      #kendoTabstripTab
+      (tabSelect)="tabChange($event)"
+    >
+      <kendo-tabstrip-tab title="Practice Configuration" selected="true">
+        <ng-template kendoTabContent>
+          <form [formGroup]="addEditClientProviderMappingForm">
+            <div class="card">
+              <div class="card-header bg-light p-2">
+                <h6 class="mb-0">Practice Information</h6>
+              </div>
+              <div class="card-body p-2">
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label"
+                        ><strong class="text-danger">*</strong>Practice
+                        Code</label
+                      >
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcClientCode"
+                      />
+                      <div
+                        *ngIf="
+                          (fbcClientCode.touched || submitted) &&
+                          fbcClientCode.invalid
+                        "
+                      >
+                        <small
+                          *ngIf="!!fbcClientCode.errors?.required"
+                          class="text-danger"
+                          >Practice Code is required</small
+                        >
+                        <small
+                          *ngIf="
+                            fbcClientCode.value &&
+                            !!fbcClientCode.hasError('whitespace')
+                          "
+                          class="text-danger"
+                          >Please enter valid practice code</small
+                        >
+                        <small
+                          *ngIf="
+                            fbcClientCode.value &&
+                            !!fbcClientCode.hasError('duplicate')
+                          "
+                          class="text-danger"
+                          >This practice code is already taken</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">UPIN</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcUPIN"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">NPI</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcNPI"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label"
+                        ><strong class="text-danger">*</strong>Practice
+                        Name</label
+                      >
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcClientName"
+                      />
+                      <div
+                        *ngIf="
+                          (fbcClientName.touched || submitted) &&
+                          fbcClientName.invalid
+                        "
+                      >
+                        <small
+                          *ngIf="!!fbcClientName.errors?.required"
+                          class="text-danger"
+                          >Practice Name is required</small
+                        >
+                        <small
+                          *ngIf="
+                            !fbcClientName.errors?.required &&
+                            !!fbcClientName.hasError('whitespace')
+                          "
+                          class="text-danger"
+                          >Please enter valid practice name</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Lookup</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcLookup"
+                      />
+                    </div>
+                  </div>
+                  <!-- <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Contact Name</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcContactName"
+                      />
+                    </div>
+                  </div> -->
+                  <!-- <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Contact Email</label>
+                      <input
+                        type="email"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcContactEmail"
+                      />
+                      <div
+                        *ngIf="
+                          (fbcContactEmail.touched ||
+                            !newClientProviderMapping) &&
+                          fbcContactEmail.invalid
+                        "
+                      >
+                        <small
+                          *ngIf="!!fbcContactEmail.errors?.email"
+                          class="text-danger"
+                          >Please enter valid email</small
+                        >
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Phone 1</label>
+                      <!-- <input
+                  type="text"
+                  kendoTextBox
+                  class="form-control form-control-sm"
+                  formControlName="fcPhone1"
+                /> -->
+                      <kendo-maskedtextbox
+                        class="form-control form-control-sm"
+                        [mask]="mask"
+                        formControlName="fcPhone1"
+                      >
+                      </kendo-maskedtextbox>
+                      <div
+                        *ngIf="
+                          (fbcPhone1.touched || !newClientProviderMapping) &&
+                          fbcPhone1.invalid
+                        "
+                      >
+                        <small *ngIf="!!fbcPhone1.errors" class="text-danger"
+                          >Please enter valid phone 1</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Phone 2</label>
+                      <!-- <input
+                  type="text"
+                  kendoTextBox
+                  class="form-control form-control-sm"
+                  formControlName="fcPhone2"
+                /> -->
+                      <kendo-maskedtextbox
+                        class="form-control form-control-sm"
+                        [mask]="mask"
+                        formControlName="fcPhone2"
+                      >
+                      </kendo-maskedtextbox>
+                      <div
+                        *ngIf="
+                          (fbcPhone2.touched || !newClientProviderMapping) &&
+                          fbcPhone2.invalid
+                        "
+                      >
+                        <small *ngIf="!!fbcPhone2.errors" class="text-danger"
+                          >Please enter valid phone 2</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Address 1</label>
+                      <textarea
+                        style="resize: none"
+                        kendoTextArea
+                        class="form-control form-control-sm w-100"
+                        formControlName="fcAddress1"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Address 2</label>
+                      <textarea
+                        style="resize: none"
+                        kendoTextArea
+                        class="form-control form-control-sm w-100"
+                        formControlName="fcAddress2"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">City</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcCity"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">State</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcState"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">Zip</label>
+                      <input
+                        type="text"
+                        kendoTextBox
+                        class="form-control form-control-sm"
+                        formControlName="fcZip"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header bg-light p-2">
+                <h6 class="mb-0">Group Information</h6>
+              </div>
+              <div class="card-body p-1">
+                <div class="row">
+                  <div class="col-md-10 pb-0">
+                    <div class="form-group mb-0">
+                      <!-- <label class="form-label"
+                  ><strong class="text-danger">*</strong>Group</label
+                > -->
+                      <kendo-multiselect
+                        id="cmbGroup"
+                        formControlName="fcGroup"
+                        [data]="groups"
+                        [textField]="'groupname'"
+                        [valueField]="'groupid'"
+                        [valuePrimitive]="false"
+                        [autoClose]="false"
+                        [filterable]="true"
+                        (filterChange)="handleGroupFilter($event)"
+                      >
+                      </kendo-multiselect>
+                      <label class="small text-muted p-0"
+                        >Add or remove group will change mail configuration.
+                        Please verify mail configuration before save.</label
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-2">
+                    <button
+                      type="button"
+                      kendoButton
+                      [primary]="true"
+                      (click)="assignGroups()"
+                    >
+                      Assign
+                    </button>
+                  </div>
+                  <div class="col-md-12">
+                    <ul
+                      style="
+                        list-style: square;
+                        height: 8vh;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                      "
+                    >
+                      <li *ngFor="let item of assignGroupsArray">
+                        {{ item.groupname }}
+                      </li>
+                    </ul>
+                    <!-- <div *ngIf="submitted && assignGroupsArray.length === 0">
+                <small class="text-danger">Group is required</small>
+              </div> -->
+                  </div>
+                </div>
+                <div *ngIf="validateGroupLoader" class="k-i-loading"></div>
+              </div>
+            </div>
+          </form>
+        </ng-template>
+      </kendo-tabstrip-tab>
+      <kendo-tabstrip-tab>
+        <ng-template kendoTabTitle>
+          Provider Configuration<span
+            class="custom-badge pt-0 pb-0 pl-2 pr-2 ml-1"
+            >{{ providersGridData.length }}</span
+          >
+        </ng-template>
+        <ng-template kendoTabContent>
+          <div class="card">
+            <div class="card-header bg-light pt-1 pb-1 pl-2 pr-2">
+              <h6 class="mb-0">
+                Providers Information (Total: {{ providersGridData.length }})
+              </h6>
+              <button
+                type="button"
+                class="ml-auto btn btn-sm btn-kendo"
+                (click)="newProvider = true"
+                data-toggle="modal"
+                data-target="#addEditProviderModal"
+              >
+                Add
+              </button>
+            </div>
+            <div class="card-body p-2">
+              <!-- <label class="form-label"
+          ><strong class="text-danger">*</strong>Provider</label
+        > -->
+              <kendo-grid
+                class="w-100"
+                style="max-height: 64vh"
+                [data]="providersGridView"
+                (edit)="onEditProvider($event)"
+                [sortable]="true"
+                [sort]="providersort"
+                (sortChange)="providerSortChange($event)"
+              >
+                <kendo-grid-column
+                  field="code"
+                  title="Code"
+                  width="10"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                </kendo-grid-column>
+                <kendo-grid-column
+                  field="npi"
+                  title="NPI"
+                  width="15"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                </kendo-grid-column>
+                <kendo-grid-column
+                  field="upin"
+                  title="UPIN"
+                  width="15"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                </kendo-grid-column>
+                <kendo-grid-column
+                  field="name"
+                  title="Name"
+                  width="30"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                </kendo-grid-column>
+
+                <kendo-grid-column
+                  field="lookup"
+                  title="Lookup"
+                  width="30"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                </kendo-grid-column>
+                <kendo-grid-column
+                  field="status"
+                  title="Status"
+                  width="15"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    <div *ngIf="dataItem.status == true" class="text-success">
+                      Active
+                    </div>
+                    <div *ngIf="dataItem.status == false" class="text-danger">
+                      Inactive
+                    </div>
+                  </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-command-column
+                  title="Action"
+                  width="20"
+                  [headerStyle]="{ 'font-weight': 'bold' }"
+                >
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                    <button
+                      kendoGridEditCommand
+                      [primary]="true"
+                      title="Edit"
+                      data-toggle="modal"
+                      data-target="#addEditProviderModal"
+                    >
+                      <i class="fe fe-edit-2"></i>
+                    </button>
+                    <ng-container *ngIf="dataItem.providerid">
+                      <button
+                        *ngIf="dataItem.status == false"
+                        data-toggle="modal"
+                        data-target=".bd-example-modal-lg"
+                        class="k-button"
+                        title="Activate"
+                        (click)="onUpdateStatus(dataItem)"
+                      >
+                        <i class="fe fe-zap"></i>
+                      </button>
+                      <button
+                        *ngIf="dataItem.status == true"
+                        class="k-button"
+                        data-toggle="modal"
+                        data-target=".bd-example-modal-lg"
+                        title="Deactivate"
+                        (click)="onUpdateStatus(dataItem)"
+                      >
+                        <i class="fe fe-zap-off"></i>
+                      </button>
+                    </ng-container>
+                  </ng-template>
+                </kendo-grid-command-column>
+              </kendo-grid>
+              <!-- <div *ngIf="submitted && providersGridData.length == 0">
+          <small class="text-danger"
+            >Please add atleast one provider information</small
+          >
+        </div> -->
+            </div>
+          </div>
+        </ng-template>
+      </kendo-tabstrip-tab>
+      <kendo-tabstrip-tab title="Mail Configuration">
+        <ng-template kendoTabContent>
+          <form [formGroup]="mailConfigForm">
+            <div class="row mb-2">
+              <div class="col-md-10">
+                <div class="form-group">
+                  <!-- <label class="form-label">UPIN</label> -->
+                  <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcCustomUser"
+                  />
+                  <div *ngIf="fbcCustomUser.invalid">
+                    <small
+                      *ngIf="!!fbcCustomUser.errors?.email"
+                      class="text-danger"
+                      >Please enter valid email</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <button
+                  type="button"
+                  kendoButton
+                  [primary]="true"
+                  (click)="onAddUser()"
+                  appNoDblClick
+                >
+                  Add
+                </button>
+              </div>
+            </div>
+          </form>
+          <div class="text-right text-muted">
+            {{ groupUsers ? groupUsers.length : 0 }} records found
+          </div>
+          <kendo-grid
+            class="w-100"
+            style="max-height: 65vh"
+            [data]="groupUsers"
+            [selectable]="groupUsersSelectableSettings"
+            [kendoGridSelectBy]="groupUsersSelectedCallback"
+            [selectedKeys]="groupUserSelected"
+            [sortable]="true"
+            [sort]="groupusersort"
+            (sortChange)="groupUserSortChange($event)"
+          >
+            <kendo-grid-checkbox-column width="8" showSelectAll="true">
+            </kendo-grid-checkbox-column>
+            <kendo-grid-column
+              field="firstname"
+              title="Name"
+              width="30"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{ dataItem.firstname }} {{ dataItem.lastname }}
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="email"
+              title="Email"
+              width="70"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+          </kendo-grid>
+          <div *ngIf="mailConfigLoader" class="k-i-loading"></div>
+        </ng-template>
+      </kendo-tabstrip-tab>
+    </kendo-tabstrip>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      [ngClass]="{
+        readonlybtn:
+          addEditClientProviderMappingForm.invalid || disableSavePracticeBtn
+      }"
+      (click)="onClientProviderMappingSave()"
+      class="btn btn-primary btn-sm"
+      data-dismiss="modal"
+      appNoDblClick
+    >
+      Save
+    </button>
+  </div>
+  <div class="black-box" *ngIf="loader">
+    <div class="k-i-loading"></div>
+  </div>
+
+  <div
+    class="modal fade"
+    data-backdrop="static"
+    data-keyboard="false"
+    id="addEditProviderModal"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-lg w-75">
+      <div class="modal-content box-shadow">
+        <div class="modal-header p-2">
+          <h5 class="modal-title mb-0" *ngIf="newProvider">
+            Add Provider Details
+          </h5>
+          <h5 class="modal-title mb-0" *ngIf="!newProvider">
+            Edit Provider Details
+          </h5>
+          <button
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="onProviderClose()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="providerGroup">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="d-flex form-group">
+                  <input
+                    kendoTextBox
+                    formControlName="fcSearchByNpi"
+                    type="text"
+                    id="SearchByNpi"
+                    class="w-100"
+                    title="Search by npi"
+                    placeholder="Search by npi"
+                    (keyup.enter)="onSearchByNpi()"
+                  />
+                  <button
+                    type="button"
+                    class="k-button"
+                    (click)="onSearchByNpi()"
+                  >
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-8"></div>
+              <div *ngIf="showProviderSearchGrid" class="col-md-12">
+                <kendo-grid
+                  class="w-100 mb-2"
+                  [data]="providersSearchGridView"
+                  [selectable]="providerSearchSelectableSetting"
+                  [kendoGridSelectBy]="providerSelectedCallback"
+                  [selectedKeys]="providerSelected"
+                  [sortable]="true"
+                  [sort]="providersearchsort"
+                  (sortChange)="providerSearchSortChange($event)"
+                  (selectionChange)="providerSelectionChange($event)"
+                >
+                  <kendo-grid-checkbox-column width="8">
+                  </kendo-grid-checkbox-column>
+                  <kendo-grid-column
+                    field="npi"
+                    title="NPI"
+                    width="15"
+                    [headerStyle]="{ 'font-weight': 'bold' }"
+                  >
+                  </kendo-grid-column>
+                  <kendo-grid-column
+                    field="fullname"
+                    title="Name"
+                    width="20"
+                    [headerStyle]="{ 'font-weight': 'bold' }"
+                  >
+                  </kendo-grid-column>
+                  <kendo-grid-column
+                    field="mailingaddress"
+                    title="Address"
+                    width="30"
+                    [headerStyle]="{ 'font-weight': 'bold' }"
+                  >
+                  </kendo-grid-column>
+                  <!-- <kendo-grid-column
+                    field="state"
+                    title="State"
+                    width="15"
+                    [headerStyle]="{ 'font-weight': 'bold' }"
+                  >
+                  </kendo-grid-column>
+                  <kendo-grid-column
+                    field="telephone"
+                    title="State"
+                    width="15"
+                    [headerStyle]="{ 'font-weight': 'bold' }"
+                  >
+                  </kendo-grid-column> -->
+                </kendo-grid>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label"
+                    ><strong class="text-danger">*</strong>Code</label
+                  >
+                  <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderCode"
+                  />
+                  <div
+                    *ngIf="
+                      (fbcProviderCode.touched || providerSubmitted) &&
+                      fbcProviderCode.invalid
+                    "
+                  >
+                    <small
+                      *ngIf="!!fbcProviderCode.errors?.required"
+                      class="text-danger"
+                      >Code is required</small
+                    >
+                    <small
+                      *ngIf="
+                        fbcProviderCode.value &&
+                        !!fbcProviderCode.hasError('whitespace')
+                      "
+                      class="text-danger"
+                      >Please enter valid code</small
+                    >
+                    <small
+                      *ngIf="
+                        fbcProviderCode.value &&
+                        !!fbcProviderCode.hasError('duplicate')
+                      "
+                      class="text-danger"
+                      >This provider code is already taken</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label"
+                    ><strong class="text-danger">*</strong>NPI</label
+                  >
+                  <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderNPI"
+                  />
+                  <div
+                    *ngIf="
+                      (fbcProviderNPI.touched || providerSubmitted) &&
+                      fbcProviderNPI.invalid
+                    "
+                  >
+                    <small
+                      *ngIf="!!fbcProviderNPI.errors?.required"
+                      class="text-danger"
+                      >NPI is required</small
+                    >
+                    <small
+                      *ngIf="
+                        !fbcProviderNPI.errors?.required &&
+                        !!fbcProviderNPI.hasError('whitespace')
+                      "
+                      class="text-danger"
+                      >Please enter valid npi</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label class="form-label">UPIN</label>
+                  <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderUPIN"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label"
+                    ><strong class="text-danger">*</strong>Name</label
+                  >
+                  <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderName"
+                  />
+                  <div
+                    *ngIf="
+                      (fbcProviderName.touched || providerSubmitted) &&
+                      fbcProviderName.invalid
+                    "
+                  >
+                    <small
+                      *ngIf="!!fbcProviderName.errors?.required"
+                      class="text-danger"
+                      >Name is required</small
+                    >
+                    <small
+                      *ngIf="
+                        !fbcProviderName.errors?.required &&
+                        !!fbcProviderName.hasError('whitespace')
+                      "
+                      class="text-danger"
+                      >Please enter valid name</small
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Lookup</label>
+                  <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderLookup"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Phone 1</label>
+                  <!-- <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderPhone1"
+                  /> -->
+                  <kendo-maskedtextbox
+                    class="form-control form-control-sm"
+                    [mask]="mask"
+                    formControlName="fcProviderPhone1"
+                  >
+                  </kendo-maskedtextbox>
+                  <div
+                    *ngIf="
+                      (fbcProviderPhone1.touched || !newProvider) &&
+                      fbcProviderPhone1.invalid
+                    "
+                  >
+                    <small
+                      *ngIf="!!fbcProviderPhone1.errors"
+                      class="text-danger"
+                      >Please enter valid phone 1</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Phone 2</label>
+                  <!-- <input
+                    type="text"
+                    kendoTextBox
+                    class="form-control form-control-sm"
+                    formControlName="fcProviderPhone2"
+                  /> -->
+                  <kendo-maskedtextbox
+                    class="form-control form-control-sm"
+                    [mask]="mask"
+                    formControlName="fcProviderPhone2"
+                  >
+                  </kendo-maskedtextbox>
+                  <div
+                    *ngIf="
+                      (fbcProviderPhone2.touched || !newProvider) &&
+                      fbcProviderPhone2.invalid
+                    "
+                  >
+                    <small
+                      *ngIf="!!fbcProviderPhone2.errors"
+                      class="text-danger"
+                      >Please enter valid phone 2</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary btn-sm"
+            (click)="onProviderClose()"
+          >
+            Close
+          </button>
+          <button
+            type="button"
+            [ngClass]="{
+              readonlybtn: providerGroup.invalid || disableAddProviderBtn
+            }"
+            class="btn btn-primary btn-sm"
+            (click)="addUpdateProvider()"
+            appNoDblClick
+          >
+            <ng-container *ngIf="newProvider">Add</ng-container>
+            <ng-container *ngIf="!newProvider">Update</ng-container>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Confirmation Model -->
+  <div
+    class="modal fade"
+    data-backdrop="static"
+    data-keyboard="false"
+    id="mailConfigConfirmation"
+    role="dialog"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <app-custom-confirmation
+        [ConfirmationTitle]="'Confirmation'"
+        [ConfirmationMessage]="
+          'Mail configuration not configured. Do you want to continue ?'
+        "
+        (OutputCustomConfirmation)="OutputConfirmationResult($event)"
+      >
+        <!--  -->
+      </app-custom-confirmation>
+    </div>
+  </div>
+  <!--Confirmation Model -->
+</div>

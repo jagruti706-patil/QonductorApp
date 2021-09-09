@@ -1,0 +1,1153 @@
+<div
+  *ngIf="
+    loginUserRoleID == 12 || loginUserRoleID == 15 || loginUserRoleID == 18 || loginUserRoleID == 19
+  "
+>
+  <form [formGroup]="DropDownGroup">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label"
+            ><strong class="text-danger">*</strong>Client
+          </label>
+          <kendo-dropdownlist
+            class="form-control"
+            formControlName="fcClientName"
+            id="ddClients"
+            [class.is-invalid]="fbcClientName.invalid && fbcClientName.touched"
+            [data]="lstClients"
+            textField="clientcodename"
+            valueField="nclientid"
+            [defaultItem]="ClientDefaultValue"
+            [valuePrimitive]="true"
+          >
+          </kendo-dropdownlist>
+          <div *ngIf="fbcClientName.invalid && fbcClientName.touched">
+            <small *ngIf="fbcClientName.errors?.required" class="text-danger"
+              >Client is required</small
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-6 " hidden>
+        <div class="form-group">
+          <label class="form-label"><strong class="text-danger">*</strong>Status </label>
+          <kendo-dropdownlist class="form-control form-control-sm" formControlName="fcMasterStatus" id="ddMasterStatus"
+            [class.is-invalid]="fbcMasterStatus.invalid && fbcMasterStatus.touched" textField="text" valueField="text" [data]="View"
+            [valuePrimitive]="true"  [defaultItem]="ViewDefaultValue"> 
+          </kendo-dropdownlist>
+          <div *ngIf="fbcMasterStatus.invalid && fbcMasterStatus.touched">
+            <small *ngIf="fbcMasterStatus.errors?.required" class="text-danger">Status is required</small>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </form>
+</div>
+<!-- RCM OPS Manager -->
+<div *ngIf="loginUserRoleID == 12">
+  <!-- <div class="row row-cards">
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-green">
+            6%
+            <i class="fe fe-chevron-up"></i>
+          </div>
+          <div class="h1 m-0">43</div>
+          <div class="text-muted mb-4">Work Items</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-red">
+            -3%
+            <i class="fe fe-chevron-down"></i>
+          </div>
+          <div class="h1 m-0">$17</div>
+          <div class="text-muted mb-4">Total AR</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-green">
+            Total: 10
+          </div>
+          <div class="h1 m-0">7</div>
+          <div class="text-muted mb-4">Agents</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-green">
+            3%
+            
+            <i class="fe fe-chevron-up"></i>
+          </div>
+          <div class="h1 m-0">27</div>
+          <div class="text-muted mb-4">Average Productivity/wk</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-red">
+            -2%
+            <i class="fe fe-chevron-down"></i>
+          </div>
+          <div class="h1 m-0">95</div>
+          <div class="text-muted mb-4">Pending Task</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-red">
+            -1%
+            <i class="fe fe-chevron-down"></i>
+          </div>
+          <div class="h1 m-0">$2</div>
+          <div class="text-muted mb-4">Closed AR</div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-blue mr-3">
+            <i class="fa fa-institution"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_WorkItem }}</h4>
+            <small class="text-muted">Work Items</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-green mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_TotalAR }}</h4>
+            <small class="text-muted">Total AR</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fa fa-institution"></i>
+          </span>
+          <div>
+            <h4 class="m-0">
+              {{ MGR_UntouchWorkItem }}
+            </h4>
+            <small class="text-muted">Untouched Work Items</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fe fe-pie-chart"></i>
+          </span>
+          <div>
+            <h4 class="m-0">
+              {{ MGR_AvgProd }}
+            </h4>
+            <!--  compare last week productivity with last before week productivity task-->
+            <small class="text-muted">Average Productivity/day</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-orange mr-3">
+            <i class="fa fa-tasks"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_PendingTask }}</h4>
+            <small class="text-muted">Pending Tasks</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-green mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_NegetiveWorkItemCount }}</h4>
+            <small class="text-muted">Negative Work Items Count</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fa fa-tasks"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_OverdueTask }}</h4>
+            <small class="text-muted">Overdue Task</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_HighPriorityAR }}</h4>
+            <small class="text-muted">High Priority AR</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- RCM OPS Manager -->
+<!-- AR Representative -->
+<div *ngIf="loginUserRoleID == 13">
+    <div class="row row-cards">
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_TodayAssignedTask }}</div>
+              <!-- Todays assign task -->
+              <div class="text-muted mb-2">Today Assinged Tasks</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_TodayTotalAR }}</div>
+              <div class="text-muted mb-2">Today Total AR</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_PendingTask }}</div>
+              <!-- Total Pending task -->
+              <div class="text-muted mb-2">Pending Tasks</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_PendingTaskAR }}</div>
+              <!-- daily completed task -->
+              <div class="text-muted mb-2">Pending Total AR</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_OverdueTask }}</div>
+              <div class="text-muted mb-2">Overdue Task</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_HighPriorityAR }}</div>
+              <div class="text-muted mb-2">High Priority Task AR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- AR Representative -->
+<!-- System Admin -->
+<div *ngIf="loginUserRoleID == 18">
+  <!-- <div class="row row-cards">
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-green">
+            6%
+            <i class="fe fe-chevron-up"></i>
+          </div>
+          <div class="h1 m-0">{{ MGR_WorkItem }}</div>
+          <div class="text-muted mb-4">Work Items</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-red">
+            -3%
+            <i class="fe fe-chevron-down"></i>
+          </div>
+          <div class="h1 m-0">{{ MGR_TotalAR }}</div>
+          <div class="text-muted mb-4">Total AR</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-green">
+            Total: 10
+          </div>
+          <div class="h1 m-0">{{ MGR_Agents }}</div>
+          <div class="text-muted mb-4">Agents</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-green">
+            3%
+            <i class="fe fe-chevron-up"></i>
+          </div>
+          <div class="h1 m-0">{{ MGR_AvgProd }}</div>
+          <div class="text-muted mb-4">Average Productivity/wk</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-red">
+            -2%
+            <i class="fe fe-chevron-down"></i>
+          </div>
+          <div class="h1 m-0">{{ MGR_PendingTask }}</div>
+          <div class="text-muted mb-4">Pending Task</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6 col-sm-4 col-lg-2">
+      <div class="card">
+        <div class="card-body p-3 text-center">
+          <div class="text-right text-red">
+            -1%
+            <i class="fe fe-chevron-down"></i>
+          </div>
+          <div class="h1 m-0">{{ MGR_NegetiveWorkItemCount }}</div>
+          <div class="text-muted mb-4">Closed AR</div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-blue mr-3">
+            <i class="fa fa-institution"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_WorkItem }}</h4>
+            <small class="text-muted">Work Items</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-green mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_TotalAR }}</h4>
+            <small class="text-muted">Total AR</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fa fa-institution"></i>
+          </span>
+          <div>
+            <h4 class="m-0">
+              {{ MGR_UntouchWorkItem }}
+            </h4>
+            <small class="text-muted">Untouched Work Items</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fe fe-pie-chart"></i>
+          </span>
+          <div>
+            <h4 class="m-0">
+              {{ MGR_AvgProd }}
+            </h4>
+            <!--  compare last week productivity with last before week productivity task-->
+            <small class="text-muted">Average Productivity/day</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-orange mr-3">
+            <i class="fa fa-tasks"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_PendingTask }}</h4>
+            <small class="text-muted">Pending Tasks</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-green mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_NegetiveWorkItemCount }}</h4>
+            <small class="text-muted">Negative Work Items Count</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fa fa-tasks"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_OverdueTask }}</h4>
+            <small class="text-muted">Overdue Task</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_HighPriorityAR }}</h4>
+            <small class="text-muted">High Priority AR</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-md-12">
+      <kendo-grid
+        id="gridActions"
+        [data]="agingbucket"
+        style="width:99%"
+        [height]="60"
+        [pageable]="false"
+        [sortable]="false"
+      >
+        <kendo-grid-column
+          field="bucket1"
+          title="0-15"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket2"
+          title="16-30"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket3"
+          title="31-60"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket4"
+          title="61-90"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket5"
+          title="91-120"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket6"
+          title="121-180"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bucket7"
+          title="180+"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bolder' }"
+        >
+        </kendo-grid-column>
+      </kendo-grid>
+    </div> -->
+
+    
+  </div>
+</div>
+<!-- System Admin -->
+<!-- AR Auditor/QA -->
+<div *ngIf="loginUserRoleID == 17">
+    <div class="row row-cards">
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_TodayAssignedTask }}</div>
+              <!-- Todays assign task -->
+              <div class="text-muted mb-2">Today Assinged Tasks</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_TodayTotalAR }}</div>
+              <div class="text-muted mb-2">Today Total AR</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_PendingTask }}</div>
+              <!-- Total Pending task -->
+              <div class="text-muted mb-2">Pending Tasks</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_PendingTaskAR }}</div>
+              <!-- daily completed task -->
+              <div class="text-muted mb-2">Pending Total AR</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_OverdueTask }}</div>
+              <div class="text-muted mb-2">Overdue Task</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_HighPriorityAR }}</div>
+              <div class="text-muted mb-2">High Priority Task AR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- AR Auditor/QA -->
+<!-- AR Manager -->
+<div *ngIf="loginUserRoleID == 19">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-blue mr-3">
+            <i class="fa fa-institution"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_WorkItem }}</h4>
+            <small class="text-muted">Work Items</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-green mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_TotalAR }}</h4>
+            <small class="text-muted">Total AR</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fa fa-institution"></i>
+          </span>
+          <div>
+            <h4 class="m-0">
+              {{ MGR_UntouchWorkItem }}
+            </h4>
+            <small class="text-muted">Untouched Work Items</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fe fe-pie-chart"></i>
+          </span>
+          <div>
+            <h4 class="m-0">
+              {{ MGR_AvgProd }}
+            </h4>
+            <!--  compare last week productivity with last before week productivity task-->
+            <small class="text-muted">Average Productivity/day</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-orange mr-3">
+            <i class="fa fa-tasks"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_PendingTask }}</h4>
+            <small class="text-muted">Pending Tasks</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp bg-green mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_NegetiveWorkItemCount }}</h4>
+            <small class="text-muted">Negative Work Items Count</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fa fa-tasks"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_OverdueTask }}</h4>
+            <small class="text-muted">Overdue Task</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-3">
+      <div class="card p-3">
+        <div class="d-flex align-items-center">
+          <span class="stamp  bg-red mr-3">
+            <i class="fe fe-dollar-sign"></i>
+          </span>
+          <div>
+            <h4 class="m-0">{{ MGR_HighPriorityAR }}</h4>
+            <small class="text-muted">High Priority AR</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- AR Manager -->
+<!-- RCM Performance Manager -->
+<div *ngIf="loginUserRoleID == 15">
+    <div class="row">
+        <div class="col-sm-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp bg-blue mr-3">
+                <i class="fa fa-institution"></i>
+              </span>
+              <div>
+                <h4 class="m-0">{{ MGR_WorkItem }}</h4>
+                <small class="text-muted">Work Items</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp bg-green mr-3">
+                <i class="fe fe-dollar-sign"></i>
+              </span>
+              <div>
+                <h4 class="m-0">{{ MGR_TotalAR }}</h4>
+                <small class="text-muted">Total AR</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp  bg-red mr-3">
+                <i class="fa fa-institution"></i>
+              </span>
+              <div>
+                <h4 class="m-0">
+                  {{ MGR_UntouchWorkItem }}
+                </h4>
+                <small class="text-muted">Untouched Work Items</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp  bg-red mr-3">
+                <i class="fe fe-pie-chart"></i>
+              </span>
+              <div>
+                <h4 class="m-0">
+                  {{ MGR_AvgProd }}
+                </h4>
+                <!--  compare last week productivity with last before week productivity task-->
+                <small class="text-muted">Average Productivity/day</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp bg-orange mr-3">
+                <i class="fa fa-tasks"></i>
+              </span>
+              <div>
+                <h4 class="m-0">{{ MGR_PendingTask }}</h4>
+                <small class="text-muted">Pending Tasks</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp bg-green mr-3">
+                <i class="fe fe-dollar-sign"></i>
+              </span>
+              <div>
+                <h4 class="m-0">{{ MGR_NegetiveWorkItemCount }}</h4>
+                <small class="text-muted">Negative Work Items Count</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp  bg-red mr-3">
+                <i class="fa fa-tasks"></i>
+              </span>
+              <div>
+                <h4 class="m-0">{{ MGR_OverdueTask }}</h4>
+                <small class="text-muted">Overdue Task</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <div class="card p-3">
+            <div class="d-flex align-items-center">
+              <span class="stamp  bg-red mr-3">
+                <i class="fe fe-dollar-sign"></i>
+              </span>
+              <div>
+                <h4 class="m-0">{{ MGR_HighPriorityAR }}</h4>
+                <small class="text-muted">High Priority AR</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- RCM Performance Manager -->
+<!-- Client -->
+<div *ngIf="loginUserRoleID == 14">
+    <div class="row row-cards">
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_TodayAssignedTask }}</div>
+              <!-- Todays assign task -->
+              <div class="text-muted mb-2">Today Assinged Tasks</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_TodayTotalAR }}</div>
+              <div class="text-muted mb-2">Today Total AR</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_PendingTask }}</div>
+              <!-- Total Pending task -->
+              <div class="text-muted mb-2">Pending Tasks</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_PendingTaskAR }}</div>
+              <!-- daily completed task -->
+              <div class="text-muted mb-2">Pending Total AR</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_OverdueTask }}</div>
+              <div class="text-muted mb-2">Overdue Task</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4 col-lg-2">
+          <div class="card">
+            <div class="card-body p-3 text-center">
+              <div class="h4 m-0">{{ AR_HighPriorityAR }}</div>
+              <div class="text-muted mb-2">High Priority Task AR</div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- Client -->
+<!-- Other Roles -->
+<div *ngIf="loginUserRoleID != 12 && loginUserRoleID != 13 && loginUserRoleID != 14 
+            && loginUserRoleID != 15 && loginUserRoleID != 17 && loginUserRoleID != 18
+            && loginUserRoleID != 19">
+  <div class="row row-cards">
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h4 m-0">{{ AR_TodayAssignedTask }}</div>
+            <!-- Todays assign task -->
+            <div class="text-muted mb-2">Today Assinged Tasks</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h4 m-0">{{ AR_TodayTotalAR }}</div>
+            <div class="text-muted mb-2">Today Total AR</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h4 m-0">{{ AR_PendingTask }}</div>
+            <!-- Total Pending task -->
+            <div class="text-muted mb-2">Pending Tasks</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h4 m-0">{{ AR_PendingTaskAR }}</div>
+            <!-- daily completed task -->
+            <div class="text-muted mb-2">Pending Total AR</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h4 m-0">{{ AR_OverdueTask }}</div>
+            <div class="text-muted mb-2">Overdue Task</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-lg-2">
+        <div class="card">
+          <div class="card-body p-3 text-center">
+            <div class="h4 m-0">{{ AR_HighPriorityAR }}</div>
+            <div class="text-muted mb-2">High Priority Task AR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<!-- Other Roles -->
+
+<div
+  *ngIf="
+    loginUserRoleID == 12 || loginUserRoleID == 15 || loginUserRoleID == 18 || loginUserRoleID == 19
+  "
+>
+
+  <div class="row">
+      <div class="col-md-12">
+          <div class="card">
+            <div class="card-status bg-cyan"></div>
+            <div class="card-header pl-2 border-0">
+              <h6 class="mb-0">Aging Bucket</h6>
+            </div>
+            <div class="table-responsive p-1">
+              <table class="table table-bordered mb-0 border-top">
+                <thead class="text-center">
+                  <th>0-15</th>
+                  <th>16-30</th>
+                  <th>31-60</th>
+                  <th>61-90</th>
+                  <th>91-120</th>
+                  <th>121-180</th>
+                  <th>180+</th>
+                </thead>
+                <tbody class="text-center font-weight-bold">
+                  <tr>
+                    <td>{{ MGR_bucket_1 }}</td>
+                    <td>{{ MGR_bucket_2 }}</td>
+                    <td>{{ MGR_bucket_3 }}</td>
+                    <td>{{ MGR_bucket_4 }}</td>
+                    <td>{{ MGR_bucket_5 }}</td>
+                    <td>{{ MGR_bucket_6 }}</td>
+                    <td>{{ MGR_bucket_7 }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card status">
+        <div class="card-status bg-info"></div>
+        <div class="card-header">
+          <h4 class="card-title mx-auto">Worked AR Status</h4>
+        </div>
+
+        <div class="card-body p-0 o-auto" style="height: 340px;">
+          <div
+            class="d-flex justify-content-between border-bottom"
+            *ngFor="let status of MGR_TopStatus"
+          >
+            <span class="p-1 pl-3" style="width: 80%;">{{
+              status.statusdescription
+            }}</span>
+            <span class="p-1 pr-3 text-info">{{ status.statuscount }}</span>
+          </div>
+        </div>
+        <!-- <div class="card-footer text-center text-gray">
+          <p class="mb-0">Top 10 records</p>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- <div class="col-sm-6 col-lg-3">
+      <div class="card">
+        <div class="card-status bg-green"></div>
+        <div class="card-body p-3">
+            <div class="card-category">Top 10 Status</div>
+            <kendo-grid [data]="lstTopStatus">
+                <kendo-grid-column field="text" title="" width="160" [headerStyle]="{'display': 'none'}">
+                </kendo-grid-column>
+                <kendo-grid-column field="value" title="" width="30" [headerStyle]="{'display': 'none'}">
+                  </kendo-grid-column>
+            </kendo-grid>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card status">
+        <div class="card-status bg-orange"></div>
+        <div class="card-header">
+          <h4 class="card-title mx-auto">Worked AR Action</h4>
+        </div>
+        <div class="card-body p-0 o-auto" style="height: 340px;">
+          <div
+            class="d-flex justify-content-between border-bottom"
+            *ngFor="let action of MGR_TopAction"
+          >
+            <span
+              *ngIf="action.actiondescription != null"
+              class="p-1 pl-3"
+              style="width: 80%;"
+              >{{ action.actiondescription }}</span
+            >
+            <span
+              *ngIf="action.actiondescription != null"
+              class="p-1 pr-3 text-warning"
+              >{{ action.actioncount }}</span
+            >
+          </div>
+        </div>
+
+        <!-- 
+        <div class="card-footer text-center text-gray">
+          <p class="mb-0">Top 10 records</p>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- <div class="col-sm-6 col-lg-3">
+        <div class="card">
+          <div class="card-status bg-green"></div>
+          <div class="card-body p-3">
+              <div class="card-category">Top 10 Action</div>
+              <kendo-grid [data]="lstTopAction">
+                  <kendo-grid-column field="text" title="" width="160" [headerStyle]="{'display': 'none'}">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="value" title="" width="30" [headerStyle]="{'display': 'none'}">
+                    </kendo-grid-column>
+              </kendo-grid>
+          </div>
+  
+        </div>
+      </div> -->
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card status">
+        <div class="card-status bg-teal"></div>
+        <div class="card-header">
+          <h4 class="card-title mx-auto">Payer by AR</h4>
+        </div>
+
+        <div class="card-body p-0 o-auto" style="height: 340px;">
+          <div
+            class="d-flex justify-content-between border-bottom"
+            *ngFor="let payer of MGR_TopPayerByAR"
+          >
+            <span class="p-1 pl-3" style="width: 75%;">{{
+              payer.payername
+            }}</span>
+            <span class="p-1 pr-3 text-teal">{{ payer.remainingbalance }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-sm-6 col-lg-3">
+          <div class="card">
+            <div class="card-status bg-green"></div>
+            <div class="card-body p-3">
+                <div class="card-category">Top 10 Payer by AR</div>
+                <kendo-grid [data]="lstTopPayer">
+                    <kendo-grid-column field="text" title="" width="100" [headerStyle]="{'display': 'none'}">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="value" title="" width="30" [headerStyle]="{'display': 'none'}">
+                      </kendo-grid-column>
+                </kendo-grid>
+            </div>
+    
+          </div>
+        </div> -->
+
+    <div class="col-sm-6 col-lg-3">
+      <div class="card status">
+        <div class="card-status bg-success"></div>
+        <div class="card-header">
+          <h4 class="card-title mx-auto">Client by AR</h4>
+        </div>
+
+        <div class="card-body p-0 o-auto" style="height: 340px;">
+          <div
+            class="d-flex justify-content-between border-bottom"
+            *ngFor="let client of MGR_TopClientByAR"
+          >
+            <span class="p-1 pl-3" style="width: 75%;">{{
+              client.sclientname
+            }}</span>
+            <span class="p-1 pr-3 text-green">{{
+              client.remainingbalance
+            }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="col-sm-6 col-lg-3">
+            <div class="card">
+              <div class="card-status bg-green"></div>
+              <div class="card-body p-3">
+                  <div class="card-category">Top 10 Client by AR</div>
+                  <kendo-grid [data]="lstTopClient">
+                      <kendo-grid-column field="text" title="" width="140" [headerStyle]="{'display': 'none'}">
+                      </kendo-grid-column>
+                      <kendo-grid-column field="value" title="" width="40" [headerStyle]="{'display': 'none'}">
+                        </kendo-grid-column>
+                  </kendo-grid>
+              </div>
+      
+            </div>
+          </div> -->
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingDashboard">
+  <div class="k-i-loading"></div>
+</div>

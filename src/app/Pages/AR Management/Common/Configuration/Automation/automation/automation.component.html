@@ -1,0 +1,141 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Automation Error</h4>
+    <div class="row ml-auto">
+      <button
+        class="ml-auto"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#addAutomationModal"
+        (click)="AddAutomation()"
+      >
+        Add Automation Error
+      </button>
+    </div>
+  </div>
+  <div class="card-body"  style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridAutomation"
+        [data]="AutomationgridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="AutomationpageSize"
+        [pageable]="true"
+        [skip]="Automationskip"
+        (pageChange)="pageChangeAutomation($event)"
+        [sortable]="true"
+        [sort]="Automationsort"
+        (sortChange)="sortAutomationChange($event)"
+        [selectable]="true"
+        (edit)="EditAutomation($event)"
+      >
+        <kendo-grid-column
+          field="sautomationerrordescription"
+          title="Description"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bisactive"
+          title="Status"
+          width="1"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bisactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.bisactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="1"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editAutomationconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnAutomationStatus(dataItem.nautomationerrorid, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnAutomationStatus(dataItem.nautomationerrorid, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.AutomationgridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Automation -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addAutomationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-add-automation
+      [InputAutomationEditid]="EditAutomationid"
+      (OutputAutomationEditResult)="OutputAutomationEditResult($event)"
+      #AddAutomationChild
+    >
+    </app-add-automation>
+  </div>
+</div>
+<!-- Add Automation -->
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editAutomationconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

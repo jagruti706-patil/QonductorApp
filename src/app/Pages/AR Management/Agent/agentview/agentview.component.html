@@ -1,0 +1,50 @@
+<div class="card">
+  <div class="card-header">
+    Code:  <strong>{{selectedAgent.code}}</strong>, Name:  <strong>{{selectedAgent.name}}</strong>
+  </div>
+  <div class="card-body">
+    <!-- <div class="row">
+      Code: {{selectedAgent.code}} Name: {{selectedAgent.name}}
+    </div> -->
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6 font-weight-bold text-right">Rating : </div>
+          <div class="col-md-6">
+            <ngb-rating [(rate)]="selectedAgent.Rating" style="margin-top: -9px;">
+                <ng-template let-fill="fill" let-index="index">
+                    <span class="star" [class.filled]="fill === 100" >&#9733;</span>
+                  </ng-template>
+            </ngb-rating>
+          </div>
+        </div>
+      </div>
+    <!-- </div>
+    <div class="row"> -->
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6 font-weight-bold text-right">Average : </div>
+          <div *ngIf= "selectedAgent.dailyaverage>0" class="col-md-6">{{selectedAgent.dailyaverage}} wi/day</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-6 font-weight-bold text-right">Week Availablity : </div>
+          <div *ngIf= "selectedAgent.weekavailibility>0" class="col-md-6">{{selectedAgent.weekavailibility*8}} hrs</div>
+        </div>
+      </div>
+    <!-- </div>
+    <div class="row"> -->
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold text-right">Pending Tasks : </div>
+            <div *ngIf= "selectedAgent.pendingtasks>0" class="col-md-6">{{selectedAgent.pendingtasks}}</div>
+            <div class="col-md-6" [class.alert-red]="selectedAgent.pendingtasks>0">{{selectedAgent.pendingtasks}}</div>
+          </div>
+        </div>
+      </div>
+
+  </div>
+</div>

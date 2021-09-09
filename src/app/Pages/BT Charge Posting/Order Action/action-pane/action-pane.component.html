@@ -1,0 +1,302 @@
+<form [formGroup]="OrderActionFormGroup">
+  <div class="card mt-0 mb-1">
+    <div
+      class="card-header pl-2 p-1 text-center"
+      style="background-color: #e5f2ff; color: #00274e; font-weight: 600"
+    >
+      Action
+    </div>
+    <div class="card-body p-2">
+      <div class="row">
+        <ng-container *ngIf="gcurrentTask?.nstatus != 16">
+          <div class="col-md-12">
+            <div class="form-group mb-1">
+              <label for="" class="form-label">
+                <span class="text-danger">*</span> Status
+              </label>
+              <kendo-dropdownlist
+                class="w-100"
+                formControlName="fcStatus"
+                id="cmbStatus"
+                [data]="
+                  encountersource == 'rcm encounter' ? rcmStatuses : orderStatus
+                "
+                textField="status"
+                valueField="statuscode"
+                [valuePrimitive]="true"
+                (selectionChange)="statusChanged($event)"
+              >
+              </kendo-dropdownlist>
+              <!-- <kendo-combobox
+              id="cmbStatus"
+              formControlName="fcStatus"
+              [data]="orderStatus"
+              [valuePrimitive]="true"
+              textField="status"
+              [filterable]="true"
+              (filterChange)="handleFilter($event)"
+              valueField="statuscode"
+              class="w-100"
+              (selectionChange)="statusChanged($event)"
+            >
+            </kendo-combobox> -->
+              <div
+                *ngIf="submitted || (fbcStatus.invalid && fbcStatus.touched)"
+              >
+                <small *ngIf="!!fbcStatus.errors?.required" class="text-danger"
+                  >Status is required</small
+                >
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="encountersource != 'rcm encounter'">
+            <div
+              class="col-md-12"
+              *ngIf="this.orderSubStatus && this.orderSubStatus.length > 0"
+            >
+              <div class="form-group mb-1">
+                <label for="" class="form-label">
+                  <span class="text-danger">*</span> Encounter Sub-Status
+                </label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  formControlName="fcSubStatus"
+                  [data]="orderSubStatus"
+                  textField="substatusname"
+                  valueField="substatusid"
+                  [valuePrimitive]="true"
+                >
+                </kendo-dropdownlist>
+                <div
+                  *ngIf="
+                    submitted || (fbcSubStatus.invalid && fbcSubStatus.touched)
+                  "
+                >
+                  <small
+                    *ngIf="!!fbcSubStatus.errors?.required"
+                    class="text-danger"
+                    >Sub-Status is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-md-12"
+              *ngIf="this.orderNotes && this.orderNotes.length > 0"
+            >
+              <div class="form-group mb-1">
+                <label for="" class="form-label"> Encounter Note </label>
+                <kendo-dropdownlist
+                  class="w-100"
+                  formControlName="fcOrderNote"
+                  [data]="orderNotes"
+                  textField="notetitle"
+                  valueField="ordernoteid"
+                  [valuePrimitive]="true"
+                  (selectionChange)="orderNoteChanged($event)"
+                >
+                </kendo-dropdownlist>
+                <!-- <div
+              *ngIf="
+                submitted || (fbcOrderNote.invalid && fbcOrderNote.touched)
+              "
+            >
+              <small *ngIf="!!fbcOrderNote.errors?.required" class="text-danger"
+                >Order Note is required</small
+              >
+            </div> -->
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group mb-1">
+                <label for="" class="form-label">
+                  <span
+                    *ngIf="
+                      fbcStatus.value == 2 ||
+                      fbcStatus.value == 4 ||
+                      fbcStatus.value == 7
+                    "
+                    class="text-danger"
+                    >*</span
+                  >
+                  Claim Reference #
+                </label>
+                <input
+                  kendoTextBox
+                  id="txtClaimReferenceNumber"
+                  formControlName="fcClaimReferenceNumber"
+                  type="text"
+                  class="w-100"
+                />
+                <div *ngIf="fbcClaimReferenceNumber.invalid">
+                  <small
+                    *ngIf="!!fbcClaimReferenceNumber.errors?.required"
+                    class="text-danger"
+                    >Claim Reference # is required</small
+                  >
+                  <small
+                    *ngIf="
+                      !fbcClaimReferenceNumber.errors?.required &&
+                      !!fbcClaimReferenceNumber.hasError('whitespace')
+                    "
+                    class="text-danger"
+                    >Please enter valid claim reference #</small
+                  >
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <div class="col-md-12">
+          <div class="form-group mb-1">
+            <label for="" class="form-label">
+              <span
+                *ngIf="
+                  fbcStatus.value == 7 ||
+                  (gcurrentTask?.nstatus == 16 &&
+                    this.encountersource == 'rcm encounter')
+                "
+                class="text-danger"
+                >*</span
+              >
+              Note
+            </label>
+            <textarea
+              id="txtActionNote"
+              formControlName="fcActionNote"
+              kendoTextArea
+              style="min-height: 20px !important"
+              class="w-100"
+              maxlength="1000"
+            ></textarea>
+            <div *ngIf="fbcActionNote.invalid">
+              <small
+                *ngIf="!!fbcActionNote.errors?.required"
+                class="text-danger"
+                >Note is required</small
+              >
+              <small
+                *ngIf="!!fbcActionNote.errors?.maxlength"
+                class="text-danger"
+                >Note allows 1000 characters</small
+              >
+              <small
+                *ngIf="
+                  !fbcActionNote.errors?.required &&
+                  !!fbcActionNote.hasError('whitespace')
+                "
+                class="text-danger"
+                >Please enter valid note</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row d-none">
+        <app-incomplete-order-action
+          #ActionPaneIncompleteInfoOrder
+        ></app-incomplete-order-action>
+      </div>
+    </div>
+    <div class="card-footer p-1">
+      <div class="text-left">
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          [ngClass]="{ readonlybtn: disableNext || validateOrderAction() }"
+          (click)="btnSave_Next_click()"
+          id="btnSave_Next"
+          appNoDblClick
+        >
+          {{ this.gcurrentTask?.nstatus == 16 ? "Complete&Next" : "Save&Next" }}
+        </button>
+
+        <button
+          type="button"
+          class="ml-1 btn btn-primary btn-sm"
+          (click)="btnSave_Close_click()"
+          [ngClass]="{
+            readonlybtn: validateOrderAction(),
+            'mr-5': this.gcurrentTask?.nstatus == 16
+          }"
+          id="btnSave_Close"
+          appNoDblClick
+        >
+          {{
+            this.gcurrentTask?.nstatus == 16 ? "Complete&Close" : "Save&Close"
+          }}
+          <!-- Save&Close -->
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="btnNext_click()"
+          [ngClass]="{
+            readonlybtn: disableNext || validateOrderAction(),
+            'mt-1': this.gcurrentTask?.nstatus == 16,
+            'ml-1': this.gcurrentTask?.nstatus != 16
+          }"
+          id="btnNext"
+          appNoDblClick
+        >
+          Next
+        </button>
+        <button
+          type="button"
+          class="ml-1 btn btn-danger btn-sm"
+          [ngClass]="{ 'mt-1': this.gcurrentTask?.nstatus == 16 }"
+          (click)="btnClose_click()"
+          id="btnClose"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+<!--Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="inputConfirmationTitle"
+      [InputConfirmationMessage]="confirmationMsg"
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Model -->
+<!--Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="YesNoCancelModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-yes-no-cancel-confirmation
+      [InputConfirmationTitle]="inputConfirmationTitle"
+      [InputConfirmationMessage]="confirmationMsg"
+      [InputButtonInformation]="inputButtonInfo"
+      (OutputConfirmationResult)="OutputYesNoCancelResult($event)"
+    >
+    </app-yes-no-cancel-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Model -->
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>

@@ -1,0 +1,269 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Payer Crosswalk</h4>
+    <div class="row ml-auto">
+      <button
+        class="ml-auto"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#addpayercrosswalkModal"
+        (click)="AddPayercrosswalk()"
+      >
+        Add Payer Crosswalk
+      </button>
+    </div>
+  </div>
+  <div class="card-body" style=" height: 72vh">
+    <!-- <form [formGroup]="StatusCrosswalkGroup"> -->
+    <div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <input
+              type="radio"
+              name="fcCrosswalkStatus"
+              id="StatusAll"
+              class="k-radio"
+              value="All"
+              (click)="setStatus('StatusAll')"
+              checked
+            />
+            <label for="StatusAll" class="k-radio-label">
+              All
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <input
+              type="radio"
+              name="fcCrosswalkStatus"
+              id="StatusMapped"
+              class="k-radio"
+              value="Mapped"
+              (click)="setStatus('StatusMapped')"
+              checked
+            />
+            <label for="StatusMapped" class="k-radio-label">
+              Mapped
+            </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <input
+              type="radio"
+              name="fcCrosswalkStatus"
+              id="StatusUnmapped"
+              class="k-radio"
+              value="Unmapped"
+              (click)="setStatus('StatusUnmapped')"
+              checked="checked"
+            />
+            <label for="StatusUnmapped" class="k-radio-label">
+              Unmapped
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- </form> -->
+    <div class="mb-1">
+      <div *ngIf="PayercrosswalkgridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+    </div>
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridPayercrosswalk"
+        [data]="PayercrosswalkgridView"
+        style="width:100%; max-height: 56vh;"
+        [sortable]="true"
+        [sort]="Payercrosswalksort"
+        (sortChange)="sortPayercrosswalkChange($event)"
+        [selectable]="true"
+        (edit)="EditPayercrosswalk($event)"
+      >
+        <kendo-grid-column
+          field="filepayername"
+          title="File Payer Name"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="payername"
+          title="Payer Name"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="clientname"
+          title="Client Name"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bisactive"
+          title="Status"
+          width="2"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bisactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.bisactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column title="Payer" width="2" [headerStyle]="{'font-weight': 'bold'}">
+          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">           
+            <kendo-autocomplete #autocomplete [data]="Payerdetail" [valueField]="'spayername'"
+              [placeholder]="'e.g. Medicare'" (keydown.enter)="onPayerSelectionChange($event,rowIndex,0)"
+              (click)="onPayerSelectionChange($event,rowIndex,0)">
+            </kendo-autocomplete>
+          </ng-template>
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column field="snotetext" title="Template" width="10" [headerStyle]="{'font-weight': 'bold'}">
+          </kendo-grid-column> -->
+        <kendo-grid-command-column
+          title="Action"
+          width="2"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editpayercrosswalkconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <!-- <button kendoGridRemoveCommand title="Delete" data-toggle="modal"
+              data-target="#deletepayercrosswalkconfirmationModal"><i class="fe fe-x"></i></button> -->
+            <button
+              *ngIf="dataItem.bisactive == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnPayercrosswalkStatus(dataItem.crosswalkid, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnPayercrosswalkStatus(dataItem.crosswalkid, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div class="d-flex mt-2">
+        <button
+          id="btnprevious"
+          class="btn btn-secondary btn-sm float-left mr-2"
+          kendoButton
+          [primary]="true"
+          (click)="onClickPrevious()"
+          [disabled]="Ispreviousdisabled"
+        >
+          Previous
+        </button>
+        <button
+          id="btnnext"
+          class="btn btn-primary btn-sm mr-2"
+          kendoButton
+          [primary]="true"
+          (click)="onClickNext()"
+          [disabled]="Isnextdisabled"
+        >
+          Next
+        </button>
+
+        <div class="ml-auto">
+          {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+        </div>
+      </div>
+
+      <div
+        *ngIf="!this.PayercrosswalkgridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Payer -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addpayercrosswalkModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addpayercrosswalk
+      [InputPayercrosswalkEditid]="EditPayercrosswalkid"
+      (OutputPayercrosswalkEditResult)="OutputPayercrosswalkEditResult($event)"
+      #AddPayercrosswalkChild
+    ></app-addpayercrosswalk>
+    <!-- <app-addnotetemplate [InputNoteEditid]="editNoteid" (OutputNoteEditResult)="OutputNoteTemplateEditResult($event)"></app-addnotetemplate> -->
+  </div>
+</div>
+<!-- Add Payer -->
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editpayercrosswalkconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+
+<!--Delete Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deletepayercrosswalkconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-deleteconfirmation
+      [InputDeleteMessage]="InputDeleteMessage"
+      (OutputDeleteResult)="OutputDeleteResult($event)"
+    >
+    </app-deleteconfirmation>
+  </div>
+</div>
+<!--Delete Confirmation Model -->

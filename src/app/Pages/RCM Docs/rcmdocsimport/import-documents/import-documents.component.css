@@ -1,0 +1,27 @@
+.uploadfilecontainer {
+  background-image: url("../../../../../assets/images/cloud-upload-symbol.svg");
+  background-repeat: no-repeat;
+  background-size: 100px;
+  background-position: center 20px;
+  height: 200px;
+  width: 100%;
+  margin: 20px auto;
+  border: 2px dashed #b2bdcc;
+  border-radius: 10px;
+  transition: all 0.4s;
+  position: relative;
+}
+
+.file-text {
+  position: absolute;
+  bottom: 12px;
+  font-size: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.uploadfilecontainer:hover {
+  cursor: pointer;
+  background-color: #e5f0f8 !important;
+  opacity: 0.8;
+}

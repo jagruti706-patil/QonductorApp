@@ -1,0 +1,375 @@
+<div class="card">
+  <div class="card-header pl-2">
+    <h4 class="mb-0">Practice Mapping</h4>
+    <div class="row ml-auto">
+      <div>
+        <button class="ml-auto" kendoButton [primary]="true" data-toggle="modal"
+          data-target="#AddEditClientProviderMappingmodal" (click)="addClientProviderMapping()">
+          Add Practice Mapping
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-2" style="height: 72vh">
+    <form [formGroup]="formGroup">
+      <div class="row">
+        <div class="col-md-5">
+          <div class="form-group">
+            <label class="form-label">Practice </label>
+            <kendo-dropdownlist class="form-control form-control-sm" [data]="Clientdetail" formControlName="fcClient"
+              [textField]="'client'" [valueField]="'clientid'" [valuePrimitive]="true"
+              [defaultItem]="ClientDefaultValue" [filterable]="true" (filterChange)="handleFilter($event, 0)">
+            </kendo-dropdownlist>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="form-group">
+            <label class="form-label">Provider </label>
+            <kendo-dropdownlist class="form-control form-control-sm" [data]="Providerdetail"
+              formControlName="fcProvider" [textField]="'provider'" [valueField]="'npi'" [valuePrimitive]="true"
+              [defaultItem]="ProviderDefaultValue" [filterable]="true" (filterChange)="handleFilter($event, 1)">
+            </kendo-dropdownlist>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="form-group">
+            <label class="form-label">Group Mapping </label>
+            <kendo-dropdownlist class="form-control form-control-sm" [data]="GroupMapping"
+              formControlName="fcGroupMapping" textField="text" [valuePrimitive]="true" valueField="value">
+            </kendo-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="grid-wrapper">
+      <kendo-grid class="w-100" [data]="clientProviderGridView" style="max-height: 62vh" [pageSize]="pageSize"
+        [pageable]="true" [skip]="pageSkip" (pageChange)="pageChange($event)" [sortable]="{
+          mode: 'multiple'
+        }" [sort]="clientProviderSort" (sortChange)="sortChange($event)" [selectable]="true"
+        (edit)="editClientProviderMapping($event)" [loading]="this.loadingGrid">
+        <kendo-grid-column field="clientcode" title="Practice Code" width="25"
+          [headerStyle]="{ 'font-weight': 'bold' }">
+        </kendo-grid-column>
+        <kendo-grid-column field="clientname" title="Practice Name" width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }">
+        </kendo-grid-column>
+        <kendo-grid-column field="city" title="City" width="25" [headerStyle]="{ 'font-weight': 'bold' }">
+        </kendo-grid-column>
+        <kendo-grid-column field="zip" title="Zip Code" width="15" [headerStyle]="{ 'font-weight': 'bold' }">
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          field="modifiedon"
+          title="Modified On"
+          width="25"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.modifiedon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column field="status" title="Status" width="20" [headerStyle]="{ 'font-weight': 'bold' }">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.status == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.status == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="groupmapping" title="Group Associated" width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.groupmapping == true" class="text-success text-center">
+              Yes
+            </div>
+            <div *ngIf="dataItem.groupmapping == false" class="text-danger text-center">
+              No
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column title="Action" width="30" [headerStyle]="{ 'font-weight': 'bold' }">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button kendoGridEditCommand [primary]="true" title="Edit" data-toggle="modal"
+              data-target="#editConfirmationModal">
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button *ngIf="dataItem.status == false" data-toggle="modal" data-target=".bd-example-modal-lg"
+              class="k-button" title="Activate" (click)="onUpdateStatus(dataItem)">
+              <i class="fe fe-zap"></i>
+            </button>
+            <button *ngIf="dataItem.status == true" class="k-button" data-toggle="modal"
+              data-target=".bd-example-modal-lg" title="Deactivate" (click)="onUpdateStatus(dataItem)">
+              <i class="fe fe-zap-off"></i>
+            </button>
+            <button kendoGridEditCommand title="Practice Mapping Details" data-toggle="modal"
+              data-target="#ViewClientProviderMappingmodal" (click)="onViewClientProviderMappingDetails(dataItem)">
+              <i class="fe fe-info"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+    </div>
+    <div class="black-box" *ngIf="loading">
+      <div class="k-i-loading"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="AddEditClientProviderMappingmodal"
+  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <app-add-edit-client-provider-mapping #AddEditClientProviderMapping
+      (onsaveclientprovidermapping)="onclientprovidermappingsave($event)"></app-add-edit-client-provider-mapping>
+  </div>
+</div>
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="ViewClientProviderMappingmodal" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title mb-0" id="exampleModalLabel">
+          Practice Mapping Details
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card">
+          <div class="card-header bg-light p-2">
+            <h6 class="mb-0">Practice Information</h6>
+            <div *ngIf="clientProviderMappingItem != null" class="small text-muted ml-auto">Modified By:
+              {{clientProviderMappingItem.username==''||clientProviderMappingItem.username==null?'-':clientProviderMappingItem.username}}
+              ({{clientProviderMappingItem.modifiedon==''||clientProviderMappingItem.modifiedon==null?'-':clientProviderMappingItem.modifiedon| date: "MM-dd-yyyy hh:mm:ss a"}})
+            </div>
+          </div>
+          <div class="card-body p-2">
+            <!-- <div class="row">
+              <div class="col-md-4">
+                <small class="mb-0">Practice Code</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.clientcode
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">UPIN</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.upin
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">NPI</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.npi
+                }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <small class="mb-0">Practice Name</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.clientname
+                }}</label>
+              </div>
+              <div class="col-md-8">
+                <small class="mb-0">Lookup</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.lookup
+                }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <small class="mb-0">Contact Name</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.contactname
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">Contact Email</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.contactemail
+                }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <small class="mb-0">Phone 1</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.phoneno1
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">Phone 2</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.phoneno2
+                }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <small class="mb-0">Address 1</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.address1
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">Address 2</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.address2
+                }}</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <small class="mb-0">City</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.city
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">State</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.state
+                }}</label>
+              </div>
+              <div class="col-md-4">
+                <small class="mb-0">Zip</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.zip
+                }}</label>
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-4"><small class="mb-0">Practice Code</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.clientcode==''||clientProviderMappingItem.clientcode==null?'-':clientProviderMappingItem.clientcode
+              }}</label></div>
+              <div class="col-4"><small class="mb-0">Practice Name</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.clientname==''||clientProviderMappingItem.clientname==null?'-':clientProviderMappingItem.clientname
+              }}</label></div>
+              <div class="col-4"><small class="mb-0">Lookup</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.lookup==''||clientProviderMappingItem.lookup==null?'-':clientProviderMappingItem.lookup
+              }}</label></div>
+            </div>
+            <div class="row">
+
+              <div class="col-4"><small class="mb-0">Address 1</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.address1==''||clientProviderMappingItem.address1==null?'-':clientProviderMappingItem.address1
+              }}</label></div>
+              <div class="col-4"><small class="mb-0">Address 2</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.address2==''||clientProviderMappingItem.address2==null?'-':clientProviderMappingItem.address2
+              }}</label></div>
+              <div class="col-2"><small class="mb-0">Phone 1</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.phoneno1==''||clientProviderMappingItem.phoneno1==null?'-':clientProviderMappingItem.phoneno2
+                }}</label></div>
+              <div class="col-2"><small class="mb-0">Phone 2</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.phoneno2==''||clientProviderMappingItem.phoneno2==null?'-':clientProviderMappingItem.phoneno2
+                }}</label></div>
+            </div>
+            <div class="row">
+              <div class="col-4"><small class="mb-0">City</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.city==''||clientProviderMappingItem.city==null?'-':clientProviderMappingItem.city
+              }}</label></div>
+              <div class="col-1"><small class="mb-0">State</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.state==''||clientProviderMappingItem.state==null?'-':clientProviderMappingItem.state
+              }}</label></div>
+              <div class="col-3"><small class="mb-0">Zip</small>
+                <label class="mb-0 form-label">{{
+                clientProviderMappingItem.zip==''||clientProviderMappingItem.zip==null?'-':clientProviderMappingItem.zip
+              }}</label></div>
+              <div class="col-2"><small class="mb-0">UPIN</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.upin==''||clientProviderMappingItem.upin==null?'-':clientProviderMappingItem.upin
+                }}</label></div>
+              <div class="col-2"><small class="mb-0">NPI</small>
+                <label class="mb-0 form-label">{{
+                  clientProviderMappingItem.npi==''||clientProviderMappingItem.npi==null?'-':clientProviderMappingItem.npi
+                }}</label></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header bg-light p-2">
+            <h6 class="mb-0">Group Information</h6>
+          </div>
+          <div class="card-body p-2">
+            <small *ngIf="
+                clientProviderMappingItem.groups?.length == 0;
+                else showList
+              ">
+              No group information available.
+            </small>
+
+            <ng-template #showList>
+              <ul style="list-style: square">
+                <li *ngFor="let item of clientProviderMappingItem.groups">
+                  {{ item.groupname }}
+                </li>
+              </ul>
+            </ng-template>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header bg-light p-2">
+            <h6 class="mb-0">
+              Providers Information (Total:
+              {{ providersGridView ? providersGridView.data.length : 0 }})
+            </h6>
+          </div>
+          <div class="card-body p-2">
+            <kendo-grid class="w-100" style="max-height: 30vh" [data]="providersGridView" [sortable]="true"
+              [sort]="providerSort" (sortChange)="providerSortChange($event)">
+              <kendo-grid-column field="code" title="Code" width="10" [headerStyle]="{ 'font-weight': 'bold' }">
+              </kendo-grid-column>
+              <kendo-grid-column field="npi" title="NPI" width="15" [headerStyle]="{ 'font-weight': 'bold' }">
+              </kendo-grid-column>
+              <kendo-grid-column field="upin" title="UPIN" width="15" [headerStyle]="{ 'font-weight': 'bold' }">
+              </kendo-grid-column>
+              <kendo-grid-column field="name" title="Name" width="30" [headerStyle]="{ 'font-weight': 'bold' }">
+              </kendo-grid-column>
+
+              <kendo-grid-column field="lookup" title="Lookup" width="30" [headerStyle]="{ 'font-weight': 'bold' }">
+              </kendo-grid-column>
+              <kendo-grid-column field="status" title="Status" width="15" [headerStyle]="{ 'font-weight': 'bold' }">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div *ngIf="dataItem.status == true" class="text-success">
+                    Active
+                  </div>
+                  <div *ngIf="dataItem.status == false" class="text-danger">
+                    Inactive
+                  </div>
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+      <div *ngIf="loadingDetails" class="black-box">
+        <div class="k-i-loading"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="editConfirmationModal" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <app-editconfirmation [InputEditMessage]="InputEditMessage" (OutputEditResult)="OutputEditResult($event)">
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

@@ -1,0 +1,590 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="mb-0">QConstrue Service Configuration</h4>
+  </div>
+  <div class="card-body pt-3 pb-3">
+    <div class="row">
+      <div class="col-md-6 border-right">
+        <h4 class="mb-3">Service Status</h4>
+        <!-- <label class="mr-2 font-weight-bold">Service Status</label> -->
+        <label class="form-label">{{ QConstrueServiceStatus }}</label>
+        <!-- </div> -->
+        <!-- <div class="col-md-6"> -->
+        <button
+          [class.readonlybtn]="isButtonDisabled"
+          *ngIf="!isParserServiceStarted"
+          class="btn btn-success btn-sm mr-2"
+          (click)="onStartService()"
+          appNoDblClick
+        >
+          Start Service
+        </button>
+        <button
+          [class.readonlybtn]="isButtonDisabled"
+          *ngIf="isParserServiceStarted"
+          class="btn btn-danger btn-sm mr-2"
+          (click)="onStopService()"
+          appNoDblClick
+        >
+          Stop Service
+        </button>
+        <button
+          class="btn btn-primary btn-sm"
+          (click)="GetQConstrueParserServiceStatus()"
+          title="Refresh"
+        >
+          <i class="fe fe-rotate-cw"></i>
+        </button>
+      </div>
+      <div class="col-md-6" *ngIf="DbDetails != null">
+        <h4 class="mb-3">QConstrue Server Details</h4>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label mb-0">Current User</label>
+              <h5>{{ DbDetails.currentuser }}</h5>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label mb-0">Host</label>
+              <h5>{{ DbDetails.host }}</h5>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label class="form-label mb-0">Port</label>
+              <h5>{{ DbDetails.port }}</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0">EDoc Service Configuration</h4>
+      </div>
+      <div class="card-body pt-3 pb-2">
+        <div class="">
+          <div class="border-bottom">
+            <h4>EDoc Service</h4>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <h4 class="mt-3 mb-3">Service Status</h4>
+              <label class="form-label">
+                {{ EdocServiceStatus }}
+              </label>
+              <button
+                [class.readonlybtn]="isEdocButtonDisabled"
+                *ngIf="!isEdocParserServiceStarted"
+                class="btn btn-success btn-sm mr-2"
+                (click)="EdocServiceStatusChanged(true)"
+                appNoDblClick
+              >
+                Start Service
+              </button>
+              <button
+                [class.readonlybtn]="isEdocButtonDisabled"
+                *ngIf="isEdocParserServiceStarted"
+                class="btn btn-danger btn-sm mr-2"
+                (click)="EdocServiceStatusChanged(false)"
+                appNoDblClick
+              >
+                Stop Service
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="getEdocServiceStatus()"
+                title="Refresh"
+              >
+                <i class="fe fe-rotate-cw"></i>
+              </button>
+            </div>
+            <div class="col-md-6">
+              <!-- <h4 class="mb-3">EDoc Service Setting</h4> -->
+              <div class="row">
+                <div class="col-md-12">
+                  <label class="form-label mt-3">Schedule Time</label>
+                  <div class="row">
+                    <div class="col-md-9">
+                      <kendo-timepicker
+                        [steps]="{ hour: 1, minute: 5 }"
+                        [format]="'HH:mm'"
+                        [(value)]="scheduleTime"
+                        class="form-control"
+                      >
+                      </kendo-timepicker>
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        class="btn btn-primary float-right btn-sm"
+                        (click)="saveScheduleTime('scheduledtime')"
+                        [disabled]="!scheduleTime"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <small
+                    >Note: Please set schedule time in UTC timezone and restart
+                    the EDoc service</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0">Encounter Service Configuration</h4>
+      </div>
+      <div class="card-body pt-3 pb-2">
+        <div class="">
+          <div class="border-bottom">
+            <h4>SFTP Splitter Service</h4>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <h4 class="mt-3 mb-3">Service Status</h4>
+              <label class="form-label">
+                {{ SFTPSplitterServiceStatus }}
+              </label>
+              <button
+                [class.readonlybtn]="isSFTPSplitterButtonDisabled"
+                *ngIf="!isSFTPSplitterServiceStarted"
+                class="btn btn-success btn-sm mr-2"
+                (click)="updateSFTPSplitterServiceStatus(1)"
+                appNoDblClick
+              >
+                Start Service
+              </button>
+              <button
+                [class.readonlybtn]="isSFTPSplitterButtonDisabled"
+                *ngIf="isSFTPSplitterServiceStarted"
+                class="btn btn-danger btn-sm mr-2"
+                (click)="updateSFTPSplitterServiceStatus(0)"
+                appNoDblClick
+              >
+                Stop Service
+              </button>
+              <button
+                class="btn btn-primary btn-sm"
+                (click)="getSFTPSplitterServiceStatus()"
+                title="Refresh"
+              >
+                <i class="fe fe-rotate-cw"></i>
+              </button>
+            </div>
+            <div class="col-md-6">
+              <div class="row">
+                <div class="col-md-12">
+                  <label class="form-label mt-3">Schedule Time</label>
+                  <div class="row">
+                    <div class="col-md-9">
+                      <kendo-timepicker
+                        [steps]="{ hour: 1, minute: 5 }"
+                        [format]="'HH:mm'"
+                        [(value)]="sftpSplitterScheuleTime"
+                        class="form-control"
+                      >
+                      </kendo-timepicker>
+                    </div>
+                    <div class="col-md-3">
+                      <button
+                        class="btn btn-primary float-right btn-sm"
+                        (click)="saveScheduleTime('SFTPSplitterScheduler')"
+                        [disabled]="!sftpSplitterScheuleTime"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <small
+                    >Note: Please set schedule time in UTC timezone and restart
+                    the SFTP Splitter service</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0">Automation Service Configuration</h4>
+      </div>
+      <div class="card-body pt-3 pb-2">
+        <div class="row">
+          <div class="col-md-12 border-bottom">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="border-bottom">
+                  <h4>HL7 Service</h4>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <h4 class="mt-3 mb-3">Service Status</h4>
+                    <!-- <label class="form-label" *ngIf="HL7ControlStatus">
+                      HL7 Service is started
+                    </label>
+                    <label class="form-label" *ngIf="!HL7ControlStatus">
+                      HL7 Service is stopped
+                    </label> -->
+                    <label class="form-label">
+                      {{ HL7ControlStatus }}
+                    </label>
+                    <button
+                      [class.readonlybtn]="ishl7ButtonDisabled"
+                      *ngIf="!isHL7ServiceStarted"
+                      class="btn btn-success btn-sm mr-2"
+                      (click)="updateHL7ServiceStatus(1)"
+                      appNoDblClick
+                    >
+                      <!-- (click)="HL7UpdateStatus(true)" -->
+                      Start Service
+                    </button>
+                    <button
+                      [class.readonlybtn]="ishl7ButtonDisabled"
+                      *ngIf="isHL7ServiceStarted"
+                      class="btn btn-danger btn-sm mr-2"
+                      (click)="updateHL7ServiceStatus(0)"
+                      appNoDblClick
+                    >
+                      <!-- (click)="HL7UpdateStatus(false)" -->
+                      Stop Service
+                    </button>
+                    <button
+                      class="btn btn-primary btn-sm"
+                      (click)="getHL7ServiceStatus()"
+                      title="Refresh"
+                    >
+                      <i class="fe fe-rotate-cw"></i>
+                    </button>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <label class="form-label mt-3">Schedule Time</label>
+                        <div class="row">
+                          <div class="col-md-9">
+                            <kendo-timepicker
+                              [steps]="{ hour: 1, minute: 5 }"
+                              [format]="'HH:mm'"
+                              [(value)]="HL7ScheduleTime"
+                              class="form-control"
+                            >
+                            </kendo-timepicker>
+                          </div>
+                          <div class="col-md-3">
+                            <button
+                              class="btn btn-primary float-right btn-sm"
+                              (click)="saveHL7ScheduleTime()"
+                              [disabled]="!HL7ScheduleTime"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">
+                        <small
+                          >Note: Please set schedule time in UTC timezone and
+                          restart the HL7 service</small
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 mt-4">
+            <div class="border-bottom">
+              <h4>Document Upload Service</h4>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <h4 class="mt-3 mb-3">Service Status</h4>
+                <label class="form-label" *ngIf="EdocControlStatus">
+                  Document Upload Service is started
+                </label>
+                <label class="form-label" *ngIf="!EdocControlStatus">
+                  Document Upload Service is stopped
+                </label>
+                <button
+                  *ngIf="!EdocControlStatus"
+                  class="btn btn-success btn-sm mr-2"
+                  (click)="updateAutomationEdocServiceStatus(true)"
+                  appNoDblClick
+                >
+                  Start Service
+                </button>
+                <button
+                  *ngIf="EdocControlStatus"
+                  class="btn btn-danger btn-sm mr-2"
+                  (click)="updateAutomationEdocServiceStatus(false)"
+                  appNoDblClick
+                >
+                  Stop Service
+                </button>
+                <button
+                  class="btn btn-primary btn-sm"
+                  (click)="getAutomationControlStatus('0', 'fromEdoc')"
+                  title="Refresh"
+                >
+                  <i class="fe fe-rotate-cw"></i>
+                </button>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label class="form-label mt-3">Schedule Time</label>
+                    <div class="row">
+                      <div class="col-md-9">
+                        <kendo-timepicker
+                          [steps]="{ hour: 1, minute: 5 }"
+                          [format]="'HH:mm'"
+                          [(value)]="docUploadScheduleTime"
+                          class="form-control"
+                        >
+                        </kendo-timepicker>
+                      </div>
+                      <div class="col-md-3">
+                        <button
+                          class="btn btn-primary float-right btn-sm"
+                          (click)="saveDocUploadScheduleTime()"
+                          [disabled]="!docUploadScheduleTime"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <small
+                      >Note: Please set schedule time in UTC timezone and
+                      restart the Document Upload service</small
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h4 class="mb-0">Archival Service Configuration</h4>
+      </div>
+      <div class="card-body pt-0 pb-4">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12">
+                <h4 class="mt-3 mb-3">Service Status</h4>
+                <div class="d-flex mb-2">
+                  <button
+                    *ngIf="!isArchivalServiceStarted"
+                    class="btn btn-success btn-sm mr-2"
+                    (click)="archivalUpdateStatus(true)"
+                    appNoDblClick
+                  >
+                    Start Service
+                  </button>
+                  <button
+                    *ngIf="isArchivalServiceStarted"
+                    class="btn btn-danger btn-sm mr-2"
+                    (click)="archivalUpdateStatus(false)"
+                    appNoDblClick
+                  >
+                    Stop Service
+                  </button>
+                  <button
+                    class="btn btn-primary btn-sm"
+                    (click)="getArchivalServiceStatus()"
+                    title="Refresh"
+                  >
+                    <i class="fe fe-rotate-cw"></i>
+                  </button>
+                  <label class="form-label ml-2">
+                    {{ archivalServiceStatus }}
+                  </label>
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="card">
+                      <div class="card-body pt-1 pb-2">
+                        <div class="row">
+                          <div class="col-md-4">
+                            <label for="" class="form-label mt-3"
+                              >Archival Day</label
+                            >
+                            <kendo-dropdownlist
+                              class="form-control form-control-sm"
+                              id="ddDay"
+                              [data]="daysList"
+                              textField="day"
+                              valueField="value"
+                              [(value)]="archivalDay"
+                              [valuePrimitive]="true"
+                            >
+                            </kendo-dropdownlist>
+                          </div>
+                          <div class="col-md-8">
+                            <label for="" class="form-label mt-3"
+                              >Archival Status</label
+                            >
+                            <kendo-multiselect
+                              class="msFilter"
+                              id="msStatusFilter"
+                              [kendoMultiSelectSummaryTag]="1"
+                              [data]="statusData"
+                              [textField]="'status'"
+                              [valueField]="'statuscode'"
+                              [valuePrimitive]="true"
+                              [(value)]="selectedStatus"
+                              [autoClose]="false"
+                              [filterable]="true"
+                              (filterChange)="handleStatusFilter($event)"
+                            >
+                              <ng-template
+                                kendoMultiSelectItemTemplate
+                                let-dataItem
+                              >
+                                <span class="pr-1"
+                                  ><input
+                                    type="checkbox"
+                                    class="k-checkbox"
+                                    [checked]="
+                                      isItemSelected(dataItem.statuscode)
+                                    "
+                                /></span>
+                                <label class="k-checkbox-label">{{
+                                  dataItem.status
+                                }}</label>
+                              </ng-template>
+                              <ng-template kendoMultiSelectNoDataTemplate>
+                                <h4>
+                                  <span class="k-icon k-i-warning"></span
+                                  ><br /><br />
+                                  No data here
+                                </h4>
+                              </ng-template>
+                              <ng-template
+                                kendoMultiSelectTagTemplate
+                                let-dataItem
+                              >
+                                <div
+                                  [title]="dataItem.status"
+                                  class="text-truncate text-left mb-0"
+                                >
+                                  {{ dataItem.status }}
+                                </div>
+                              </ng-template>
+                              <ng-template
+                                kendoMultiSelectGroupTagTemplate
+                                let-dataItems
+                              >
+                                <span
+                                  [title]="
+                                    summaryTagSelectedValues(
+                                      dataItems,
+                                      'status'
+                                    )
+                                  "
+                                  >+{{ dataItems.length }}</span
+                                >
+                              </ng-template>
+                            </kendo-multiselect>
+                          </div>
+                          <div class="col-md-4">
+                            <label for="" class="form-label mt-3"
+                              >Archive After Days</label
+                            >
+                            <!-- <div class="d-flex"> -->
+                            <kendo-numerictextbox
+                              class="w-100"
+                              style="height: 2.4rem"
+                              [min]="1"
+                              [max]="999"
+                              autoCorrect="true"
+                              format="n"
+                              [(value)]="archiveAfterDays"
+                            >
+                            </kendo-numerictextbox>
+                            <!-- <strong class="ml-1 mt-1">Days</strong> -->
+                            <!-- </div> -->
+                          </div>
+                          <div class="col-md-8">
+                            <label class="form-label mt-3">Schedule Time</label>
+                            <kendo-timepicker
+                              class="w-100"
+                              [steps]="{ hour: 1, minute: 5 }"
+                              [format]="'HH:mm'"
+                              [(value)]="archivalScheduleTime"
+                              class="form-control"
+                            >
+                            </kendo-timepicker>
+                            <div class="small">
+                              Note: Please set schedule time in UTC timezone and
+                              restart the Archival service
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <button
+                          class="btn btn-primary btn-sm float-right"
+                          (click)="saveScheduleTime('archivescheduletime')"
+                          [disabled]="
+                            selectedStatus.length === 0 ||
+                            !archiveAfterDays ||
+                            archivalDay == null ||
+                            !archivalScheduleTime
+                          "
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

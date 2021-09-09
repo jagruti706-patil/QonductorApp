@@ -1,0 +1,319 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h4 class="modal-title" id="exampleModalLabel">View Task Details</h4>
+    <button
+      type="button"
+      class="close pr-5"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="card p-2">
+      <div class="row">
+        <div *ngIf="gcurrentTask != null" class="col-md-3">
+          <small class="mb-0">Task #</small>
+          <label class="mb-0 form-label">{{ gcurrentTask.taskcode }}</label>
+        </div>
+
+        <div *ngIf="gcurrentTask != null" class="col-md-3">
+          <small class="mb-0">Work Group #</small>
+          <label class="mb-0 form-label">{{
+            gcurrentTask.workgroupcode
+          }}</label>
+        </div>
+
+        <div *ngIf="gcurrentTask != null" class="col-md-3">
+          <small class="mb-0">Assigned By</small>
+          <label class="mb-0 form-label"
+            >{{ gcurrentTask.susername }}
+            <small
+              >(
+              {{ gcurrentTask.assigneddate | date: "MM-dd-yyyy hh:mm:ss a" }}
+              )</small
+            >
+          </label>
+        </div>
+
+        <div *ngIf="gcurrentTask != null" class="col-md-3">
+          <small class="mb-0">Worked Date</small>
+          <label class="mb-0 form-label" *ngIf="gcurrentTask.taskstatus != 1"
+            >{{ gcurrentTask.assignedtousername }}
+            <small
+              >(
+              {{ gcurrentTask.modifiedon | date: "MM-dd-yyyy hh:mm:ss a" }}
+              )</small
+            ></label
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <!-- Patient & Claim Details -->
+      <!-- Patint Details -->
+      <div
+        class="card-header p-2 d-block"
+        style="background-color: #e5f2ff; color: #00274e; font-weight: 600;"
+      >
+        <app-patient-banner
+          *ngIf="this.gcurrentTask != null"
+        ></app-patient-banner>
+      </div>
+      <!-- Patint Details -->
+
+      <!-- Claim Details -->
+      <div class="card-body pt-1 pb-1 p-1">
+        <app-claim-banner *ngIf="this.gcurrentTask != null"></app-claim-banner>
+        <hr />
+        <app-status-banner
+          *ngIf="this.gcurrentTask != null"
+        ></app-status-banner>
+      </div>
+
+      <!-- Claim Details -->
+      <!-- Patient & Claim Details -->
+    </div>
+
+    <div class="grid-wrapper">
+      <h4 class="mb-2 mt-4">Claim Lines</h4>
+      <kendo-grid
+        id="gridClaimlines"
+        [data]="ClaimlinesgridView"
+        style="width:100%"
+        [sortable]="true"
+        [sort]="Claimlinessort"
+        (sortChange)="sortClaimlinesChange($event)"
+        [selectable]="true"
+        style="height: 160px;"
+      >
+        <kendo-grid-column
+          field="dos"
+          title="DOS"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dos | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="charge"
+          title="CPT"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx1code"
+          title="Dx1"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx2code"
+          title="Dx2"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx3code"
+          title="Dx3"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx4code"
+          title="Dx4"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="mod1code"
+          title="Mod1"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="mod2code"
+          title="Mod2"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="billed_amount"
+          title="Billed Amt"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="remainingbalance"
+          title="Ins.Due Amt"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+
+    <div
+      class="card mt-3"
+      *ngIf="
+        this.gcurrentTask != null &&
+        this.gcurrentTask.taskassign != null &&
+        this.gcurrentTask.taskassign.assignmentnote != null
+      "
+    >
+      <div class="card-header p-2 pl-3">
+        <h4 class="mb-0">Task Note</h4>
+      </div>
+      <div class="card-body p-2">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group mb-2">
+              <label class="form-label">Assigned To :</label>
+              <span class="mb-0"
+                >{{ this.gcurrentTask.taskassign.sassignedtousername }}
+              </span>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group mb-2">
+              <label class="form-label">Notes :</label>
+              <span class="mb-0"
+                >{{ this.gcurrentTask.taskassign.assignmentnote }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-3">
+      <div class="card-header p-2 pl-3">
+        <h4 class="mb-0">Task Action</h4>
+      </div>
+      <div class="card-body p-2">
+        <div class="row">
+          <div
+            *ngIf="taskaction != null && taskaction.status != null"
+            class="col-md-6"
+          >
+            <div class="form-group mb-2">
+              <label class="form-label">Status</label>
+              <span class="mb-0">{{
+                taskaction.status.statusDescription
+              }}</span>
+            </div>
+          </div>
+          <div
+            *ngIf="taskaction != null && taskaction.substatus != null"
+            class="col-md-6"
+          >
+            <div class="form-group mb-2">
+              <label class="form-label">Sub-Status</label>
+              <span class="mb-0">{{
+                taskaction.substatus.subStatusDescription
+              }}</span>
+            </div>
+          </div>
+          <div
+            *ngIf="taskaction != null && taskaction.action != null"
+            class="col-md-6"
+          >
+            <div class="form-group mb-2">
+              <label class="form-label">Action</label>
+              <span class="mb-0"
+                >{{ taskaction.action.actionDescription }}
+              </span>
+            </div>
+          </div>
+          <div
+            *ngIf="taskaction != null && taskaction.logaction != null"
+            class="col-md-6"
+          >
+            <div class="form-group mb-2">
+              <label class="form-label">Action Logged</label>
+              <span *ngIf="taskaction.logaction.logactioncode" class="mb-0"
+                >{{ taskaction.logaction.logactiondate | date: "MM-dd-yyyy" }}:
+                {{ taskaction.logaction.logactioncode }} -
+                {{ taskaction.logaction.logactiondescription }}
+              </span>
+            </div>
+          </div>
+          <div
+            *ngIf="taskaction != null && taskaction.scheduleaction != null"
+            class="col-md-6"
+          >
+            <div class="form-group mb-2">
+              <label class="form-label">Next Scheduled</label>
+              <span
+                *ngIf="taskaction.scheduleaction.scheduleactioncode"
+                class="mb-0"
+                >{{
+                  taskaction.scheduleaction.scheduleactiondate
+                    | date: "MM-dd-yyyy"
+                }}: {{ taskaction.scheduleaction.scheduleactioncode }} -
+                {{ taskaction.scheduleaction.scheduleactiondescription }}
+              </span>
+            </div>
+          </div>
+          <div *ngIf="taskaction != null" class="col-md-6">
+            <div class="form-group mb-2">
+              <label class="form-label">WorkType</label>
+              <span class="mb-0">{{ taskaction.sworktype }} </span>
+            </div>
+          </div>
+          <div *ngIf="taskaction != null" class="col-md-6">
+            <div class="form-group mb-2">
+              <label class="form-label">Reason Code</label>
+              <span class="mb-0">{{ taskaction.reasoncodes }} </span>
+            </div>
+          </div>
+          <div *ngIf="taskaction != null" class="col-md-6">
+            <div class="form-group mb-2">
+              <label class="form-label">Remark Code</label>
+              <span class="mb-0">{{ taskaction.remarkcodes }} </span>
+            </div>
+          </div>
+          <div *ngIf="taskaction != null" class="col-md-6">
+            <div class="form-group mb-2">
+              <label class="form-label">TFL from DOS</label>
+              <span class="mb-0">{{ taskaction.tflfromdos }} </span>
+            </div>
+          </div>
+
+          <div *ngIf="taskaction != null" class="col-md-12">
+            <div class="form-group mb-2">
+              <label class="form-label">Notes :</label>
+              <span class="mb-0">{{ taskaction.notes }} </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+      id="btnClose"
+    >
+      Close
+    </button>
+  </div>
+
+  <div class="black-box" *ngIf="loadingViewTaskDetails">
+    <div class="k-i-loading"></div>
+  </div>
+</div>

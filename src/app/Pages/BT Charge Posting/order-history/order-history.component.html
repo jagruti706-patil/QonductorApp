@@ -1,0 +1,120 @@
+<div class="card">
+  <div class="card-body" style=" padding: 5px 0.75rem;">
+    <div class="row ml-auto">
+      <button
+        type="button"
+        kendoButton
+        [primary]="true"
+        (click)="onCloseClick()"
+        class="ml-auto mr-2 mb-2"
+      >
+        Close
+      </button>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <app-order-patient-banner></app-order-patient-banner>
+      </div>
+    </div>
+    <div class="card-header text-center">
+      <h4>Order History</h4>
+    </div>
+    <div class="grid-wrapper">
+      <kendo-grid
+        [selectable]="true"
+        [sortable]="true"
+        [data]="HistorygridView"
+        [sortable]="true"
+        [sort]="Historysort"
+        (sortChange)="sortHistoryChange($event)"
+        [selectable]="true"
+      >
+        <kendo-grid-column
+          field=""
+          title="Status"
+          width="3"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field=""
+          title="History"
+          width="3"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field=""
+          title="Date"
+          width="3"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.date | date: "MM-dd-yyyy hh:mm:ss a" }}
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+  </div>
+</div>
+<app-order-documents></app-order-documents>
+
+<!--saurabh <div class="card">
+  <div class="card-body" style=" padding: 5px 0.75rem;">
+    <div class="row">
+      <div class="col-md-12">
+        <app-order-patient-banner></app-order-patient-banner>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <div class="card-header text-center">
+      <h4>Order History</h4>
+    </div>
+    <div class="grid-wrapper">
+      <kendo-grid [selectable]="true" [sortable]="true" [data]="">
+        <kendo-grid-column
+          field=""
+          title="Col1"
+          width="3"
+          [hidden]="true"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field=""
+          title="Col2"
+          width="3"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field=""
+          title="Col3"
+          width="3"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field=""
+          title="Col4"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+  </div>
+
+  <div class="card-body" style=" padding: 5px 0.75rem;">
+    <div class="row">
+      <div class="col-md-12">
+        <app-order-documents></app-order-documents>
+      </div>
+    </div>
+  </div>
+</div> -->

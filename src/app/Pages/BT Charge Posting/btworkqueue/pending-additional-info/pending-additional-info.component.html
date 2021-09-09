@@ -1,0 +1,254 @@
+<!-- ====------------------=-\\\\\\\\\\\\\\\\\\\\\\\\\\ -->
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Pending for Additional Information</h4>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-filters
+          [CallingPage]="'PendingAdditionalInfo'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row mb-2 mt-2">
+      <div class="col-md-12">
+        <button
+          type="button"
+          data-target="#assignOrderModal"
+          data-toggle="modal"
+          kendoButton
+          [primary]="true"
+          (click)="onDocumentReceived()"
+          [disabled]="loadingOrderGrid"
+        >
+          Document Received
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="OrderGridView"
+          [skip]="OrderSkip"
+          class="w-100"
+          style="height: 60vh"
+          [selectable]="selectableSettings"
+          [kendoGridSelectBy]="selectedCallback"
+          [selectedKeys]="OrderSelected"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="OrderSort"
+          (sortChange)="OrderSortChange($event)"
+          [loading]="loadingOrderGrid"
+          [pageable]="true"
+          [pageSize]="pagesize"
+          (pageChange)="OrderPageChange($event)"
+        >
+          <ng-template *ngIf="vwExportButton" kendoGridToolbarTemplate>
+            <button
+              class="pull-right mr-1"
+              type="button"
+              (click)="exportToExcelLog()"
+              kendoGridExcelCommand
+            >
+              Export to Excel
+            </button>
+          </ng-template>
+          <kendo-grid-checkbox-column width="8" showSelectAll="true">
+          </kendo-grid-checkbox-column>
+
+          <kendo-grid-column
+            *ngIf="!isHidden('orderqueuegroupid')"
+            field="orderqueuegroupid"
+            title="Work Group #"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="orderyear"
+            title="Year"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderday"
+            title="Folder"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordercategory"
+            title="Category"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientname"
+            title="Client"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderqueuegroupcode"
+            title="Accession #"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="comment"
+            title="Comment"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <!-- <kendo-grid-column
+            field="hl7present"
+            title="HL7"
+            width="15"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div
+                *ngIf="dataItem.hl7present"
+                class="text-success"
+                title="HL7 is present"
+              >
+                Yes
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientbilling"
+            title="Client Billing"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div
+                *ngIf="dataItem.clientbilling"
+                class="text-success"
+                title="Client billing is present"
+              >
+                Yes
+              </div>
+            </ng-template>
+          </kendo-grid-column> -->
+          <kendo-grid-column
+            field="documentcount"
+            title=""
+            width="30"
+            [sortable]="false"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <a
+                [href]=""
+                (click)="onOpenViewdetails(dataItem)"
+                data-toggle="modal"
+                data-target="#viewdetailsModal"
+                class="text-info pointer view-btn pr-1"
+                >View</a
+              >
+              <span
+                *ngIf="dataItem.hl7present"
+                class="text-danger font-weight-bold pr-1"
+                title="HL7 is available"
+              >
+                HL7
+              </span>
+              <span
+                *ngIf="dataItem.clientbilling"
+                class="text-success"
+                title="Client billed encounter"
+              >
+                Client Billed
+              </span>
+            </ng-template>
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+          <kendo-grid-excel fileName="{{ exportFilename }}.xlsx">
+            <!-- [fetchData]="allData" -->
+            <kendo-excelexport-column field="orderyear" title="Year">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderday" title="Folder">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordercategory" title="Category">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="clientname" title="Client">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="orderqueuegroupcode"
+              title="Accession #"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="comment" title="Comment">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="hl7present" title="HL7">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="clientbilling"
+              title="Client Billing"
+            >
+            </kendo-excelexport-column>
+          </kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<!--View Details Model GRID---  -->
+
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-order-details #OrderDetailsComponent></app-order-details>
+    <!-- <app-order-action></app-order-action> -->
+  </div>
+</div>
+<!--View Details Model -->
+
+<!--Confirmation Modal -->
+<div
+  *ngIf="this.OrderSelected.length > 0"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="confirmationTitle"
+      [InputConfirmationMessage]="InputStatusMessage"
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation>
+  </div>
+</div>
+<!--Confirmation Modal -->
+<div class="black-box" *ngIf="loadingOrderGrid">
+  <div class="k-i-loading"></div>
+</div>

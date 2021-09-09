@@ -1,0 +1,56 @@
+.textarea-to-lable {
+  color: #656565;
+  padding: unset;
+  height: 23px;
+  background: border-box;
+  border: none;
+  overflow: auto;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  resize: none;
+}
+.form-group {
+  margin-bottom: 0 !important;
+}
+.w-35 {
+  width: 35%;
+}
+.hrline {
+  border-top: 1px solid gray;
+  margin-top: 5vh;
+  margin-bottom: 0 !important;
+}
+.answer {
+  border-top: 1px solid gray;
+  margin-top: 0vh;
+  margin-bottom: 0 !important;
+}
+
+.diagnosistable td {
+  border: 1px solid gray;
+  border-collapse: collapse;
+}
+.diagnosistable td {
+  padding: 0px;
+  text-align: right;
+  height: 40px;
+}
+.diagnosistable td.input {
+  height: 100%;
+}
+.alt-grid {
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+.w-100px {
+  width: 100px;
+}
+.readonlybtn {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.checkBoxSize {
+  width: 15px;
+  height: 15px;
+}

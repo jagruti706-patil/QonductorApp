@@ -1,0 +1,251 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <div class="card border-0">
+      <div class="card-body p-2">
+        <button
+          type="button"
+          class="mb-2"
+          kendoButton
+          [primary]="true"
+          [disabled]="selectedMissingHL7Accessions.length == 0"
+          data-toggle="modal"
+          data-target="#updateReasonModal"
+        >
+          Update Status
+        </button>
+
+        <kendo-grid
+          class="w-100"
+          style="height: 67vh"
+          [data]="missingHL7AccessionGridView"
+          [selectable]="selectableSettings"
+          [kendoGridSelectBy]="selectedCallback"
+          [selectedKeys]="selectedMissingHL7Accessions"
+          [sort]="state.sort"
+          [sortable]="true"
+          (dataStateChange)="dataStateChange($event)"
+          [loading]="loader"
+          (cellClick)="cellClickHandler($event)"
+          (cellClose)="cellCloseHandler($event)"
+          [navigable]="true"
+        >
+          <kendo-grid-checkbox-column width="5" showSelectAll="true">
+          </kendo-grid-checkbox-column>
+          <kendo-grid-column
+            width="20"
+            field="cabinetname"
+            title="Year"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="20"
+            field="folder"
+            title="Folder"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="30"
+            field="category"
+            title="Category"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="30"
+            field="accession"
+            title="Accession #"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="30"
+            field="comment"
+            title="Comment"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [footerClass]="'text-right'"
+          >
+            <ng-template
+              kendoGridFooterTemplate
+              let-column
+              let-columnIndex="columnIndex"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                (click)="onSaveClick()"
+                [disabled]="loader"
+              >
+                Save
+              </button>
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="updateReasonModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-add-reason
+      [calledFrom]="'missinghl7'"
+      [selectedMissingHL7Accessions]="selectedMissingHL7Accessions"
+      (missingReportSaved)="onReportSaved($event)"
+    ></app-add-reason>
+  </div>
+</div> -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card border-0">
+      <div class="card-body p-2">
+        <button
+          type="button"
+          class="mb-2"
+          kendoButton
+          [primary]="true"
+          [disabled]="selectedMissingHL7Accessions.length == 0"
+          data-toggle="modal"
+          data-target="#updateReasonModal"
+        >
+          Update Status
+        </button>
+        <div class="card-header pl-2 border-0">
+          <h5 class="mb-0">HL7 DFT's missing for Order</h5>
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <kendo-grid
+              class="w-100 filter-grid disableDropdownOperator wrap-grid"
+              [data]="missingHL7AccessionGridView"
+              [selectable]="selectableSettings"
+              [kendoGridSelectBy]="selectedCallback"
+              [selectedKeys]="selectedMissingHL7Accessions"
+              [sortable]="true"
+              [filterable]="true"
+              [sort]="missingHL7AccessionGridState.sort"
+              [filter]="missingHL7AccessionGridState.filter"
+              (dataStateChange)="dataStateChange($event)"
+              [loading]="loader"
+              (cellClick)="cellClickHandler($event)"
+              (cellClose)="cellCloseHandler($event)"
+              [navigable]="true"
+            >
+              <kendo-grid-checkbox-column width="5" showSelectAll="true">
+              </kendo-grid-checkbox-column>
+              <kendo-grid-column
+                width="10"
+                field="srno"
+                title="#"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+                [filterable]="false"
+              >
+                <ng-template kendoGridCellTemplate let-rowIndex="rowIndex">
+                  {{ rowIndex + 1 }}
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="20"
+                field="folder"
+                title="Folder"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="category"
+                title="Category"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="accession"
+                title="Accession #"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="comment"
+                title="Comment"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+                [footerClass]="'text-right'"
+                [filterable]="false"
+              >
+                <!-- <ng-template
+                  kendoGridFooterTemplate
+                  let-column
+                  let-columnIndex="columnIndex"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="onSaveClick()"
+                    [disabled]="loader"
+                  >
+                    Save
+                  </button>
+                </ng-template> -->
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+          <div class="col-md-4">
+            <kendo-grid
+              class="w-100"
+              [data]="categoryWiseAccessionCountsGridView"
+              [sort]="categoryWiseAccessionCountGridState.sort"
+              [sortable]="true"
+            >
+              <kendo-grid-column
+                width="10"
+                field="category"
+                title="Category"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridFooterTemplate let-column>
+                  Grand Total
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="10"
+                field="countofaccession"
+                title="Count of Accession #"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridFooterTemplate let-column>
+                  {{ getSumByFieldName(column.field) }}
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="updateReasonModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-add-reason
+      [calledFrom]="'missinghl7'"
+      [selectedAccessions]="selectedMissingHL7Accessions"
+      (missingReportSaved)="onReportSaved($event)"
+    ></app-add-reason>
+  </div>
+</div>

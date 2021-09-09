@@ -1,0 +1,115 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="mb-0">Agents</h4>
+    <!-- <span class=" ml-auto">
+      <button class="mr-3" kendoButton (click)="CardView()"><i class="fa fa-th-large mr-2"></i> Card View</button>
+      <button kendoButton (click)="GridView()"><i class="fa fa-list mr-2"></i> Grid View</button>
+    </span> -->
+  </div>
+  <div class="card-body">
+    <form [formGroup]="AgentRoleGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Role
+            </label>
+            <kendo-dropdownlist
+              class="form-control"
+              formControlName="fcUserRole"
+              id="ddRoles"
+              [class.is-invalid]="fbcUserRole.invalid && fbcUserRole.touched"
+              [data]="Roles"
+              textField="rolename"
+              valueField="roleid"
+              [defaultItem]="RoleDefaultValue"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="fbcUserRole.invalid && fbcUserRole.touched">
+              <small *ngIf="fbcUserRole.errors?.required" class="text-danger"
+                >Role is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- Card View -->
+    <div class="row">
+      <div class="col-md-2 mb-4" *ngFor="let item of Users; let i = index">
+        <div class="card card-profile-agent pb-0">
+          <div
+            class="card-header-agent"
+            [ngClass]="{
+              'bg-green': (i + 1) % 7 == 0,
+              'bg-orange': (i + 1) % 7 == 1,
+              'bg-blue': (i + 1) % 7 == 2,
+              'bg-pink': (i + 1) % 7 == 3,
+              'bg-purple': (i + 1) % 7 == 4,
+              'bg-aqua': (i + 1) % 7 == 5,
+              'bg-yellow': (i + 1) % 7 == 6
+            }"
+          ></div>
+          <div class="card-body text-center pb-0">
+            <div class="card-profile-img avatar avatar-xxl">
+              <!-- {{ item.firstname | slice: 0:1 }}{{ item.lastname | slice: 0:1 }} -->
+              {{ item.initials }}
+            </div>
+            <h3 class="mb-2 text-black">
+              {{ item.firstname }} {{ item.lastname }}
+            </h3>
+            <p class="mb-1">{{ item.rolename }}</p>
+            <div>
+              <ngb-rating [(rate)]="item.rating">
+                <ng-template let-fill="fill" let-index="index">
+                  <span class="star" [class.filled]="fill === 100"
+                    >&#9733;</span
+                  >
+                </ng-template>
+              </ngb-rating>
+            </div>
+            <button
+              class="btn btn-pill btn-outline-primary btn-outline-secondary btn-sm mt-2"
+            >
+              {{ item.pendingtask }} pending task
+            </button>
+          </div>
+          <div class="row no-gutters work-top-border mt-3">
+            <div class="col-7 work-right-border">
+              <div class="text-center mt-2">
+                <span class="work-color">{{ item.workavg }} </span>
+                <label class="work-text-color">Work Avg/Day</label>
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="text-center mt-2">
+                <span class="work-color">{{ item.errorrate }}%</span>
+                <label class="work-text-color">Error Rate</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Card View -->
+  </div>
+  <!-- <div class="card-footer" *ngIf="this.IsCardView">
+    <nav aria-label="Page navigation example">
+      <ul class="pagination ">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav>
+  </div> -->
+</div>
+<div class="black-box" *ngIf="loadingAgenttask">
+  <div class="k-i-loading"></div>
+</div>

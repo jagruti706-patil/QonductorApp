@@ -1,0 +1,495 @@
+<div class="row">
+  <div class="col-md-11">
+    <!-- <div
+  [ngClass]="{
+    'col-md-10': showPagePanel == true,
+    'col-md-11': showPagePanel == false
+  }"
+> -->
+    <div class="card" style="height: 90vh;">
+      <div class="card-header p-1 d-block w-100">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex p-1 left-block">
+              <!-- <h5 class="mb-0 mr-2">Document(s)</h5>
+              <div class="small mr-3">
+                Source:
+                <span class="font-weight-bold">
+                  TRIARQ Storage
+                </span>
+              </div> -->
+              <div class="small">
+                Name:
+                <span
+                  *ngIf="
+                    originaldocinfo != null && originaldocinfo['isacknowledged']
+                  "
+                  class="font-weight-bold text-success"
+                >
+                  {{ originaldocinfo["documentname"] }}
+                </span>
+                <span
+                  *ngIf="
+                    originaldocinfo != null &&
+                    !originaldocinfo['isacknowledged']
+                  "
+                  class="font-weight-bold text-danger"
+                >
+                  {{ originaldocinfo["documentname"] }}
+                </span>
+                <i
+                  *ngIf="
+                    originaldocinfo &&
+                    originaldocinfo['documentname'] &&
+                    (calledFrom == 'encounteraction' ||
+                      calledFrom == 'assistance')
+                  "
+                  (click)="onViewMasterDocument()"
+                  data-toggle="modal"
+                  class="fas fa-eye mr-2 pointer"
+                  title="View Original Document"
+                ></i>
+              </div>
+              <div class="small ml-auto" *ngIf="statustype">
+                Status :
+                <span class="font-weight-bold">
+                  {{ statustype }}
+                </span>
+              </div>
+            </div>
+            <div class="right-block" *ngIf="showActionPane">
+              <em
+                class="fe pointer sidebar-icon ml-auto"
+                [ngClass]="{
+                  'fe-arrow-right-circle': !leftside,
+                  'fe-arrow-left-circle': leftside
+                }"
+                style="vertical-align: middle;"
+                (click)="sidebar()"
+              ></em>
+            </div>
+          </div>
+
+          <!-- <div class="col-md-4">
+            <button
+              type="button"
+              (click)="onAddCommentClicked()"
+              data-target="#addCommentModal"
+              data-toggle="modal"
+              class="btn btn-sm btn-primary float-right mb-1"
+              [disabled]="
+                this.documentList == null || this.documentList.length == 0
+              "
+            >
+              Add Comment/Note
+            </button>
+          </div> -->
+          <div class="col-md-12">
+            <div
+              class="d-flex justify-content-center border-top pt-1"
+              *ngIf="
+                !(this.documentList == null || this.documentList.length == 0)
+              "
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-primary ml-1 mr-1"
+                (click)="showDocumentByIndex(currentindex - 1)"
+                [disabled]="
+                  this.currentindex == 0 || this.documentList.length == 0
+                "
+              >
+                <!-- <em
+                  class="fa pointer fa-chevron-left"
+                  title="Previous Page"
+                ></em> -->
+                Previous Page
+              </button>
+              <ng-container *ngIf="calledFrom !== 'viewmasterdocument'">
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary mr-1 ml-1"
+                  (click)="onAcknowledgePageClicked()"
+                >
+                  <!-- [disabled]="this.documentList[currentindex]['iscompleted']" -->
+                  Mark Complete Page
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary mr-1 ml-1"
+                  (click)="onAddCommentClicked()"
+                  data-target="#addCommentModal"
+                  data-toggle="modal"
+                >
+                  Add Note
+                </button>
+                <button
+                  *ngIf="showAcknoledgeButton"
+                  type="button"
+                  class="btn btn-sm btn-primary mr-1 ml-1"
+                  (click)="onAcknowledgedDocument()"
+                  [disabled]="
+                    originaldocinfo != null && originaldocinfo['isacknowledged']
+                  "
+                >
+                  Acknowledge Document
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-primary mr-1 ml-1"
+                  (click)="onAcknowledgeNextPageClicked()"
+                  [disabled]="this.documentList.length == this.currentindex + 1"
+                >
+                  Mark Complete & Next Page
+                </button>
+              </ng-container>
+              <button
+                type="button"
+                class="btn btn-sm btn-primary ml-1 mr-1"
+                (click)="showDocumentByIndex(currentindex + 1)"
+                [disabled]="this.documentList.length == this.currentindex + 1"
+              >
+                <!-- <em class="fa pointer fa-chevron-right" title="Next Page"></em> -->
+                Next Page
+              </button>
+            </div>
+            <!-- <div class="d-flex" class="w-100">
+              <div
+                class="card mt-0 mb-0"
+                *ngIf="this.pagenotes && this.pagenotes.length > 0"
+              >
+                <div
+                  class="card-header d-block pl-3 p-1"
+                  style="
+                    background-color: #e5f2ff;
+                    color: #00274e;
+                    font-weight: 600;
+                  "
+                >
+                  <div class="row">
+                    <div class="col-md-2">
+                      Notes
+                    </div>
+                    <div class="col-md-4 offset-md-6">
+                      <span class="float-right">
+                        <em
+                          [ngClass]="{
+                            'fa-chevron-circle-down': !noteCollapse,
+                            'fa-chevron-circle-up': noteCollapse
+                          }"
+                          class="fa pointer"
+                          (click)="this.noteCollapse = !this.noteCollapse"
+                        ></em
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="card-body p-1"
+                  id="collapseExample"
+                  style="max-height: 50px; overflow-x: hidden;"
+                  *ngIf="noteCollapse"
+                >
+                  <div class="row" *ngIf="this.pagenotes">
+                    <ng-container *ngFor="let item of pagenotes">
+                      <div class="col-md-12">
+                        <span class="h6 text-muted mr-2">{{
+                          item.createdon | date: "MM-dd-yyyy hh:mm:ss a"
+                        }}</span>
+                        <span class="h6 text-orange">{{ item.username }}</span>
+                        <div class="h6 text-dark p-1">
+                          {{ item.ordernote }}
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div *ngIf="loadingPDF">
+          <div class="k-i-loading"></div>
+        </div>
+        <!-- <div
+          [ngStyle]="{
+            height: pagenotes && pagenotes.length > 0 ? '83.1vh' : '91.7vh'
+          }"
+        > -->
+        <ng2-pdfjs-viewer
+          #pdfViewerRCMAutoLoad
+          [viewBookmark]="false"
+          [showSpinner]="true"
+          [download]="false"
+          [openFile]="false"
+        ></ng2-pdfjs-viewer>
+        <!-- </div> -->
+      </div>
+      <div
+        class="card-footer p-1 w-100"
+        *ngIf="this.pagenotes && this.pagenotes.length > 0"
+      >
+        <div class="row">
+          <div class="col-md-12">
+            <div class="d-flex" class="w-100">
+              <div class="card mt-0 mb-0">
+                <div
+                  class="card-header d-block pl-3 p-1"
+                  style="
+                    background-color: #e5f2ff;
+                    color: #00274e;
+                    font-weight: 600;
+                  "
+                >
+                  <div class="row">
+                    <div class="col-md-2">
+                      Notes
+                    </div>
+                    <div class="col-md-4 offset-md-6">
+                      <span class="float-right">
+                        <em
+                          [ngClass]="{
+                            'fa-chevron-circle-down': !noteCollapse,
+                            'fa-chevron-circle-up': noteCollapse
+                          }"
+                          class="fa pointer"
+                          (click)="this.noteCollapse = !this.noteCollapse"
+                        ></em
+                      ></span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="card-body p-1"
+                  id="collapseExample"
+                  style="max-height: 50px; overflow-x: hidden;"
+                  *ngIf="noteCollapse"
+                >
+                  <div *ngIf="this.pagenotes[0] != null" class="row">
+                    <ng-container *ngFor="let item of this.pagenotes">
+                      <div class="col-md-12 border-bottom">
+                        <span class="h6 text-muted mr-2">{{
+                          item.createdon | date: "MM-dd-yyyy hh:mm:ss a"
+                        }}</span>
+                        <span class="h6 text-orange">{{ item.username }}</span>
+                        <div class="h6 text-dark p-1">
+                          {{ item.ordernote }}
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!showPagePanel" class="col-md-1 pl-0">
+    <div class="card">
+      <div class="card-body p-0">
+        <div class="card border-0">
+          <div class="card-body p-3" style="height: 90vh;">
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <i
+                  class="fe fe-menu pointer"
+                  (click)="showPagePanel = true"
+                ></i>
+                <div
+                  style="writing-mode: vertical-rl; text-orientation: mixed;"
+                  class="h4 mx-auto"
+                >
+                  <span *ngIf="selectedPage"
+                    >Page:
+                    <b
+                      [ngClass]="
+                        this.documentList &&
+                        this.documentList[currentindex]['statustype'] ===
+                          'Completed'
+                          ? 'text-danger'
+                          : 'text-orange'
+                      "
+                      >{{ selectedPage }}
+                      of
+                      {{ documentList ? documentList.length : 1 }}&nbsp;&nbsp;
+                    </b>
+                  </span>
+                  <!-- {
+                    'text-orange':
+                      this.documentList &&
+                      (!this.documentList[currentindex]['iscompleted'] ||
+                        this.documentList[currentindex]['statustype'] ==
+                          'Sent To Practice'),
+                    'text-danger':
+                      this.documentList &&
+                      this.documentList[currentindex]['iscompleted'] &&
+                      this.documentList[currentindex]['statustype'] !=
+                        'Sent To Practice'
+                  } -->
+                  <!-- <span *ngIf="selectedPage">
+                    Total Pages:
+                    <b class="text-success">{{ documentList.length }}</b></span
+                  > -->
+                  <span
+                    *ngIf="
+                      originaldocinfo != null &&
+                      originaldocinfo['completedcount'] != 0
+                    "
+                    >Completed Count:
+                    <b class="text-orange"
+                      >{{ originaldocinfo["completedcount"] }}&nbsp;</b
+                    >&nbsp;&nbsp;
+                  </span>
+                  <span
+                    *ngIf="
+                      documentList &&
+                      documentList[currentindex].pagenotes[0] != null
+                    "
+                    >Page Note:&nbsp;&nbsp;
+                    <b class="custom-badge bg-warning">{{
+                      documentList[currentindex].pagenotes.length
+                    }}</b
+                    >&nbsp;&nbsp;</span
+                  >
+
+                  <span *ngIf="!selectedPage">&nbsp;&nbsp;Pages</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    [ngStyle]="{ display: showPagePanel == false ? 'none' : 'block' }"
+    class="col-md-1 pl-0"
+  >
+    <div class="card">
+      <div class="card-header p-0">
+        <div class="d-flex">
+          <div class="ml-auto">
+            <i class="fe fe-menu pointer" (click)="showPagePanel = false"></i>
+          </div>
+          <h6 class="pb-1 pl-1" (click)="showPagePanel = false">Pages</h6>
+        </div>
+      </div>
+      <div class="card-body p-1" style="height: 86vh; overflow-x: hidden;">
+        <ng-container
+          *ngFor="let document of documentList; let currentindex = index"
+        >
+          <!-- (click)="showDocument(document, currentindex)" -->
+
+          <a
+            (click)="showDocumentByIndex(currentindex)"
+            class="btn btn-sm button-secondary mt-1 w-100"
+            [ngClass]="{
+              active:
+                document.docid == this.documentid &&
+                document.statustype !== 'Completed',
+              completed:
+                document.docid == this.documentid &&
+                document.statustype === 'Completed'
+            }"
+            routerLinkActive="active"
+            appNoDblClick
+          >
+            <sup
+              *ngIf="document != null && document.pagenotes.length > 0"
+              [title]="document.note"
+              class="text-warning"
+              style="cursor: help; font-size: smaller;"
+              ><em class="fas fa-sticky-note rounded-circle"></em
+            ></sup>
+            {{ document.filedisplayname.toString().replace(".pdf", "") }}
+            <!-- <i
+              *ngIf="document != null && document.pagenotes.length > 0"
+              class="far fa-sticky-note"
+              [title]="document.note"
+              style="cursor: help; font-size: smaller;"
+            ></i> -->
+          </a>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="black-box"> -->
+  <div *ngIf="loadingDocs" class="k-i-loading"></div>
+  <!-- </div> -->
+</div>
+<div
+  *ngIf="calledFrom !== 'viewmasterdocument'"
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addCommentModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content box-shadow">
+      <div class="modal-header bg-light p-2">
+        <h5 class="modal-title">{{ commentTitle }}</h5>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="onCloseClick()"
+        ></button>
+      </div>
+      <div class="modal-body p-0">
+        <app-add-comment
+          (iscommentsaved)="outputCommentResult($event)"
+          [isFromRcmDocs]="true"
+          [commentTitle]="commentTitle"
+          [accessionreferenceno]="originaldocinfo?.accessionreferenceno"
+          #AddCommentComponent
+        ></app-add-comment>
+      </div>
+    </div>
+    <!-- <div class="modal-content box-shadow">
+      <div class="modal-header bg-light p-2">
+        <h5 class="modal-title">{{ commentTitle }}</h5>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="onCloseClick()"
+        ></button>
+      </div>
+      <div class="modal-body p-0">
+        <app-add-comment
+          (iscommentsaved)="outputCommentResult($event)"
+          [isFromRcmDocs]="true"
+          #AddCommentComponent
+        ></app-add-comment>
+      </div>
+    </div> -->
+  </div>
+</div>
+<!--Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="ackConfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="'Acknowledge Confirmation'"
+      [InputConfirmationMessage]="confirmationMsg"
+      (OutputConfirmationResult)="OutputAckConfirmationResult($event)"
+    >
+    </app-action-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Model -->

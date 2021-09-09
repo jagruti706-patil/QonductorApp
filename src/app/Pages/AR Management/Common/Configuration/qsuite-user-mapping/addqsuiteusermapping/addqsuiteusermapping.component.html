@@ -1,0 +1,165 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newQsuiteUserMapping">
+      Add Qsuite User Mapping
+    </h4>
+    <h4
+      class="modal-title"
+      id="exampleModalLabel"
+      *ngIf="!newQsuiteUserMapping"
+    >
+      Update Qsuite User Mapping
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="QsuiteUserMappingGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcClient"
+              id="ddClient"
+              [class.is-invalid]="ClientName.invalid && ClientName.touched"
+              [data]="Clientdetail"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [(ngModel)]="selectedClientValue"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div
+              *ngIf="submitted || (ClientName.invalid && ClientName.touched)"
+            >
+              <small *ngIf="ClientName.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Agent
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcAgent"
+              id="ddAgent"
+              [class.is-invalid]="AgentName.invalid && AgentName.touched"
+              [data]="Agentdetail"
+              [textField]="'displayname'"
+              [valueField]="'ngcpuserid'"
+              [(ngModel)]="selectedAgentValue"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="submitted || (AgentName.invalid && AgentName.touched)">
+              <small *ngIf="AgentName.errors?.required" class="text-danger"
+                >Agent is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>AUSID
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="AUSID.invalid && AUSID.touched"
+              formControlName="fcAUSID"
+              type="text"
+              id="AUSID"
+              class="form-control form-control-sm"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Database Name
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="DatabaseName.invalid && DatabaseName.touched"
+              formControlName="fcDatabaseName"
+              type="text"
+              id="DatabaseName"
+              class="form-control form-control-sm"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Qsuite User Name
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                QsuiteUserName.invalid && QsuiteUserName.touched
+              "
+              formControlName="fcQsuiteUserName"
+              type="text"
+              id="QsuiteUserName"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (QsuiteUserName.invalid && QsuiteUserName.touched)
+              "
+            >
+              <small *ngIf="QsuiteUserName.errors?.required" class="text-danger"
+                >Qsuite UserName is required</small
+              >
+              <small
+                *ngIf="QsuiteUserName.errors?.maxlength"
+                class="text-danger"
+                >Qsuite UserName allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddQsuiteUserMapping"
+      (click)="saveQsuiteUserMapping()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingQsuiteUserMapping">
+  <div class="k-i-loading"></div>
+</div>

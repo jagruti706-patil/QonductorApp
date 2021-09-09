@@ -1,0 +1,502 @@
+<div class="card">
+  <!-- #region header -->
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Biotech - Ready for Printing</h4>
+  </div>
+  <!-- #endregion header -->
+
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card p-2 mb-0">
+          <div class="d-flex">
+            <h4 class="mb-0 mt-1 text-muted">
+              Total Orders Ready for Printing:
+            </h4>
+            &nbsp;&nbsp;
+            <h2 class="mb-0 text-muted">{{ totalElements }}</h2>
+            <div>
+              <button
+                *ngIf="vwPrintAllBtn"
+                type="button"
+                kendoButton
+                class="ml-4"
+                [primary]="true"
+                (click)="PrintAllClick()"
+                [disabled]="loadingOrders"
+              >
+                Print All
+              </button>
+            </div>
+            <!-- <div class="d-flex ml-auto mt-1">
+              <input type="checkbox" class="mt-1" />&nbsp;
+              <h4 class="mb-0 text-muted">
+                Include Cover Letter with Print Batch
+              </h4>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <app-print-filter
+          [CallingPage]="CallingPage"
+          (FilterData)="ApplyFilter($event)"
+        ></app-print-filter>
+      </div>
+    </div>
+    <div class="row mb-2 mt-2">
+      <div class="col-md-12">
+        <button
+          *ngIf="vwPrintBtn"
+          type="button"
+          class="mr-4"
+          kendoButton
+          [primary]="true"
+          (click)="PrintClick()"
+          [disabled]="loadingOrders"
+        >
+          Print Selected
+        </button>
+        <button
+          *ngIf="vwReadyForPrintSendToPracticeBtn"
+          type="button"
+          id="idBtnSendToPractice"
+          data-toggle="modal"
+          kendoButton
+          [primary]="true"
+          (click)="onSendToPracticeClick()"
+          [disabled]="loadingOrders"
+        >
+          Send To Practice
+        </button>
+        <!-- <button
+          *ngIf="vwPrintAllBtn"
+          type="button"
+          kendoButton
+          [ngClass]="{ 'ml-4': vwPrintBtn }"
+          [primary]="true"
+          (click)="PrintAllClick()"
+          [disabled]="loadingOrders"
+        >
+          Print All
+        </button> -->
+        <!-- <button
+          type="button"
+          kendoButton
+          class="ml-4"
+          [primary]="true"
+          (click)="PrintSampleClick()"
+          [disabled]="loadingOrders"
+        >
+          Print Sample
+        </button> -->
+        <!-- <label class="float-right h4 text-muted"
+          >Document Count:&nbsp;{{ totalDocuments }}</label
+        > -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="OrderGridView"
+          [skip]="orderSkip"
+          class="w-100 wrap-grid"
+          style="height: 60vh"
+          [selectable]="selectableSettings"
+          [kendoGridSelectBy]="selectedCallback"
+          (selectedKeysChange)="gridSelectionChange($event)"
+          [selectedKeys]="OrderSelected"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="OrderSort"
+          (sortChange)="OrderSortChange($event)"
+          [loading]="loadingOrders"
+          [pageable]="true"
+          [pageSize]="pageSize"
+          (pageChange)="OrderPageChange($event)"
+        >
+          <!-- <ng-template kendoGridToolbarTemplate>
+            <button
+              *ngIf="vwExportButton"
+              class="pull-right mr-1"
+              type="button"
+              (click)="exportToExcelLog()"
+              kendoGridExcelCommand
+            >
+              Export to Excel
+            </button>
+          </ng-template> -->
+          <kendo-grid-checkbox-column width="12" showSelectAll="true">
+          </kendo-grid-checkbox-column>
+          <kendo-grid-column
+            field="orderyear"
+            title="Year"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderday"
+            title="Folder"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordercategory"
+            title="Category"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+            field="ordersubcategory"
+            title="Order Category"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column> -->
+          <kendo-grid-column
+            field="ismedicare"
+            title="Insurance"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <ng-container *ngIf="dataItem.ismedicare">Medicare</ng-container>
+              <ng-container *ngIf="!dataItem.ismedicare"
+                >Commercial</ng-container
+              >
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="dos"
+            title="Requisition Date"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{ dataItem.dos | date: "MM-dd-yyyy" }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientname"
+            title="Practice"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderqueuegroupcode"
+            title="Accession #"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="providername"
+            title="Provider"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="providernpi"
+            title="Provider NPI"
+            width="35"
+            [filterable]="false"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+            field="providername"
+            title="Provider"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="providernpi"
+            title="Provider NPI"
+            width="30"
+            [filterable]="false"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column> -->
+
+          <kendo-grid-column
+            field="modifiedon"
+            width="40"
+            title="Submitted Date"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template
+              kendoGridFilterCellTemplate
+              let-filter
+              let-column="column"
+            >
+              <kendo-grid-date-filter-cell
+                [showOperators]="false"
+                [column]="column"
+                [filter]="filter"
+              >
+              </kendo-grid-date-filter-cell>
+            </ng-template>
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{ dataItem.modifiedon | date: "MM-dd-yyyy" }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordernote"
+            title="Note"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="documentcount"
+            title=""
+            [sortable]="false"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <i
+                (click)="onOpenViewdetails(dataItem)"
+                data-toggle="modal"
+                data-target="#viewdetailsModal"
+                class="fas fa-eye mr-1 pointer text-primary"
+                title="View"
+              ></i>
+              <i
+                *ngIf="vwAddComment"
+                (click)="onAddCommentClicked(dataItem)"
+                data-toggle="modal"
+                data-target="#viewAddComment"
+                class="fas fa-comment pointer text-info"
+                title="Add Comment"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+          <!-- <kendo-grid-excel fileName="{{ exportFilename }}.xlsx">
+            <kendo-excelexport-column field="orderyear" title="Year">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderday" title="Folder">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordercategory" title="Category">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="orderqueuegroupcode"
+              title="Accession #"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="providername"
+              title="Provider Name"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="providernpi" title="Provider NPI">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="workeddate" title="Worked Date">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordernote" title="Note">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="status" title="Status">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="comment" title="Comment">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="hl7present" title="HL7">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="clientbilling"
+              title="Client Billing"
+            >
+            </kendo-excelexport-column>
+          </kendo-grid-excel> -->
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<!--View Details Model GRID---  -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-order-details #OrderDetailsComponent></app-order-details>
+  </div>
+</div>
+<!--View Details Model -->
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ALERT!!</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div
+          style="white-space: pre-line"
+          [innerHTML]="InputConfirmationMessage"
+        ></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+          Ok
+        </button>
+      </div>
+    </div>
+
+    <!-- <app-action-confirmation
+      [InputConfirmationTitle]="'Confirmation'"
+      [InputConfirmationMessage]="InputConfirmationMessage"
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation> -->
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+
+<!-- <div class="black-box" *ngIf="incompleteInfoLoading">
+  <div class="k-i-loading"></div>
+</div> -->
+
+<div class="progress-box" *ngIf="isPercentLoader">
+  <div class="col-md-2 mx-auto" style="top: 30%">
+    <circle-progress
+      [percent]="percentage"
+      [startFromZero]="false"
+      [animation]="true"
+      [animationDuration]="200"
+      [subtitle]="'Please wait...'"
+      subtitleColor="#000"
+      titleColor="#000"
+      unitsColor="#000"
+      innerStrokeColor="#fd9644"
+      outerStrokeColor="#e76800"
+      subtitleFontSize="12"
+    ></circle-progress>
+  </div>
+</div>
+
+<!-- report modal -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="orderStatusReport"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <app-status-report
+    [title]="isPrintClick ? 'Order Print Report' : 'Order Status Report'"
+    [isForPrint]="isPrintClick"
+    (onOkClicked)="reportOkClicked($event)"
+  ></app-status-report>
+</div>
+<!-- report modal -->
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>
+
+<!-- <ng2-pdfjs-viewer
+  #pdfViewerAutoLoad
+  [viewBookmark]="false"
+  [showSpinner]="true"
+  [download]="false"
+  [openFile]="false"
+></ng2-pdfjs-viewer> -->
+<!--Confirmation Modal -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="UserConfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="confirmationTitle"
+      [InputConfirmationMessage]="InputStatusMessage"
+      (OutputConfirmationResult)="OutputConfirmationResult($event)"
+    >
+    </app-action-confirmation>
+  </div>
+</div>
+<!--Confirmation Modal -->
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="assignOrderModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-order-assignment #OrderAssignment></app-order-assignment>
+  </div>
+</div>
+<!-- Add comment modal -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewAddComment"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Comment</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="onCommentClose()"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <app-add-comment
+          (iscommentsaved)="outputCommentResult($event)"
+          #AddCommentComponent
+        ></app-add-comment>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add comment modal -->

@@ -1,0 +1,164 @@
+<div class="card">
+  <div class="card-body">
+    <!-- <form [formGroup]="DropDownGroup">
+      <div class="d-flex">
+        <div class="form-group flex-fill pr-2">
+          <label class="form-label"
+            ><strong class="text-danger">*</strong>Client
+          </label>
+          <kendo-dropdownlist
+            class="form-control form-control-sm"
+            formControlName="fcClientName"
+            id="ddClients"
+            [class.is-invalid]="ClientName.invalid && ClientName.touched"
+            [data]="Clientdetail"
+            textField="clientcodename"
+            valueField="nclientid"
+            [defaultItem]="ClientDefaultValue"
+            [valuePrimitive]="true"
+          >
+          </kendo-dropdownlist>
+          <div *ngIf="ClientName.invalid && ClientName.touched">
+            <small *ngIf="ClientName.errors?.required" class="text-danger"
+              >Client is required</small
+            >
+          </div>
+        </div>
+        <div class="form-group flex-fill pr-2">
+          <label class="form-label"
+            ><strong class="text-danger">*</strong>Status
+          </label>
+          <kendo-dropdownlist
+            class="form-control form-control-sm"
+            formControlName="fcMasterStatus"
+            id="ddMasterStatus"
+            [class.is-invalid]="MasterStatus.invalid && MasterStatus.touched"
+            [data]="sMasterStatus"
+            textField="Status"
+            valueField="Statusid"
+            [valuePrimitive]="true"
+          >
+          </kendo-dropdownlist>
+          <div *ngIf="MasterStatus.invalid && MasterStatus.touched">
+            <small *ngIf="MasterStatus.errors?.required" class="text-danger"
+              >Status is required</small
+            >
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">&nbsp;</label>
+          <button
+            class="btn btn-secondary btn-sm"
+            (click)="getFilesDetails(ClientName.value, MasterStatus.value)"
+            title="Refresh"
+          >
+            <i class="fe fe-rotate-cw"></i>
+          </button>
+        </div>
+      </div>
+    </form> -->
+    <div class="row">
+      <div class="col-md-6">
+        <span *ngIf="FilesgridView != undefined">
+          {{ displaytotalrecordscount }} records found
+        </span>
+      </div>
+      <div class="col-md-6">
+        <div class="float-right">
+          <i
+            *ngIf="!filterApplied && !loadingFiles"
+            class="fe fe-filter ml-auto pointer"
+            title="Default filter is applied.."
+            data-toggle="collapse"
+            data-target="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          ></i>
+          <i
+            *ngIf="filterApplied && !loadingFiles"
+            class="fa fa-filter ml-auto pointer"
+            title="Some filter is applied.."
+            data-toggle="collapse"
+            data-target="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+      <app-filters
+        [CallingPage]="'File'"
+        (FilterData)="ApplyFilter($event)"
+      ></app-filters>
+    </div>
+
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridFiles"
+        [data]="FilesgridView"
+        [pageSize]="FilespageSize"
+        [pageable]="true"
+        [skip]="Filesskip"
+        (pageChange)="pageChangeFiles($event)"
+        [sortable]="true"
+        [sort]="Filessort"
+        (sortChange)="sortFilesChange($event)"
+        [selectable]="true"
+        [loading]="loadingFilesGrid"
+        style="height: 70vh;"
+      >
+        <kendo-grid-column
+          field="sclientname"
+          title="Client Name"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sfilename"
+          title="File Name"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.sexception }}">{{
+              dataItem.sfilename
+            }}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="nfilestatus"
+          title="Status"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.sexception }}">
+              <div *ngIf="dataItem.nfilestatus == 1">Processed</div>
+              <div *ngIf="dataItem.nfilestatus == 0">Unprocessed</div>
+              <div *ngIf="dataItem.nfilestatus == 2">Inprocess</div>
+            </span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dtimportdate"
+          title="Import Date"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dtimportdate | date: "MM-dd-yyyy hh:mm:ss a" }}
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+      <!-- <div *ngIf="!this.FilesgridView" class="k-icon k-i-loading" style="font-size: 64px; ">
+      </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- <div class="black-box" *ngIf="loadingFiles">
+  <div class="k-i-loading"></div>
+</div> -->

@@ -1,0 +1,449 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="mb-0">Client Interface</h4>
+    <div class="row ml-auto">
+      <div>
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#addeditinterfacemodal"
+          (click)="AddInterface()"
+        >
+          Add Interface
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-1" style="height: 72vh;">
+    <form [formGroup]="formGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">Client </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              [data]="Clientdetail"
+              formControlName="fcClient"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [valuePrimitive]="true"
+              [defaultItem]="ClientDefaultValue"
+              [filterable]="true"
+              (filterChange)="handleFilter($event)"
+            >
+            </kendo-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="grid-wrapper">
+      <kendo-grid
+        class="w-100"
+        [data]="interfacesGridView"
+        style="max-height: 60vh;"
+        [pageSize]="pageSize"
+        [pageable]="true"
+        [skip]="pageSkip"
+        (pageChange)="pageChange($event)"
+        [sortable]="{
+          mode: 'multiple'
+        }"
+        [sort]="interfaceSort"
+        (sortChange)="sortChange($event)"
+        [selectable]="true"
+        (edit)="editInterface($event)"
+        [loading]="this.loadingGrid"
+      >
+        <kendo-grid-column
+          field="clientname"
+          title="Client Name"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="interfacename"
+          title="Interface Name"
+          width="25"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="loginid"
+          title="Username"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <ng-container *ngIf="dataItem.interfacecode == 'DV'">{{
+              this.clsUtility.decryptAESForDocsvault(dataItem.loginid)
+            }}</ng-container>
+            <ng-container *ngIf="dataItem.interfacecode != 'DV'">{{
+              dataItem.loginid
+            }}</ng-container>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="rootfolder"
+          title="Root Folder"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="isactive"
+          title="Status"
+          width="15"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.isactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.isactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editclientconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.isactive == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              title="Activate"
+              (click)="onUpdateStatus(dataItem)"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.isactive == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              title="Deactivate"
+              (click)="onUpdateStatus(dataItem)"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+            <button
+              kendoGridEditCommand
+              title="Interface Details"
+              data-toggle="modal"
+              data-target="#interfaceViewDetailsModal"
+              (click)="onViewInterface(dataItem)"
+            >
+              <i class="fe fe-info"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addeditinterfacemodal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-add-edit-interface
+      #AddEditInterface
+      (onsaveinterface)="oninterfacesave($event)"
+    ></app-add-edit-interface>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editclientconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+<!--Confirmation Modal -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="'Confirmation'"
+      [InputConfirmationMessage]="confirmationMsg"
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Modal -->
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="interfaceViewDetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header p-2 pl-3">
+        <h4 class="modal-title" id="exampleModalLabel">Interface Details</h4>
+        <button
+          type="button"
+          class="close pr-5"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="card p-2">
+          <div class="row">
+            <div *ngIf="interFaceMasterDetails != null" class="col-md-8">
+              <small class="mb-0">Client</small>
+              <label class="mb-0 form-label">{{
+                interFaceMasterDetails.clientname
+              }}</label>
+            </div>
+
+            <div *ngIf="interFaceMasterDetails != null" class="col-md-4">
+              <small class="mb-0">Interface</small>
+
+              <div [ngSwitch]="interFaceMasterDetails.interfacecode">
+                <label class="mb-0 form-label" *ngSwitchCase="'DV'"
+                  >DocsVault</label
+                >
+                <label class="mb-0 form-label" *ngSwitchCase="'WC'"
+                  >WebChart</label
+                >
+                <label class="mb-0 form-label" *ngSwitchCase="'EC'"
+                  >E-Clinical</label
+                >
+                <label class="mb-0 form-label" *ngSwitchCase="'SFTP'"
+                  >SFTP</label
+                >
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="interFaceMasterDetails != null" class="col-md-8">
+              <small class="mb-0">URL</small>
+              <label class="mb-0 form-label"
+                >{{ interFaceMasterDetails.ftpurl }}
+              </label>
+            </div>
+            <div
+              *ngIf="
+                interFaceMasterDetails != null &&
+                interFaceMasterDetails.interfacecode == 'SFTP'
+              "
+              class="col-md-4"
+            >
+              <small class="mb-0">Source Process Folder</small>
+              <label
+                class="mb-0 form-label"
+                [ngSwitch]="interFaceMasterDetails.sourceprocessfolder"
+              >
+                <ng-container *ngSwitchCase="0">
+                  By Date
+                </ng-container>
+                <ng-container *ngSwitchCase="1">
+                  By Category
+                </ng-container>
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div *ngIf="interFaceMasterDetails != null" class="col-md-8">
+              <small class="mb-0">Username</small>
+              <label class="mb-0 form-label">
+                <ng-container
+                  *ngIf="interFaceMasterDetails.interfacecode == 'DV'"
+                  >{{
+                    this.clsUtility.decryptAESForDocsvault(
+                      interFaceMasterDetails.username
+                    )
+                  }}</ng-container
+                >
+                <ng-container
+                  *ngIf="interFaceMasterDetails.interfacecode != 'DV'"
+                  >{{ interFaceMasterDetails.username }}</ng-container
+                >
+              </label>
+            </div>
+
+            <div
+              *ngIf="
+                interFaceMasterDetails != null &&
+                interFaceMasterDetails.interfacecode == 'SFTP'
+              "
+              class="col-md-4"
+            >
+              <small class="mb-0">port</small>
+              <label class="mb-0 form-label"
+                >{{ interFaceMasterDetails.portno }}
+              </label>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              *ngIf="
+                interFaceMasterDetails != null &&
+                interFaceMasterDetails.interfacecode == 'SFTP'
+              "
+              class="col-md-12"
+            >
+              <small class="mb-0">Root Folder</small>
+              <label class="mb-0 form-label"
+                >{{ interFaceMasterDetails.rootfolder }}
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            interFaceMasterDetails != null &&
+            interFaceMasterDetails.interfacecode == 'SFTP'
+          "
+          class="grid-wrapper"
+        >
+          <h4 class="mb-2 mt-4">
+            Folder Details&nbsp;
+            <span class="text-muted"
+              >(count:
+              {{
+                interfacesFolderGridView
+                  ? interfacesFolderGridView.data.length
+                  : 0
+              }})</span
+            >
+          </h4>
+
+          <kendo-grid
+            id="gridClaimlines"
+            [data]="interfacesFolderGridView"
+            style="width: 100%;"
+            [sortable]="true"
+            [sort]="foldersort"
+            (sortChange)="folderSortChange($event)"
+          >
+            <kendo-grid-column
+              field="categoryname"
+              title="Category"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="doctype"
+              title="Type"
+              width="15"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="path"
+              title="Path"
+              width="40"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="generateencounterperpage"
+              title="Generate Encounter"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template let-dataItem kendoGridCellTemplate>
+                <ng-container *ngIf="dataItem.encounterpage >= 1"
+                  >By Document Page &nbsp;
+                  <span class="custom-badge"
+                    ><label class="mb-0 ml-1 mr-1">{{
+                      dataItem.encounterpage
+                    }}</label></span
+                  ></ng-container
+                >
+                <ng-container *ngIf="dataItem.encounterpage == 0"
+                  >By Document</ng-container
+                >
+                <ng-container *ngIf="dataItem.encounterpage == -1"
+                  >No Encounter</ng-container
+                >
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="isactive"
+              title="Status"
+              width="10"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div *ngIf="dataItem.isactive == true" class="text-success">
+                  Active
+                </div>
+                <div *ngIf="dataItem.isactive == false" class="text-danger">
+                  Inactive
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          data-dismiss="modal"
+          id="btnClose"
+        >
+          Close
+        </button>
+      </div>
+
+      <div class="black-box" *ngIf="loadingDetails">
+        <div class="k-i-loading"></div>
+      </div>
+    </div>
+  </div>
+</div>

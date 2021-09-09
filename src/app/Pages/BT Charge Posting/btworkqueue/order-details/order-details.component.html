@@ -1,0 +1,227 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ this.title }} Details</h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="resetComponent()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <app-order-patient-banner
+      [title]="this.title"
+      [calledFrom]="calledFrom"
+      #OrderPatientBannerComponent
+    ></app-order-patient-banner>
+    <kendo-tabstrip (tabSelect)="onTabSelect($event)">
+      <kendo-tabstrip-tab
+        [title]="this.title + ' Documents'"
+        [selected]="this.index == 0"
+      >
+        <ng-template kendoTabContent>
+          <app-order-documents
+            [title]="this.title"
+            [calledFrom]="calledFrom"
+            #OrderDocumentsComponent
+          ></app-order-documents>
+        </ng-template>
+      </kendo-tabstrip-tab>
+      <kendo-tabstrip-tab
+        [title]="this.title + ' History'"
+        [selected]="this.index == 1"
+      >
+        <ng-template kendoTabContent>
+          <div class="d-flex mb-2">
+            <h4
+              class="mb-0"
+              *ngIf="!this.isExpandedUpdate && !this.isExpandedAddComment"
+            >
+              {{ this.title }} History
+            </h4>
+            <div class="ml-auto" *ngIf="visibleButtons">
+              <button
+                *ngIf="vwUpdateOnHistory && isShowUpdateStatusBtn"
+                (click)="onUpdateOrderStatus()"
+                data-toggle="collapse"
+                data-target="#updateOrderStatus"
+                class="btn btn-primary btn-sm"
+                [ngClass]="{ 'mr-4': vwEncounterHistoryAddComment }"
+              >
+                Update {{ this.title }} Status
+              </button>
+              <button
+                *ngIf="vwEncounterHistoryAddComment"
+                class="btn btn-primary btn-sm"
+                (click)="onAddCommentClicked()"
+                data-toggle="collapse"
+                data-target="#note"
+              >
+                <!-- id="collapseId" -->
+                Add Comment
+              </button>
+            </div>
+          </div>
+          <div
+            class="card collapse mt-3"
+            id="note"
+            *ngIf="isExpandedAddComment"
+          >
+            <app-add-comment
+              (iscommentsaved)="outputCommentResult($event)"
+              #AddCommentComponent
+            ></app-add-comment>
+          </div>
+          <div
+            class="card collapse mt-3"
+            id="updateOrderStatus"
+            *ngIf="SelectedOrder && isExpandedUpdate"
+          >
+            <app-note-modal #NoteModalComponent></app-note-modal>
+          </div>
+          <div *ngIf="this.isExpandedAddComment" class="d-flex mt-4">
+            <h4>{{ this.title }} History</h4>
+          </div>
+          <div class="grid-wrapper" *ngIf="!this.isExpandedUpdate">
+            <!-- [sortable]="true"
+        [sort]="Historysort"
+        [sortable]="true"
+         (sortChange)="sortHistoryChange($event)"
+        -->
+            <kendo-grid
+              [data]="HistorygridView"
+              [height]="500"
+              [selectable]="true"
+              [sortable]="true"
+              [sort]="Historysort"
+              (sortChange)="sortHistoryChange($event)"
+              class="wrap-grid w-100"
+              [loading]="historyGridLoader"
+              style="word-wrap: break-word"
+              ><kendo-grid-column
+                field="status"
+                title="Action"
+                [filterable]="false"
+                width="30"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="ordersubstatus"
+                title="Sub-Status"
+                width="30"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.orderstatus == 0">
+              New
+            </div>
+            <div *ngIf="dataItem.orderstatus == 1">
+              Assigned
+            </div>
+            <div *ngIf="dataItem.orderstatus == 2">
+              Completed
+            </div>
+            <div *ngIf="dataItem.orderstatus == 3">
+              Incomplete
+            </div>
+            <div *ngIf="dataItem.orderstatus == 4">
+              Pending Review
+            </div>
+            <div *ngIf="dataItem.orderstatus == 5">
+              Void
+            </div>
+            <div *ngIf="dataItem.orderstatus == 6">
+              Assigned Review
+            </div>
+            <div *ngIf="dataItem.orderstatus == 7">
+              Assistance
+            </div>
+          </ng-template> -->
+
+              <kendo-grid-column
+                field="lastassignedon"
+                title="Worked On"
+                width="40"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  {{ dataItem.lastassignedon | date: "MM-dd-yyyy hh:mm:ss a" }}
+                </ng-template>
+              </kendo-grid-column>
+
+              <kendo-grid-column
+                field="lastassignedtousername"
+                title="Worked By"
+                width="30"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+
+              <kendo-grid-column
+                field="lastassignedbyusername"
+                title="Assigned By"
+                width="30"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="claimreferncenumber"
+                title="Claim ref. #"
+                width="30"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="ordernote"
+                title="Note"
+                width="35"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span title="{{ dataItem.ordernote }}">{{
+                    dataItem.ordernote
+                  }}</span>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="page"
+                title="Page"
+                width="25"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="commenttype"
+                title="Comment Type"
+                width="25"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </ng-template>
+      </kendo-tabstrip-tab>
+      <kendo-tabstrip-tab
+        *ngIf="
+          SelectedOrder?.encountersource?.toLowerCase() != 'rcm encounter' &&
+          SelectedOrder?.nstatus != 8 &&
+          SelectedOrder?.nstatus != 10
+        "
+        title="Encounter Information"
+        [selected]="this.index == 2"
+      >
+        <ng-template kendoTabContent>
+          <app-hl7-financial-info
+            [calledFrom]="calledFrom"
+          ></app-hl7-financial-info>
+        </ng-template>
+      </kendo-tabstrip-tab>
+    </kendo-tabstrip>
+  </div>
+</div>
+<div class="black-box" *ngIf="this.loader">
+  <div class="k-i-loading"></div>
+</div>

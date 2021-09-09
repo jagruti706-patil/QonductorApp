@@ -1,0 +1,101 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newStatus">
+      Add Status
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newStatus">
+      Update Status
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="StatusGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Code
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="StatusCode.invalid && StatusCode.touched"
+              formControlName="fcStatusCode"
+              type="text"
+              id="txtstatuscode"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="submitted || (StatusCode.invalid && StatusCode.touched)"
+            >
+              <small *ngIf="StatusCode.errors?.required" class="text-danger"
+                >Code is required</small
+              >
+              <small *ngIf="StatusCode.errors?.maxlength" class="text-danger"
+                >Code allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Description
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                StatusDescription.invalid && StatusDescription.touched
+              "
+              formControlName="fcStatusDescription"
+              type="text"
+              id="txtstatusdescription"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted ||
+                (StatusDescription.invalid && StatusDescription.touched)
+              "
+            >
+              <small
+                *ngIf="StatusDescription.errors?.required"
+                class="text-danger"
+                >Description is required</small
+              >
+              <small
+                *ngIf="StatusDescription.errors?.maxlength"
+                class="text-danger"
+                >Description allows 150 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddStatus"
+      (click)="saveStatus()"
+    >
+      Save
+    </button>
+  </div>
+</div>

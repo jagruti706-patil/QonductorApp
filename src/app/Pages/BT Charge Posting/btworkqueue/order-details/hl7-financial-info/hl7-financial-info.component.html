@@ -1,0 +1,64 @@
+<div class="card border-0">
+  <div class="card-header p-0 border-0">
+    <h4>HL7 FT Details</h4>
+  </div>
+  <div class="card-body p-0 border-0">
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="HL7FTGridView"
+          [height]="500"
+          [selectable]="true"
+          [sortable]="true"
+          [sort]="sort"
+          (sortChange)="sortChange($event)"
+          class="wrap-grid w-100"
+          [loading]="gridLoader"
+          ><kendo-grid-column
+            field="lineno"
+            title="Line No"
+            [filterable]="false"
+            width="12"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="transaction_date"
+            title="Transaction Date"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordercode"
+            title="CPT/Order Code"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="description"
+            title="Description"
+            width="45"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="quantity"
+            title="Quantity"
+            width="13"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="dx"
+            title="Dx"
+            width="45"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>

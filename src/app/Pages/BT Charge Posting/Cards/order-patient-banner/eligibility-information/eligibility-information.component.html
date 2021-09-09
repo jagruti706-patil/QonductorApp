@@ -1,0 +1,157 @@
+<div class="modal-dialog modal-eligibility">
+  <div
+    class="modal-content box-shadow"
+    [ngClass]="{
+      'modal-active': coveragestatus.toLowerCase() == 'active',
+      'modal-rejected': coveragestatus.toLowerCase() == 'rejected'
+    }"
+  >
+    <div class="modal-header p-2 pl-3">
+      <h5 class="modal-title">
+        Insurance Eligibility Information
+      </h5>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="onCloseClick()"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <h5 class="col-md-4 pt-1">Individual Eligibility Response for:</h5>
+        <h3
+          class="col-md-8"
+          *ngIf="coveragestatus.toLowerCase() == 'active'"
+          class="text-green"
+        >
+          Active Coverage
+        </h3>
+        <h3
+          class="col-md-8"
+          *ngIf="coveragestatus.toLowerCase() == 'rejected'"
+          class="text-danger"
+        >
+          Rejected
+        </h3>
+      </div>
+      <ng-container *ngFor="let item of benefitInfoArray">
+        <ng-container
+          *ngIf="item.label == 'other_payer_alert' && item.html != ''"
+        >
+          <h6
+            *ngIf="item.label == 'other_payer_alert'"
+            class="alert alert-warning"
+            [innerHTML]="item.html"
+          ></h6>
+        </ng-container>
+        <ng-container *ngIf="item.label == 'ActiveCoverage' && item.html != ''">
+          <h6 class="alert alert-danger" [innerHTML]="item.html"></h6>
+        </ng-container>
+      </ng-container>
+
+      <kendo-tabstrip (tabSelect)="onTabSelect($event)">
+        <kendo-tabstrip-tab
+          [title]="'Patient Information'"
+          [selected]="this.index == 0"
+        >
+          <ng-template kendoTabContent>
+            <div
+              class="accordion"
+              style="max-height: 600px;"
+              id="patientAccordion"
+            >
+              <ng-container
+                *ngFor="let item of patientInfoArray; let i = index"
+              >
+                <div class="card border-bottom">
+                  <div
+                    class="card-header p-2"
+                    style="background: rgba(0, 0, 0, 0.03);"
+                    id="heading{{ i }}"
+                  >
+                    <h6
+                      class="mb-0 pointer"
+                      data-toggle="collapse"
+                      [attr.data-target]="'#collapse' + i"
+                      aria-expanded="false"
+                      [attr.aria-controls]="'collapse' + i"
+                    >
+                      {{ item.label }}
+                    </h6>
+                  </div>
+
+                  <div
+                    id="collapse{{ i }}"
+                    class="collapse show"
+                    [attr.aria-labelledby]="'heading' + i"
+                  >
+                    <div class="card-body p-1">
+                      <div
+                        style="max-height: 400px;overflow: auto;"
+                        [innerHTML]="item.html"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab
+          [title]="'Benefit Information'"
+          [selected]="this.index == 1"
+        >
+          <ng-template kendoTabContent>
+            <div
+              class="accordion"
+              id="benefitAccordion"
+              style="max-height: 600px;"
+            >
+              <ng-container
+                *ngFor="let item of benefitInfoArray; let i = index"
+              >
+                <div
+                  class="card border-bottom"
+                  *ngIf="
+                    item.label != 'other_payer_alert' &&
+                    item.label != 'ActiveCoverage'
+                  "
+                >
+                  <div
+                    class="card-header p-2"
+                    id="heading{{ i }}"
+                    style="background: rgba(0, 0, 0, 0.03);"
+                  >
+                    <h6
+                      class="mb-0 pointer"
+                      data-toggle="collapse"
+                      [attr.data-target]="'#collapse' + i"
+                      aria-expanded="false"
+                      [attr.aria-controls]="'collapse' + i"
+                    >
+                      {{ item.label }}
+                    </h6>
+                  </div>
+
+                  <div
+                    id="collapse{{ i }}"
+                    class="collapse "
+                    [attr.aria-labelledby]="'heading' + i"
+                  >
+                    <div class="card-body p-1">
+                      <div
+                        style="max-height: 400px;overflow: auto;"
+                        [innerHTML]="item.html"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+      </kendo-tabstrip>
+    </div>
+  </div>
+</div>

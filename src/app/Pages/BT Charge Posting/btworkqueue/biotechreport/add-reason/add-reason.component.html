@@ -1,0 +1,95 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title">Update Status</h5>
+    <button
+      type="button"
+      class="close pr-5"
+      (click)="close()"
+      data-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addReasonGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <span class="tag tag-rounded mb-4"
+            >{{ selectedAccessions.length }} record selected</span
+          >
+        </div>
+        <!-- <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">
+              Reason</label
+            >
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcReason"
+              [class.is-invalid]="fbcReason.invalid && fbcReason.touched"
+              [data]="reasonList"
+              textField="reason"
+              valueField="reasonid"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="fbcReason.invalid && fbcReason.touched">
+              <small *ngIf="!!fbcReason.errors?.required" class="text-danger"
+                >Group is required</small
+              >
+            </div>
+          </div>
+        </div> -->
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Note</label
+            >
+            <textarea
+              kendoTextArea
+              formControlName="fcNote"
+              class="w-100"
+            ></textarea>
+            <div *ngIf="fbcNote.invalid && fbcNote.touched">
+              <small *ngIf="!!fbcNote.errors?.required" class="text-danger"
+                >Note is required</small
+              >
+              <!-- <small
+                *ngIf="
+                  !fbcNote.errors?.required && !!fbcNote.hasError('whitespace')
+                "
+                class="text-danger"
+                >Please enter valid note</small
+              > -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      (click)="close()"
+      data-dismiss="modal"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="
+        calledFrom == 'missingdocument'
+          ? saveMissingDocumentReport()
+          : saveMissingHl7Report()
+      "
+      [ngClass]="{ readonlybtn: addReasonGroup.invalid }"
+      appNoDblClick
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>

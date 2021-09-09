@@ -1,0 +1,258 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title" id="mdAssignWork">Assign Work</h5>
+    <button
+      type="button"
+      class="close pr-5"
+      (click)="close()"
+      data-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <!-- <label class="mb-0">{{selectedWorkGroup.length}} workitem selected</label> -->
+
+    <form [formGroup]="AssignWorkGroup">
+      <div class="row">
+        <div class="col-md-8">
+          <span class="tag tag-rounded mb-4"
+            >{{ selectedWorkGroupcount }} workitem selected</span
+          >
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">* </strong>Agent</label
+                >
+                <kendo-dropdownlist
+                  class="form-control form-control-sm"
+                  formControlName="fcAgents"
+                  id="ddAgents"
+                  [class.is-invalid]="AgentName.invalid && AgentName.touched"
+                  [data]="Agents"
+                  textField="displayname"
+                  valueField="ngcpuserid"
+                  [valuePrimitive]="true"
+                  [defaultItem]="default"
+                >
+                </kendo-dropdownlist>
+                <div *ngIf="AgentName.invalid && AgentName.touched">
+                  <small
+                    *ngIf="!!AgentName.errors?.required"
+                    class="text-danger"
+                    >Agent is required</small
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">* </strong>Priority</label
+                >
+                <kendo-dropdownlist
+                  class="form-control form-control-sm"
+                  formControlName="fcPriority"
+                  id="ddPriority"
+                  [class.is-invalid]="
+                    PriorityName.invalid && PriorityName.touched
+                  "
+                  [data]="Priority"
+                  textField="displayname"
+                  valueField="id"
+                  [valuePrimitive]="true"
+                >
+                </kendo-dropdownlist>
+                <div *ngIf="PriorityName.invalid && PriorityName.touched">
+                  <small
+                    *ngIf="!!PriorityName.errors?.required"
+                    class="text-danger"
+                    >Priority is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label"
+                ><strong class="text-danger">* </strong>Due Date</label
+              >
+              <kendo-datepicker
+                class="w-100"
+                id="dtDueDate"
+                [min]="min"
+                [format]="'MM/dd/yyyy'"
+                formControlName="fcDueDate"
+                [class.is-invalid]="DueDate.invalid && DueDate.touched"
+              >
+              </kendo-datepicker>
+              <div *ngIf="DueDate.invalid && DueDate.touched">
+                <small *ngIf="!!DueDate.errors?.required" class="text-danger"
+                  >Due Date is required</small
+                >
+                <small *ngIf="!!DueDate.errors?.minError" class="text-danger"
+                  >Due Date must be greater or equal to today</small
+                >
+              </div>
+            </div>
+
+            <!-- <div class="col-md-12">
+              <app-agentview *ngIf="AgentID != 0" [Agent]="selectedAgent"></app-agentview>
+            </div> -->
+          </div>
+        </div>
+
+        <div class="col-md-4" *ngIf="AgentID != null && AgentID > 0">
+          <div class="card card-profile-agent pb-0">
+            <div class="card-header-agent bg-green"></div>
+            <div class="card-body text-center pb-0">
+              <div class="card-profile-img avatar avatar-xxl">
+                {{ selectedAgent.initials }}
+              </div>
+              <h3 class="mb-2 text-black">{{ SelectedAgentName }}</h3>
+              <p class="mb-1">{{ selectedAgent.rolename }}</p>
+              <div>
+                <ngb-rating [(rate)]="selectedAgent.rating">
+                  <ng-template let-fill="fill" let-index="index">
+                    <span class="star" [class.filled]="fill === 100"
+                      >&#9733;</span
+                    >
+                  </ng-template>
+                </ngb-rating>
+
+                <!-- <ngb-rating [(rate)]="rating">
+                  <ng-template let-fill="fill" let-index="index">
+                    <span class="star" [class.filled]="fill === 100">&#9733;</span>
+                  </ng-template>
+                </ngb-rating> -->
+              </div>
+              <button
+                class="btn btn-pill btn-outline-primary btn-outline-secondary btn-sm mt-2"
+              >
+                {{ selectedAgent.pendingtask }} pending task
+              </button>
+            </div>
+            <div class="row no-gutters work-top-border mt-3">
+              <div class="col-6 work-right-border">
+                <div class="text-center mt-2">
+                  <div class="work-color mb-1">{{ selectedAgent.workavg }}</div>
+                  <label class="work-text-color">Work Avg/Day</label>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="text-center mt-2">
+                  <div class="work-color mb-1">
+                    {{ selectedAgent.errorrate }}%
+                  </div>
+                  <label class="work-text-color">Error Rate</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="row">
+            <div class="col-md-2 font-weight-bold text-right"><strong class="text-danger">*</strong>Agent </div>
+            <div class="col-md-10 ">
+              <div class="form-group mb-2">
+                <kendo-dropdownlist class="form-control form-control-sm" formControlName="fcAgents" id="ddAgents"
+                  [class.is-invalid]="AgentName.invalid && AgentName.touched" [data]="Agents" textField="agentname"
+                  valueField="agentid" [valuePrimitive]="true" [defaultItem]="default">
+                </kendo-dropdownlist>
+                <div *ngIf="AgentName.invalid && AgentName.touched">
+                  <small *ngIf="AgentName.errors?.required" class="text-danger">Agent is required</small>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+      <!-- <div class="row">
+        <div class="col-md-2 font-weight-bold text-right"><strong class="text-danger">*</strong>Priority </div>
+        <div class="col-md-4 ">
+          <div class="form-group mb-2">
+            <kendo-dropdownlist class="form-control form-control-sm" formControlName="fcPriority" id="ddPriority"
+              [class.is-invalid]="PriorityName.invalid && PriorityName.touched" [data]="Priority"
+              textField="displayname" valueField="id" [valuePrimitive]="true">
+            </kendo-dropdownlist>
+            <div *ngIf="PriorityName.invalid && PriorityName.touched">
+              <small *ngIf="PriorityName.errors?.required" class="text-danger">Priority is required</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2 font-weight-bold text-right"><strong class="text-danger">*</strong>Due Date </div>
+        <div class="col-md-4 ">
+          <div class="form-group mb-2">
+            <kendo-datepicker class="w-100" id="dtDueDate" [min]="min" formControlName="fcDueDate"
+              [class.is-invalid]="DueDate.invalid && DueDate.touched">
+            </kendo-datepicker>
+         
+            <div *ngIf="DueDate.invalid && DueDate.touched">
+              <small *ngIf="DueDate.errors?.required" class="text-danger">Due Date is required</small>
+              <small *ngIf="DueDate.errors?.minError" class="text-danger">Due Date must be greater or equal to
+                today</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <app-agentview *ngIf="AgentID!=0" [Agent]="selectedAgent"></app-agentview>
+        </div>
+      </div> -->
+    </form>
+
+    <!-- Old Code -->
+    <!-- <div class="row mb-2">
+          <div class="col-md-12">
+            <div class="row mb-2">
+              <div class="col-md-2 font-weight-bold text-right">Agent </div>
+              <div class="col-md-10">
+                <kendo-dropdownlist style="width: 80%" [data]="Agents" textField="displayname" valueField="id"
+                  [defaultItem]="default" (selectionChange)="selectionChange($event,'Agent')">
+                </kendo-dropdownlist>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-md-2 font-weight-bold text-right">Priority </div>
+              <div class="col-md-10">
+                <kendo-dropdownlist style="width: 80%" [data]="Priority" textField="displayname" valueField="id"
+                  [defaultItem]="default" (selectionChange)="selectionChange($event, 'Priority')">
+                </kendo-dropdownlist>
+              </div>
+            </div>
+          </div>
+        </div>
+        <app-agentview *ngIf="AgentID!=0" [Agent]="selectedAgent"></app-agentview>
+      </div> -->
+    <!-- Old Code -->
+    <!-- <div class="card-footer">
+          <div class="row">
+              <button class="ml-auto" type="button" kendoButton [primary]="true" (click)="GenerateWorkitemAssignment()">Assign</button>
+              <button class=" ml-3" type="button" (click) = "closeAssign()" >Cancel</button>
+           </div>
+       </div> -->
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      (click)="close()"
+      data-dismiss="modal"
+      id="CancelWork"
+    >
+      Cancel
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AssignWork"
+      [disabled]="!validateAssignwork()"
+      (click)="GenerateWorkitemAssignment()"
+      data-dismiss="modal"
+    >
+      Assign
+    </button>
+  </div>
+  <div class="black-box" *ngIf="loadingData">
+    <div class="k-i-loading"></div>
+  </div>
+</div>

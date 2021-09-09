@@ -1,0 +1,87 @@
+
+<!-- <div class="row mb-1">
+    <div class="col-md-4 ">Preanalysis</div>
+    <div class="col-md-7"><input kendoTextBox type="text" id="txt1" /></div>
+  </div> -->
+  <form [formGroup]="NoteFormGroup">
+  <div class="row mb-1">
+    <div class="col-md-12">
+        <kendo-combobox *ngIf="noteType!=null" formControlName="fcNote" [valuePrimitive]="true" class="w-100" [data]="noteType" textField="snotetitle" valueField="nnoteid"  (valueChange)="cmbNoteType_onSelChange($event)">
+        </kendo-combobox>
+    </div>
+  </div>
+
+
+  <!-- <div class="row">
+    <div class="col-md-12">
+        <input id="txtNoteParameter1" kendoTextBox placeholder="Enter parameter {0} value"/>
+    </div>
+  </div> -->
+  <div *ngFor="let f of fillerArray;let i = index">
+  <div class="row">
+      <div class="col-md-12 ">
+          <input id="txtNoteParameter{{i}}" class="w-100 mb-1" kendoTextBox placeholder="Enter parameter {{f}} value"
+          (change)="txtNoteParameter_TextChanged($event,i)"/>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="display: none;">
+      <div class="col-md-12">
+  <textarea id="txtActionNote" formControlName="fcTestNote" kendoTextArea style="width: 100%; height: 120px;"
+  cols="21" >{{testNote}}</textarea>
+                         </div>
+  </div>
+</form>
+  <!-- <div class="row mb-1">
+    <div class="col-md-4 ">Phone</div>
+    <div class="col-md-7">
+      <kendo-dropdownlist  textField="value" valueField="id" [defaultItem]="default">
+      </kendo-dropdownlist>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <div class="col-md-4 ">Name</div>
+    <div class="col-md-7">
+      <kendo-dropdownlist textField="value" valueField="id" [defaultItem]="default">
+      </kendo-dropdownlist>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <div class="col-md-4 ">Date</div>
+    <div class="col-md-7">
+      <kendo-datepicker></kendo-datepicker>
+    </div>
+  </div>
+
+  <div class="row mb-1">
+    <div class="col-md-4 ">Other</div>
+    <div class="col-md-7"><textarea kendoTextArea style="width:100%;" id="txt1"></textarea>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <div class="col-md-4 ">Phone</div>
+    <div class="col-md-7">
+      <kendo-dropdownlist textField="value" valueField="id" [defaultItem]="default">
+      </kendo-dropdownlist>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <div class="col-md-4 ">Name</div>
+    <div class="col-md-7">
+      <kendo-dropdownlist textField="value" valueField="id" [defaultItem]="default">
+      </kendo-dropdownlist>
+    </div>
+  </div>
+  <div class="row mb-1">
+    <div class="col-md-4 ">Date</div>
+    <div class="col-md-7">
+      <kendo-datepicker></kendo-datepicker>
+    </div>
+  </div>
+  <div class="row mb-1">
+      <div class="col-md-4 ">Payment Ref. #</div>
+      <div class="col-md-7">
+          <input kendoTextBox type="text" id="txt1" />
+      </div>
+    </div>
+  -->

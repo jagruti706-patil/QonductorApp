@@ -1,0 +1,645 @@
+<div *ngIf="!ChangePasswordClick" class="row align-items-center">
+  <div class="col-lg order-lg-first">
+    <ul class="nav nav-tabs">
+      <li
+        *ngIf="
+          vwMyDashboard ||
+          vwOrderStatus ||
+          vwRCMDocsDashboard ||
+          vwPracticeDashboard ||
+          vwExecutiveDashboard
+        "
+        class="nav-item dropdown"
+      >
+        <a
+          id="idMnuDashboard"
+          class="nav-link dropdown-toggle"
+          [ngClass]="{
+            active:
+              currenturl.toLowerCase() == '/orderstatus' ||
+              currenturl.toLowerCase() == '/rcmdocsdashboard' ||
+              currenturl.toLowerCase() == '/opsmanager' ||
+              currenturl.toLowerCase() == '/armanager' ||
+              currenturl.toLowerCase() == '/practiceuser' ||
+              currenturl.toLowerCase() == '/admin' ||
+              currenturl.toLowerCase() == '/arauditor' ||
+              currenturl.toLowerCase() == '/permanager' ||
+              currenturl.toLowerCase() == '/home' ||
+              currenturl.toLowerCase() == '/practicedashboard' ||
+              currenturl.toLowerCase() == '/executivedashboard'
+          }"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <em class="fe fe-home mr-1"></em> Dashboard</a
+        >
+        <div class="dropdown-menu dropdown-content">
+          <a
+            *ngIf="vwMyDashboard"
+            id="idSbMnuArDashboard"
+            routerLink="/{{ homeNavigation }}"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>AR Dashboard</a
+          >
+          <a
+            *ngIf="vwOrderStatus"
+            id="idSbMnuEncounterStatus"
+            routerLink="/orderstatus"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Encounter Status</a
+          >
+          <a
+            *ngIf="vwRCMDocsDashboard"
+            id="idSbMnuRcmDocsDashboard"
+            routerLink="/RCMDocsDashboard"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>RCM Docs Dashboard</a
+          >
+          <a
+            *ngIf="vwPracticeDashboard"
+            id="idSbMnuPracticeDashboard"
+            routerLink="/PracticeDashboard"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Practice Dashboard</a
+          >
+          <a
+            *ngIf="vwExecutiveDashboard"
+            id="idSbMnuExecutiveDashboard"
+            routerLink="/ExecutiveDashboard"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Executive Dashboard</a
+          >
+        </div>
+      </li>
+      <li *ngIf="vwEncounterTracking" class="nav-item dropdown">
+        <a
+          id="idMnuEncounterTracking"
+          class="nav-link dropdown-toggle"
+          [ngClass]="{
+            active:
+              currenturl.toLowerCase() == '/pendingadditionalinfo' ||
+              currenturl.toLowerCase() == '/orderinventory' ||
+              currenturl.toLowerCase() == '/myorderinventory' ||
+              currenturl.toLowerCase() == '/orderreview' ||
+              currenturl.toLowerCase() == '/myorderreview' ||
+              currenturl.toLowerCase() == '/assistance' ||
+              currenturl.toLowerCase().includes('/orderassisted') ||
+              currenturl.toLowerCase() == '/ordercompleted' ||
+              currenturl.toLowerCase() == '/missingcharges' ||
+              currenturl.toLowerCase() == '/ordersearch' ||
+              currenturl.toLowerCase() == '/orderexport' ||
+              currenturl.toLowerCase() == '/processfolder' ||
+              currenturl.toLowerCase() == '/practiceassigned' ||
+              currenturl.toLowerCase() == '/practicecompleted' ||
+              currenturl.toLowerCase() == '/practiceuserqueue' ||
+              currenturl.toLowerCase() == '/incompletesummary' ||
+              currenturl.toLowerCase() == '/archivedencounters' ||
+              currenturl.toLowerCase() == '/practiceassistancecompleted' ||
+              currenturl.toLowerCase() == '/advancesearch'
+          }"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <em class="fa fa-list mr-1"></em> Encounter Tracking</a
+        >
+        <div class="dropdown-menu dropdown-content">
+          <a
+            *ngIf="vwPendingAdditionalInfo"
+            id="idSbMnuPendingForAdditionalInfo"
+            routerLink="/PendingAdditionalInfo"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Pending for Additional Info.
+          </a>
+          <div
+            *ngIf="
+              vwPendingAdditionalInfo &&
+              (vwOrderInventory || vwMyOrders || vwReviewOrder || vwMyReview)
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwOrderInventory"
+            id="idSbMnuEncounters"
+            routerLink="/OrderInventory"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Encounters</a
+          >
+          <a
+            *ngIf="vwMyOrders"
+            id="idSbMnuMyEncounters"
+            routerLink="/MyOrderInventory"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>My Encounters</a
+          >
+
+          <a
+            *ngIf="vwReviewOrder"
+            id="idSbMnuPendingReview"
+            routerLink="/OrderReview"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Pending Review</a
+          >
+          <a
+            *ngIf="vwMyReview"
+            id="idSbMnuMyReview"
+            routerLink="/myOrderReview"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>My Review</a
+          >
+          <div
+            *ngIf="
+              (vwPendingAdditionalInfo ||
+                vwOrderInventory ||
+                vwMyOrders ||
+                vwReviewOrder ||
+                vwMyReview) &&
+              (vwPracticeUserEncounter ||
+                vwPracticeAssigned ||
+                vwPracticeCompleted ||
+                vwPracticeAssistanceCompleted)
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwPracticeUserEncounter"
+            id="idSbMnuUserEncounters"
+            routerLink="/PracticeUserQueue"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Practice Assistance</a
+          >
+          <a
+            *ngIf="vwPracticeAssistanceCompleted"
+            id="idSbMnuPracticeAssistanceCompleted"
+            routerLink="/PracticeAssistanceCompleted"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Practice Assistance
+            Completed</a
+          >
+          <a
+            *ngIf="vwPracticeAssigned"
+            id="idSbMnuPracticeAssigned"
+            routerLink="/PracticeAssigned"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Practice Assigned</a
+          >
+          <a
+            *ngIf="vwPracticeCompleted"
+            id="idSbMnuPracticeCompleted"
+            routerLink="/PracticeCompleted"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Practice Completed</a
+          >
+          <div
+            *ngIf="
+              (vwPendingAdditionalInfo ||
+                vwOrderInventory ||
+                vwMyOrders ||
+                vwReviewOrder ||
+                vwMyReview ||
+                vwPracticeUserEncounter ||
+                vwPracticeAssigned ||
+                vwPracticeCompleted ||
+                vwPracticeAssistanceCompleted) &&
+              (vwTriarqAssistance ||
+                vwAssistanceInventory ||
+                vwCompletedInventory ||
+                vwMissingCharges ||
+                vwArchivedEncounters)
+            "
+            class="dropdown-divider"
+          ></div>
+
+          <a
+            *ngIf="vwTriarqAssistance"
+            id="idSbMnuAssistance"
+            routerLink="/Assistance"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Assistance</a
+          >
+          <a
+            *ngIf="vwIncompleteSummary"
+            id="idSbMnuIncompleteSummary"
+            routerLink="/IncompleteSummary"
+            routerLinkActive="active"
+            class="dropdown-item"
+            title="Incomplete encounter summary for all client"
+            ><i class="fa fa-angle-right mr-1"></i>Incomplete Summary</a
+          >
+          <a
+            *ngIf="vwAssistanceInventory"
+            id="idSbMnuIncompleteEncounters"
+            routerLink="/OrderAssisted/0"
+            routerLinkActive="active"
+            class="dropdown-item"
+            title="Encounters which require additional information or assistance"
+            ><i class="fa fa-angle-right mr-1"></i>Incomplete Encounters</a
+          >
+          <a
+            *ngIf="vwCompletedInventory"
+            id="idSbMnuCompletedEncounters"
+            routerLink="/OrderCompleted"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Completed Encounters</a
+          >
+          <a
+            *ngIf="vwMissingCharges"
+            id="idSbMnuPendingEncounters"
+            routerLink="/MissingCharges"
+            routerLinkActive="active"
+            title="Assigned encounters not converted to claim(s)"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Pending Encounters</a
+          >
+          <a
+            *ngIf="vwArchivedEncounters"
+            id="idSbMnuArchivedEncounters"
+            routerLink="/ArchivedEncounters"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Archived Encounters</a
+          >
+          <div
+            *ngIf="
+              (vwPendingAdditionalInfo ||
+                vwOrderInventory ||
+                vwMyOrders ||
+                vwReviewOrder ||
+                vwMyReview ||
+                vwPracticeUserEncounter ||
+                vwPracticeAssigned ||
+                vwPracticeCompleted ||
+                vwTriarqAssistance ||
+                vwAssistanceInventory ||
+                vwCompletedInventory ||
+                vwMissingCharges ||
+                vwArchivedEncounters ||
+                vwPracticeAssistanceCompleted) &&
+              (vwOrderSearch || vwAdvanceSearch)
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwOrderSearch"
+            id="idSbMnuSearch"
+            routerLink="/OrderSearch"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Search</a
+          >
+          <a
+            *ngIf="vwAdvanceSearch"
+            id="idSbMnuAdvanceSearch"
+            routerLink="/AdvanceSearch"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Advance Search</a
+          >
+          <div
+            *ngIf="
+              (vwPendingAdditionalInfo ||
+                vwOrderInventory ||
+                vwMyOrders ||
+                vwReviewOrder ||
+                vwMyReview ||
+                vwPracticeUserEncounter ||
+                vwPracticeAssigned ||
+                vwPracticeCompleted ||
+                vwTriarqAssistance ||
+                vwAssistanceInventory ||
+                vwCompletedInventory ||
+                vwMissingCharges ||
+                vwOrderSearch ||
+                vwAdvanceSearch ||
+                vwArchivedEncounters ||
+                vwPracticeAssistanceCompleted) &&
+              (vwReprocessFolder || vwOrderExport)
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwOrderExport"
+            id="idSbMnuExport"
+            routerLink="/OrderExport"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Export</a
+          >
+          <a
+            *ngIf="vwReprocessFolder"
+            id="idSbMnuReprocessFolder"
+            routerLink="/ProcessFolder"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Reprocess Folder
+          </a>
+        </div>
+      </li>
+      <li *ngIf="vwARTracking" class="nav-item dropdown">
+        <a
+          id="idMnuArTracking"
+          class="nav-link dropdown-toggle"
+          [ngClass]="{
+            active:
+              currenturl.toLowerCase() == '/arinventory' ||
+              currenturl.toLowerCase() == '/deferarinventory' ||
+              currenturl.toLowerCase() == '/mytask' ||
+              currenturl.toLowerCase() == '/completedtask' ||
+              currenturl.toLowerCase() == '/canceledtask' ||
+              currenturl.toLowerCase() == '/viewtask' ||
+              currenturl.toLowerCase() == '/arreview' ||
+              currenturl.toLowerCase() == '/completedreview' ||
+              currenturl.toLowerCase() == '/productiondailyclose' ||
+              currenturl.toLowerCase() == '/agent'
+          }"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <em class="fa fa-institution mr-1"></em>AR Tracking</a
+        >
+        <div class="dropdown-menu dropdown-content">
+          <a
+            *ngIf="vwARInventory"
+            id="idSbMnuArInventory"
+            routerLink="/ARInventory"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>AR Inventory</a
+          >
+          <a
+            *ngIf="vwDeferARInventory"
+            id="idSbMnuDeferArInventory"
+            routerLink="/DeferARInventory"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Defer AR Inventory</a
+          >
+          <div
+            *ngIf="
+              (vwARInventory || vwDeferARInventory) &&
+              (vwMyTask || vwCompletedTask || vwCanceledTask || vwViewTask)
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwMyTask"
+            id="idSbMnuMyTask"
+            routerLink="/MyTask"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>My Task</a
+          >
+          <a
+            *ngIf="vwCompletedTask"
+            id="idSbMnuCompletedTask"
+            routerLink="/CompletedTask"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Completed Task</a
+          >
+          <a
+            *ngIf="vwCanceledTask"
+            id="idSbMnuCanceledTask"
+            routerLink="/CanceledTask"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Canceled Task</a
+          >
+          <a
+            *ngIf="vwViewTask"
+            id="idSbMnuViewTask"
+            routerLink="/ViewTask"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>View Task</a
+          >
+          <div
+            *ngIf="
+              (vwARInventory ||
+                vwDeferARInventory ||
+                vwMyTask ||
+                vwCompletedTask ||
+                vwCanceledTask ||
+                vwViewTask) &&
+              (vwARReview || vwCompletedARReview)
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwARReview"
+            id="idSbMnuArReview"
+            routerLink="/ARReview"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>AR Review</a
+          >
+          <a
+            *ngIf="vwCompletedARReview"
+            id="idSbMnuCompletedArReview"
+            routerLink="/CompletedReview"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Completed AR Review</a
+          >
+          <div *ngIf="vwProductionDailyClose" class="dropdown-divider"></div>
+          <a
+            *ngIf="vwProductionDailyClose"
+            id="idSbMnuArDailyClose"
+            routerLink="/ProductionDailyClose"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>AR Daily Close</a
+          >
+          <div
+            *ngIf="
+              (vwARInventory ||
+                vwDeferARInventory ||
+                vwMyTask ||
+                vwCompletedTask ||
+                vwCanceledTask ||
+                vwViewTask ||
+                vwARReview ||
+                vwCompletedARReview) &&
+              vwAgents
+            "
+            class="dropdown-divider"
+          ></div>
+          <a
+            *ngIf="vwAgents"
+            id="idSbMnuAgents"
+            routerLink="/Agent"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>Agents</a
+          >
+        </div>
+      </li>
+      <li *ngIf="vwDocuments" class="nav-item dropdown">
+        <!-- *ngIf="vwRCMDocsView || vwAddOns || vwDocumentSearch || vwRCMDocsImport" -->
+        <a
+          id="idMnuDocuments"
+          class="nav-link dropdown-toggle"
+          [ngClass]="{
+            active:
+              currenturl.toLowerCase() == '/rcmdocsview' ||
+              currenturl.toLowerCase() == '/docsvalutorderdoc' ||
+              currenturl.toLowerCase() == '/documentsearch' ||
+              currenturl.toLowerCase() == '/rcmdocsimport'
+          }"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <em class="fa fa-file-alt mr-1"></em> Documents</a
+        >
+        <div class="dropdown-menu dropdown-content">
+          <a
+            *ngIf="vwRCMDocsView"
+            id="idSbMnuRcmDocs"
+            routerLink="/RCMDocsView"
+            routerLinkActive="active"
+            class="dropdown-item"
+          >
+            <i class="fa fa-angle-right mr-1"></i>RCM Docs</a
+          >
+          <a
+            *ngIf="vwRCMDocsImport"
+            id="idSbMnuRcmDocsImport"
+            routerLink="/RCMDocsImport"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>RCM Docs Import</a
+          >
+          <a
+            *ngIf="vwAddOns"
+            id="idSbMnuBiotechAddOns"
+            routerLink="/Docsvalutorderdoc"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Biotech Add-Ons</a
+          >
+          <a
+            *ngIf="vwDocumentSearch"
+            id="idSbMnuBiotechDocumentSearch"
+            routerLink="/DocumentSearch"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Biotech Document Search</a
+          >
+        </div>
+      </li>
+      <li
+        *ngIf="vwReadyForPrinting || vwSubmittedAndPrinted"
+        class="nav-item dropdown"
+      >
+        <a
+          id="idMnuPrinting"
+          class="nav-link dropdown-toggle"
+          [ngClass]="{
+            active:
+              currenturl.toLowerCase() == '/printingorders' ||
+              currenturl.toLowerCase() == '/submittedandprinted'
+          }"
+          data-toggle="dropdown"
+          href="#"
+          role="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          <em class="fa fa-print mr-1"></em> Printing</a
+        >
+        <div class="dropdown-menu dropdown-content">
+          <a
+            *ngIf="vwReadyForPrinting"
+            id="idSbMnuReadyForPrinting"
+            routerLink="/PrintingOrders"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Biotech - Ready for
+            Printing</a
+          >
+          <a
+            *ngIf="vwSubmittedAndPrinted"
+            id="idSbMnuSubmittedAndPrinted"
+            routerLink="/SubmittedAndPrinted"
+            routerLinkActive="active"
+            class="dropdown-item"
+            ><i class="fa fa-angle-right mr-1"></i>Biotech - Missing info. Order
+            in Process</a
+          >
+        </div>
+      </li>
+
+      <li *ngIf="vwReport" class="nav-item">
+        <a
+          id="idMnuReports"
+          routerLink="/Reports"
+          routerLinkActive="active"
+          class="nav-link"
+          ><em class="fe fe-book mr-1"></em> Reports</a
+        >
+      </li>
+      <li *ngIf="vwConfiguration" class="nav-item">
+        <a
+          id="idMnuConfiguration"
+          routerLink="/Configuration"
+          routerLinkActive="active"
+          class="nav-link"
+          ><em class="fe fe-settings mr-1"></em> Configuration</a
+        >
+      </li>
+      <li *ngIf="vwServiceController" class="nav-item">
+        <a
+          id="idMnuServiceController"
+          routerLink="/ServiceController"
+          routerLinkActive="active"
+          class="nav-link"
+          ><em class="fa fa-cogs mr-1"></em> Service Controller</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>

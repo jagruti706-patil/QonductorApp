@@ -1,0 +1,251 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        {{ title }}
+      </h5>
+      <button
+        *ngIf="!isForPrint"
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="!isForPrint">
+        <div class="border mb-4 rounded">
+          <div class="row p-3">
+            <div class="col-md-3">
+              <strong>Total: </strong>{{ countObj.total }}
+            </div>
+            <div class="col-md-3">
+              <strong>ERROR: </strong>{{ countObj.error }}
+            </div>
+            <div class="col-md-3">
+              <strong>SKIPPED: </strong>{{ countObj.skipped }}
+            </div>
+            <div class="col-md-3">
+              <strong>SUCCESS: </strong>{{ countObj.success }}
+            </div>
+          </div>
+        </div>
+        <div class="card border-0">
+          <kendo-grid
+            [data]="OrderStatusGridView"
+            class="w-100"
+            style="max-height: 35vh;"
+            [sortable]="true"
+            [sort]="OrderStatusSort"
+            (sortChange)="OrderStatusSortChange($event)"
+          >
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() !== 'importdocuments'"
+              field="accessionNo"
+              title="Accession #"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() === 'importdocuments'"
+              field="documentname"
+              title="Document Name"
+              width="30"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() === 'importdocuments'"
+              field="documentsize"
+              title="Document Size"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <!-- <kendo-grid-column
+            *ngIf="isFrom.toLowerCase() == 'readyforprinting'"
+            field="sequenceno"
+            title="Sequence No"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column> -->
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() == 'ordersearch'"
+              field="currentStatus"
+              title="Current Status"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() == 'ordersearch'"
+              field="updatedStatus"
+              title="Updated Status"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="status"
+              title="Status"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <strong *ngIf="dataItem.status == 0" class="text-danger"
+                  >ERROR</strong
+                >
+                <strong *ngIf="dataItem.status == 1" class="text-yellow"
+                  >SKIPPED</strong
+                >
+                <strong *ngIf="dataItem.status == 2" class="text-green"
+                  >SUCCESS</strong
+                >
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="description"
+              title="Description"
+              width="40"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+      <div *ngIf="isForPrint">
+        <div class="border mb-4 rounded">
+          <div class="row p-3">
+            <div class="col-md-3">
+              <strong>Total: </strong>{{ countObj.total }}
+            </div>
+            <div class="col-md-3">
+              <strong>ERROR: </strong>{{ countObj.error }}
+            </div>
+            <!-- <div class="col-md-3">
+            <strong>SKIPPED: </strong>{{ countObj.skipped }}
+          </div> -->
+            <div class="col-md-3">
+              <strong>SUCCESS: </strong>{{ countObj.success }}
+            </div>
+          </div>
+        </div>
+        <div class="card border-0">
+          <kendo-grid
+            [data]="OrderStatusGridView"
+            class="w-100"
+            style="max-height: 35vh;"
+            [sortable]="true"
+            [sort]="OrderStatusSort"
+            (sortChange)="OrderStatusSortChange($event)"
+          >
+            <kendo-grid-column
+              field="accessionNo"
+              title="Accession #"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <!-- <kendo-grid-column
+            *ngIf="isFrom.toLowerCase() == 'readyforprinting'"
+            field="sequenceno"
+            title="Sequence No"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column> -->
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() == 'ordersearch'"
+              field="currentStatus"
+              title="Current Status"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              *ngIf="isFrom.toLowerCase() == 'ordersearch'"
+              field="updatedStatus"
+              title="Updated Status"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="status"
+              title="Status"
+              width="20"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <strong *ngIf="dataItem.status == 0" class="text-danger"
+                  >ERROR</strong
+                >
+                <!-- <strong *ngIf="dataItem.status == 1" class="text-yellow"
+                >SKIPPED</strong
+              > -->
+                <strong *ngIf="dataItem.status == 2" class="text-green"
+                  >SUCCESS</strong
+                >
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="description"
+              title="Description"
+              width="40"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!isForPrint" class="modal-footer">
+      <button
+        type="button"
+        (click)="onOkClick()"
+        class="btn btn-primary"
+        data-dismiss="modal"
+      >
+        Ok
+      </button>
+    </div>
+    <!-- <div *ngIf="isForPrint && countObj.error > 0" class="modal-footer"> -->
+    <div *ngIf="isForPrint" class="modal-footer">
+      <div class="pull-right">
+        There were <b>{{ countObj.error }}</b> order(s) could not printed and
+        <b>{{ countObj.success }}</b> order(s) are printed and mark as submitted
+        & Printed.
+      </div>
+      <button
+        type="button"
+        (click)="onOkClick()"
+        class="btn btn-primary"
+        data-dismiss="modal"
+      >
+        Ok
+      </button>
+      <!-- <button
+        type="button"
+        (click)="onPrintClick(false)"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        (click)="onPrintClick(true)"
+        class="btn btn-primary"
+        data-dismiss="modal"
+        [disabled]="
+          countObj.error == countObj.total || countObj.skipped == countObj.total
+        "
+        title="Order will be mark as 'Submitted & Printed' and move in Submitted & Printed tab."
+      >
+        Mark Printed
+      </button> -->
+    </div>
+  </div>
+</div>

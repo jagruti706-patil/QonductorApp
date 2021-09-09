@@ -1,0 +1,103 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newFollowup">
+      Add Follow-up
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newFollowup">
+      Update Follow-up
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="FollowupGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Code
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="FollowupCode.invalid && FollowupCode.touched"
+              formControlName="fcFollowupCode"
+              type="text"
+              id="txtfollowupcode"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (FollowupCode.invalid && FollowupCode.touched)
+              "
+            >
+              <small *ngIf="FollowupCode.errors?.required" class="text-danger"
+                >Code is required</small
+              >
+              <small *ngIf="FollowupCode.errors?.maxlength" class="text-danger"
+                >Code allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Description
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                FollowupDescription.invalid && FollowupDescription.touched
+              "
+              formControlName="fcFollowupDescription"
+              type="text"
+              id="txtfollowupdescription"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted ||
+                (FollowupDescription.invalid && FollowupDescription.touched)
+              "
+            >
+              <small
+                *ngIf="FollowupDescription.errors?.required"
+                class="text-danger"
+                >Description is required</small
+              >
+              <small
+                *ngIf="FollowupDescription.errors?.maxlength"
+                class="text-danger"
+                >Description allows 255 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddFollowup"
+      (click)="saveFollowup()"
+    >
+      Save
+    </button>
+  </div>
+</div>

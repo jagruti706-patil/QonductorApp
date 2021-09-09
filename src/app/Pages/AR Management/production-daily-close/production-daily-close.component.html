@@ -1,0 +1,474 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">AR Daily Close</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="DateGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <label><strong class="text-danger">*</strong>Date: </label>
+          <div class="mb-2">
+            <kendo-datepicker
+              formControlName="fcDate"
+              id="dtDate"
+              [format]="'MM/dd/yyyy'"
+              [max]="max"
+            >
+            </kendo-datepicker>
+            <button
+              id="btnViewResult"
+              type="button"
+              class="ml-2"
+              kendoButton
+              (click)="retriveData()"
+              [disabled]="!validateDailyProduction()"
+            >
+              View Result
+            </button>
+            <button
+              id="btnExport"
+              type="button"
+              class="ml-2"
+              kendoButton
+              [primary]="true"
+              [disabled]="!IsProductionDateChanged"
+              data-toggle="modal"
+              data-target="#confirmationModal"
+            >
+              Daily Production Close
+            </button>
+
+            <div>
+              <small *ngIf="fbcDate.errors?.required" class="text-danger"
+                >Date is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row" id="ProductionData">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-status bg-light"></div>
+          <kendo-grid
+            id="workcountGrid"
+            [data]="gridWorkedData"
+            style="pointer-events: none;"
+            [loading]="loadingDailyProduction"
+          >
+            <kendo-grid-column [headerStyle]="{ display: 'none' }">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="card p-1">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp bg-blue mr-1">
+                      <i class="fa fa-institution"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0">{{ dataItem.workitems }}</h4>
+                      <small class="text-muted">Work Items</small>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column [headerStyle]="{ display: 'none' }">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="card p-1">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp bg-green mr-1">
+                      <i class="fa fa-tasks"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0">{{ dataItem.worktask }}</h4>
+                      <small class="text-muted">Worked Tasks</small>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column [headerStyle]="{ display: 'none' }">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="card p-1">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp bg-orange mr-1">
+                      <i class="fe fe-pie-chart"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0">
+                        {{ dataItem.averageproductivitywork }}
+                      </h4>
+                      <small class="text-muted">Avg. Productivity/day</small>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column [headerStyle]="{ display: 'none' }">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="card p-1">
+                  <div class="d-flex align-items-center">
+                    <span class="stamp bg-red mr-1">
+                      <i class="fa fa-institution"></i>
+                    </span>
+                    <div>
+                      <h4 class="m-0">{{ dataItem.unsyncworkitem }}</h4>
+                      <small class="text-muted">Unsync Work Item</small>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-pdf
+              fileName="DailyProduction.pdf"
+              paperSize="A4"
+              [allPages]="true"
+              [repeatHeaders]="true"
+              [margin]="{
+                top: '1.2cm',
+                left: '0.5cm',
+                right: '0.5cm',
+                bottom: '1.2cm'
+              }"
+              [scale]="scale"
+            >
+              <ng-template
+                kendoGridPDFTemplate
+                let-pageNum="pageNum"
+                let-totalPages="totalPages"
+              >
+                <div class="page-template">
+                  <div class="header p-1">
+                    <div style="float: right;">
+                      Page {{ pageNum }} of {{ totalPages }}
+                    </div>
+                    Dashboard
+                  </div>
+                  <div class="footer">
+                    Page {{ pageNum }} of {{ totalPages }}
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-pdf>
+          </kendo-grid>
+        </div>
+      </div>
+
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-status bg-cyan"></div>
+          <div class="card-header pl-2 border-0">
+            <h6 class="mb-0">Aging Bucket</h6>
+          </div>
+
+          <div class="card-body o-auto p-1" style="max-height: 180px;">
+            <!-- <kendo-grid
+              [data]="bucketgridView"
+              [groupable]="true"
+              [height]="200"
+              [group]="bucketgroups"
+              (groupChange)="bucketgroupChange($event)"
+            > -->
+            <kendo-grid
+              id="kgAgingBucket"
+              [data]="gridBucketData"
+              [loading]="loadingDailyProduction"
+            >
+              <kendo-grid-column
+                field="sclientname"
+                title="Client"
+              ></kendo-grid-column>
+              <kendo-grid-column field="bucket_1" title="0-15">
+              </kendo-grid-column>
+              <kendo-grid-column field="bucket_2" title="16-30">
+              </kendo-grid-column>
+              <kendo-grid-column field="bucket_3" title="31-60">
+              </kendo-grid-column>
+              <kendo-grid-column field="bucket_4" title="61-90">
+              </kendo-grid-column>
+              <kendo-grid-column field="bucket_5" title="91-120">
+              </kendo-grid-column>
+              <kendo-grid-column field="bucket_6" title="121-180">
+              </kendo-grid-column>
+              <kendo-grid-column field="bucket_7" title="180+">
+              </kendo-grid-column>
+              <kendo-grid-pdf
+                fileName="DailyProduction.pdf"
+                paperSize="A4"
+                [allPages]="true"
+                [repeatHeaders]="true"
+                [margin]="{
+                  top: '1.2cm',
+                  left: '0.5cm',
+                  right: '0.5cm',
+                  bottom: '1.2cm'
+                }"
+                [scale]="scale"
+              >
+                <ng-template
+                  kendoGridPDFTemplate
+                  let-pageNum="pageNum"
+                  let-totalPages="totalPages"
+                >
+                  <div class="page-template">
+                    <div class="header p-1">
+                      <div style="float: right;">
+                        Page {{ pageNum }} of {{ totalPages }}
+                      </div>
+                      Aging Bucket
+                    </div>
+                    <div class="footer">
+                      Page {{ pageNum }} of {{ totalPages }}
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-grid-pdf>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="card" id="ProductionDataTable">
+          <div class="card-status bg-orange"></div>
+          <div class="card-header pl-2 border-0">
+            <h6 class="mb-0">Production</h6>
+          </div>
+          <div class="card-body o-auto p-1" style="max-height: 180px;">
+            <kendo-grid
+              id="kgProduction"
+              [data]="gridProdData"
+              [loading]="loadingDailyProduction"
+            >
+              <kendo-grid-column field="clientname" title="Client">
+              </kendo-grid-column>
+              <kendo-grid-column field="workedtask" title="Worked Task">
+              </kendo-grid-column>
+              <kendo-grid-column field="auditedtaskcount" title="Audited Task">
+              </kendo-grid-column>
+              <kendo-grid-column field="errorpercentage" title="Error %">
+              </kendo-grid-column>
+              <kendo-grid-pdf
+                fileName="DailyProduction.pdf"
+                paperSize="A4"
+                [allPages]="true"
+                [repeatHeaders]="true"
+                [margin]="{
+                  top: '1.2cm',
+                  left: '0.5cm',
+                  right: '0.5cm',
+                  bottom: '1.2cm'
+                }"
+                [scale]="scale"
+              >
+                <ng-template
+                  kendoGridPDFTemplate
+                  let-pageNum="pageNum"
+                  let-totalPages="totalPages"
+                >
+                  <div class="page-template">
+                    <div class="header p-1">
+                      <div style="float: right;">
+                        Page {{ pageNum }} of {{ totalPages }}
+                      </div>
+                      Production
+                    </div>
+                    <div class="footer">
+                      Page {{ pageNum }} of {{ totalPages }}
+                    </div>
+                  </div>
+                </ng-template>
+              </kendo-grid-pdf>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-status bg-green"></div>
+          <div class="card-header pl-2 border-0">
+            <h6 class="mb-0">Production Status</h6>
+          </div>
+          <div class="card-body p-1 o-auto" style="max-height: 230px;">
+            <div class="card">
+              <div class="card-body p-0">
+                <kendo-grid
+                  id="kgProductionStatus"
+                  [groupable]="true"
+                  [data]="statusgridView"
+                  [height]="400"
+                  [group]="statusgroups"
+                  (groupChange)="statusgroupChange($event)"
+                  [loading]="loadingDailyProduction"
+                >
+                  <kendo-grid-column
+                    field="clientname"
+                    title="Client"
+                    [width]="120"
+                  ></kendo-grid-column>
+                  <kendo-grid-column
+                    field="status"
+                    title="Status"
+                  ></kendo-grid-column>
+                  <kendo-grid-column
+                    field="count"
+                    title="Count"
+                    [width]="45"
+                  ></kendo-grid-column>
+                  <kendo-grid-column field="arvalue" title="AR" [width]="100">
+                  </kendo-grid-column>
+                  <kendo-grid-pdf
+                    fileName="DailyProduction.pdf"
+                    paperSize="A4"
+                    [allPages]="true"
+                    [repeatHeaders]="true"
+                    [margin]="{
+                      top: '1.2cm',
+                      left: '0.5cm',
+                      right: '0.5cm',
+                      bottom: '1.2cm'
+                    }"
+                    [scale]="scale"
+                  >
+                    <ng-template
+                      kendoGridPDFTemplate
+                      let-pageNum="pageNum"
+                      let-totalPages="totalPages"
+                    >
+                      <div class="page-template">
+                        <div class="header p-1">
+                          <div style="float: right;">
+                            Page {{ pageNum }} of {{ totalPages }}
+                          </div>
+                          Production Status
+                        </div>
+                        <div class="footer">
+                          Page {{ pageNum }} of {{ totalPages }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </kendo-grid-pdf>
+                </kendo-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-status bg-green"></div>
+          <div class="card-header pl-2 border-0">
+            <h6 class="mb-0">Automation Status</h6>
+          </div>
+          <div class="card-body p-1 o-auto" style="max-height: 230px;">
+            <div class="card">
+              <div class="card-body p-0">
+                <kendo-grid
+                  id="kgAutomationStatus"
+                  [groupable]="true"
+                  [data]="autostatusgridView"
+                  [height]="400"
+                  [group]="autostatusgroups"
+                  (groupChange)="autostatusgroupChange($event)"
+                  [loading]="loadingDailyProduction"
+                >
+                  <kendo-grid-column
+                    field="clientname"
+                    title="Client"
+                  ></kendo-grid-column>
+                  <kendo-grid-column
+                    field="sclaimstatus"
+                    title="Status"
+                  ></kendo-grid-column>
+                  <kendo-grid-column
+                    field="count"
+                    title="Count"
+                  ></kendo-grid-column>
+                  <kendo-grid-pdf
+                    fileName="DailyProduction.pdf"
+                    paperSize="A4"
+                    [allPages]="true"
+                    [repeatHeaders]="true"
+                    [margin]="{
+                      top: '1.2cm',
+                      left: '0.5cm',
+                      right: '0.5cm',
+                      bottom: '1.2cm'
+                    }"
+                    [scale]="scale"
+                  >
+                    <ng-template
+                      kendoGridPDFTemplate
+                      let-pageNum="pageNum"
+                      let-totalPages="totalPages"
+                    >
+                      <div class="page-template">
+                        <div class="header p-1">
+                          <div style="float: right;">
+                            Page {{ pageNum }} of {{ totalPages }}
+                          </div>
+                          Automation Status
+                        </div>
+                        <div class="footer">
+                          Page {{ pageNum }} of {{ totalPages }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </kendo-grid-pdf>
+                </kendo-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingDailyProduction">
+  <div class="k-i-loading"></div>
+</div>
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Daily Production Close</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          {{ confirmationMessage }}
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="onConfirmationModal('No')"
+          data-dismiss="modal"
+        >
+          No
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="onConfirmationModal('Yes')"
+          data-dismiss="modal"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

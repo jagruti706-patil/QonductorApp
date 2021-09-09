@@ -1,0 +1,301 @@
+<div
+  class="modal-content"
+  [ngStyle]="{ 'pointer-events': isPercentLoader === true ? 'none' : 'all' }"
+>
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title" id="mdNoteTitle" *ngIf="NoteTitle != 'Undefined'">
+      {{ NoteTitle }}
+    </h5>
+    <button
+      *ngIf="this.noteCalledFrom != 'universalupdateorderstatus'"
+      type="button"
+      class="close pr-5"
+      aria-label="Close"
+      (click)="onCloseClick()"
+      data-dismiss="modal"
+    ></button>
+    <!-- id="btnCancel" -->
+  </div>
+  <div class="modal-body">
+    <div
+      *ngIf="showTopSection && selectedOrderReviewGroup.length == 1"
+      class="border mb-4 rounded"
+    >
+      <div class="row p-3" style="word-break: break-word">
+        <div class="col-md-3">
+          <strong>Accession #: </strong
+          >{{ selectedOrderReviewGroup[0].orderqueuegroupcode }}
+        </div>
+        <div class="col-md-3">
+          <strong>Status: </strong>{{ selectedOrderReviewGroup[0].status }}
+        </div>
+        <div
+          class="col-md-6"
+          style="
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+          "
+          title="{{ selectedOrderReviewGroup[0].ordernote }}"
+        >
+          <strong>Last Note: </strong
+          >{{ selectedOrderReviewGroup[0].ordernote }}
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="NoteGroup">
+      <div class="row">
+        <div class="col-md-12" *ngIf="SelectedWorkItemCount > 0">
+          <span *ngIf="SelectedWorkItemCount > 0" class="tag tag-rounded mb-4"
+            >{{ SelectedWorkItemCount }} workitem selected</span
+          >
+        </div>
+        <div *ngIf="HideNoteCategory" class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Category
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcNoteCategory"
+              id="ddlNoteCategory"
+              [class.is-invalid]="
+                fbcNoteCategory.invalid && fbcNoteCategory.touched
+              "
+              [data]="ddlNoteCategory"
+              [textField]="'scategoryname'"
+              [valueField]="'scategoryname'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="fbcNoteCategory.invalid && fbcNoteCategory.touched">
+              <small
+                *ngIf="!!fbcNoteCategory.errors?.required"
+                class="text-danger"
+                >Category is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            HideOrderStatus &&
+            !isMarkIncomplete &&
+            !isMarkComplete &&
+            !isSendToBiotech &&
+            !isDownloadAndSendToBT &&
+            !isUpdateMissingInfo &&
+            !isFromSubmittedAndPrinted
+          "
+          class="col-md-12"
+        >
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Status
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcOrderStatus"
+              id="ddlStatus"
+              [data]="ddlOrderStatus"
+              [textField]="'status'"
+              [valueField]="'statuscode'"
+              [valuePrimitive]="true"
+              (selectionChange)="statusChanged($event)"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="fbcOrderStatus.invalid && fbcOrderStatus.touched">
+              <small
+                *ngIf="!!fbcOrderStatus.errors?.required"
+                class="text-danger"
+                >Status is required</small
+              >
+            </div>
+            <!-- <div *ngIf="fbcNoteCategory.invalid && fbcNoteCategory.touched">
+                <small
+                  *ngIf="!!fbcNoteCategory.errors?.required"
+                  class="text-danger"
+                  >Category is required</small
+                >
+              </div> -->
+          </div>
+        </div>
+        <div
+          class="col-md-12"
+          *ngIf="
+            this.orderSubStatus &&
+            this.orderSubStatus.length > 0 &&
+            selectedOrderReviewGroup[0]?.encountersource?.toLowerCase() ==
+              'biotech encounter'
+          "
+        >
+          <div class="form-group mb-2">
+            <label for="" class="form-label">
+              <span class="text-danger">*</span>
+              {{ this.title }} Sub-Status
+            </label>
+            <kendo-dropdownlist
+              class="w-100"
+              formControlName="fcSubStatus"
+              [data]="orderSubStatus"
+              textField="substatusname"
+              valueField="substatusid"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="fbcSubStatus.invalid && fbcSubStatus.touched">
+              <small *ngIf="!!fbcSubStatus.errors?.required" class="text-danger"
+                >Sub-Status is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-md-12"
+          *ngIf="
+            this.orderNotes &&
+            this.orderNotes.length > 0 &&
+            selectedOrderReviewGroup[0]?.encountersource?.toLowerCase() ==
+              'biotech encounter'
+          "
+        >
+          <div class="form-group">
+            <label for="" class="form-label"> {{ this.title }} Note </label>
+            <kendo-dropdownlist
+              class="w-100"
+              formControlName="fcOrderNote"
+              [data]="orderNotes"
+              textField="notetitle"
+              valueField="ordernoteid"
+              [valuePrimitive]="true"
+              (selectionChange)="orderNoteChanged($event)"
+            >
+            </kendo-dropdownlist>
+            <!-- <div *ngIf="fbcOrderNote.invalid && fbcOrderNote.touched">
+              <small *ngIf="!!fbcOrderNote.errors?.required" class="text-danger"
+                >Order Note is required</small
+              >
+            </div> -->
+          </div>
+        </div>
+        <div class="col-md-12" *ngIf="!isUpdateMissingInfo">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Note</label
+            >
+            <textarea
+              id="txtNote"
+              class="form-control form-control-sm"
+              [class.is-invalid]="fbcNote.invalid && fbcNote.touched"
+              formControlName="fcNote"
+              kendoTextArea
+              style="width: 100%; height: 50px"
+              cols="21"
+              maxlength="1000"
+            ></textarea>
+            <div *ngIf="fbcNote.invalid && fbcNote.touched">
+              <small *ngIf="!!fbcNote.errors?.required" class="text-danger"
+                >Note is required</small
+              >
+              <small
+                *ngIf="
+                  !fbcNote.errors?.required && !!fbcNote.hasError('whitespace')
+                "
+                class="text-danger"
+                >Please enter valid note</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="mt-2">
+      <app-incomplete-order-action
+        *ngIf="
+          isMarkIncomplete ||
+          isUpdateMissingInfo ||
+          this.fbcOrderStatus.value == 3 ||
+          this.fbcOrderStatus.value == 8 ||
+          this.isSendToBiotech
+        "
+        [ngClass]="{
+          'd-none': this.fbcOrderStatus.value == 8 || this.isSendToBiotech
+        }"
+        [calledFrom]="'notemodal'"
+        [noteCalledFrom]="noteCalledFrom"
+        #IncompleteOrderAction
+      ></app-incomplete-order-action>
+    </div>
+    <!-- *ngIf="fbcOrderStatus.value == 3" -->
+  </div>
+  <div class="modal-footer">
+    <small
+      class="mr-auto"
+      *ngIf="
+        selectedOrderReviewGroup[0]?.encountersource?.toLowerCase() ==
+        'rcm encounter'
+      "
+      ><b>*Note</b>: Selected
+      <ng-container *ngIf="selectedOrderReviewGroup.length == 1"
+        >encounter</ng-container
+      ><ng-container *ngIf="selectedOrderReviewGroup.length > 1"
+        >encounters</ng-container
+      >
+      may have unanswered question(s)
+    </small>
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      (click)="onCloseClick()"
+      data-dismiss="modal"
+    >
+      Cancel
+    </button>
+    <!-- id="btnCancel" -->
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="onOkClick()"
+      [ngClass]="{
+        readonlybtn:
+          (this.IncompleteOrderAction &&
+            !this.IncompleteOrderAction.validateFields() &&
+            this.fbcOrderStatus.value != 8 &&
+            !this.isSendToBiotech) ||
+          (!isUpdateMissingInfo && !validate())
+      }"
+      appNoDblClick
+    >
+      <!-- [disabled]="
+    (this.IncompleteOrderAction &&
+      !this.IncompleteOrderAction.validateFields()) ||
+    !validate()
+  " -->
+      <!-- id="btnSave" -->
+      <!-- data-dismiss="modal" -->
+      OK
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingNote">
+  <div class="k-i-loading"></div>
+</div>
+<div class="progress-box" *ngIf="isPercentLoader">
+  <div class="col-md-2 mx-auto" style="top: 10%">
+    <circle-progress
+      [percent]="percentage"
+      [startFromZero]="false"
+      [animation]="true"
+      [animationDuration]="200"
+      [subtitle]="accessionInProgress"
+      subtitleColor="#000"
+      titleColor="#000"
+      unitsColor="#000"
+      innerStrokeColor="#fd9644"
+      outerStrokeColor="#e76800"
+      subtitleFontSize="12"
+    ></circle-progress>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newAutomation">
+      Add Errortype
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newAutomation">
+      Update Errortype
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="AutomationGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Description
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                AutomationDescription.invalid && AutomationDescription.touched
+              "
+              formControlName="fcAutomationDescription"
+              type="text"
+              id="txtAutomationDescription"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted ||
+                (AutomationDescription.invalid && AutomationDescription.touched)
+              "
+            >
+              <small
+                *ngIf="AutomationDescription.errors?.required"
+                class="text-danger"
+                >Description is required</small
+              >
+              <small
+                *ngIf="AutomationDescription.errors?.maxlength"
+                class="text-danger"
+                >Description allows 150 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddAutoamtionError"
+      (click)="saveAutoamtionError()"
+    >
+      Save
+    </button>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Note template</h4>
+    <div class="row ml-auto">
+      <button
+        class="ml-auto"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#addnotetemplateModal"
+        (click)="AddNotetemplate()"
+      >
+        Add Note
+      </button>
+    </div>
+  </div>
+  <div class="card-body" style=" height: 72vh">
+    <!-- <h4 class="text-center text-success"> Note template </h4> -->
+    <div class="grid-wrapper">
+      <!-- <kendo-grid id="gridNoteTemplate" [data]="NoteTemplategridView" style="width:100%" [height]="350"
+        [pageSize]="NoteTemplatepageSize" [pageable]="true" [skip]="NoteTemplateskip"
+        (pageChange)="pageChangeNoteTemplate($event)" [sortable]="true" [sort]="NoteTemplatesort"
+        (sortChange)="sortNoteTemplateChange($event)" [selectable]="true">
+        <kendo-grid-column field="sstatusdescription" title="Title" width="5" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+        <kendo-grid-column field="sdisplaycodedesc" title="Template" width="5" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+      </kendo-grid> -->
+
+      <kendo-grid
+        id="gridNoteTemplate"
+        [data]="NoteTemplategridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="NoteTemplatepageSize"
+        [pageable]="true"
+        [skip]="NoteTemplateskip"
+        (pageChange)="pageChangeNoteTemplate($event)"
+        [sortable]="true"
+        [sort]="NoteTemplatesort"
+        (sortChange)="sortNoteTemplateChange($event)"
+        [selectable]="true"
+        (edit)="EditNoteTemplate($event)"
+        (remove)="DeleteNoteTemplate($event)"
+      >
+        <kendo-grid-column
+          field="snotetitle"
+          title="Title"
+          width="3"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="snotetext"
+          title="Template"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bisactive"
+          title="Status"
+          width="2"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bisactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.bisactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="2"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editnoteconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <!-- <button kendoGridRemoveCommand title="Delete" data-toggle="modal"
+              data-target="#deletenoteconfirmationModal"><i class="fe fe-x"></i></button> -->
+            <button
+              *ngIf="dataItem.bisactive == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnNoteTemplateStatus(dataItem.nnoteid, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bisactive == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnNoteTemplateStatus(dataItem.nnoteid, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.NoteTemplategridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add NoteTemplate -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addnotetemplateModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addnotetemplate
+      [InputNoteEditid]="EditNoteid"
+      (OutputNoteEditResult)="OutputNoteTemplateEditResult($event)"
+      #AddnotetemplateChild
+    >
+    </app-addnotetemplate>
+  </div>
+</div>
+<!-- Add NoteTemplate -->
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editnoteconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+
+<!--Delete Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deletenoteconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-deleteconfirmation
+      [InputDeleteMessage]="InputDeleteMessage"
+      (OutputDeleteResult)="OutputDeleteResult($event)"
+    >
+    </app-deleteconfirmation>
+  </div>
+</div>
+<!--Delete Confirmation Model -->

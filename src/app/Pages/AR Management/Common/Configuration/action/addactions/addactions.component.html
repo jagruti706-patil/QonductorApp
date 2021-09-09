@@ -1,0 +1,101 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newActions">
+      Add Actions
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newActions">
+      Update Actions
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="ActionsGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Code
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="ActionsCode.invalid && ActionsCode.touched"
+              formControlName="fcActionsCode"
+              type="text"
+              id="txtactionscode"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="submitted || (ActionsCode.invalid && ActionsCode.touched)"
+            >
+              <small *ngIf="ActionsCode.errors?.required" class="text-danger"
+                >Code is required</small
+              >
+              <small *ngIf="ActionsCode.errors?.maxlength" class="text-danger"
+                >Code allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Description
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                ActionsDescription.invalid && ActionsDescription.touched
+              "
+              formControlName="fcActionsDescription"
+              type="text"
+              id="txtactionsdescription"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted ||
+                (ActionsDescription.invalid && ActionsDescription.touched)
+              "
+            >
+              <small
+                *ngIf="ActionsDescription.errors?.required"
+                class="text-danger"
+                >Description is required</small
+              >
+              <small
+                *ngIf="ActionsDescription.errors?.maxlength"
+                class="text-danger"
+                >Description allows 150 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddActions"
+      (click)="saveActions()"
+    >
+      Save
+    </button>
+  </div>
+</div>

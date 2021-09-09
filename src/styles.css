@@ -1,0 +1,278 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* @import '~css-star-rating/scss/star-rating'; */
+
+/* @import "~bootstrap/dist/css/bootstrap.css"; */
+
+@import "~font-awesome/css/font-awesome.css";
+body {
+  font-family: "Source Sans Pro";
+  font-size: 14px;
+}
+
+.k-grid {
+  font-family: "Source Sans Pro";
+  font-size: 13px;
+}
+
+.k-grid-header .k-header {
+  padding: 4px;
+  height: 30px;
+  /* height: 20px;
+  overflow: visible; */
+  /* white-space: normal; */
+}
+
+.k-grid tbody tr {
+  line-height: 15px;
+}
+
+.k-grid tbody td {
+  padding: 5px;
+  /* white-space: pre-wrap; */
+}
+
+.collapse-task {
+  position: absolute;
+  top: 15%;
+  left: 4%;
+  z-index: 100;
+  width: 93%;
+}
+
+.btn-kendo {
+  background-color: tomato;
+  color: white;
+}
+
+.modal-ku {
+  width: 750px;
+  margin: auto;
+}
+
+textarea {
+  resize: none;
+}
+
+.textarea-small {
+  resize: none;
+  height: 50px;
+  width: 400px;
+}
+
+.k-i-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 64px;
+  background-color: #ff6757;
+  color: #ff6757;
+}
+
+.k-loading-image::before,
+.k-loading-image::after {
+  color: #ff6757 !important;
+}
+
+/* START grid loading CSS */
+
+.grid-wrapper {
+  position: relative;
+}
+
+.k-i-loading-grid {
+  position: initial;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  bottom: 30;
+  font-size: 64px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #ff6757;
+}
+
+/* END grid loading CSS */
+
+.card-status-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 3px 3px 0 0;
+}
+
+/* START page loading CSS */
+
+.black-box {
+  display: block;
+  position: fixed;
+  z-index: 1300;
+  padding-top: 100px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.progress-box {
+  display: block;
+  position: fixed;
+  z-index: 1300;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.mt-40 {
+  margin-top: 40px;
+}
+
+/* .k-i-loading {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  padding: 20px;
+  border-radius: 30px;
+  font-size: 24px;
+  background-color: #fefefe;
+} */
+
+.k-i-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 64px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #ff6757;
+}
+
+/* END page loading CSS */
+
+@media (min-width: 992px) {
+  .modal-xl {
+    max-width: 1100px;
+  }
+}
+
+.pointer {
+  cursor: pointer !important;
+}
+
+.k-grid-norecords {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  align-items: center;
+}
+
+.readonlybtn {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.wrap-grid.k-grid th,
+.wrap-grid.k-grid-header .k-header > .k-link {
+  white-space: normal !important;
+}
+
+/* .wrap-grid .k-grouping-header{
+  display: none;
+} */
+
+.pointer-evt-none {
+  pointer-events: none;
+}
+
+#viewdetailsModal {
+  overflow: scroll;
+}
+
+.box-shadow {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.55) !important;
+}
+
+.custom-badge {
+  background: gray;
+  color: white;
+  border-radius: 13px;
+  padding: 2px;
+}
+
+#category-grid .k-grid-toolbar,
+#encounters-grid .k-grid-toolbar {
+  padding: 0;
+}
+
+.disableFilters {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.left-block {
+  float: left;
+  display: inline-block;
+  width: 98%;
+}
+
+.right-block {
+  float: right;
+  display: inline-block;
+  width: 2%;
+}
+
+.filter-grid .k-grid-header .k-filtercell .k-header {
+  padding: 0 4px;
+  height: 100%;
+}
+
+.disableDropdownOperator
+  .k-filtercell
+  .k-filtercell-operator
+  .k-dropdown-operator {
+  display: none;
+}
+.inputLoader .k-i-loading {
+  position: relative;
+  font-size: 18px;
+  color: #ff6757;
+  margin-left: auto;
+}
+.k-multiselect .k-multiselect-wrap,
+.k-dropdowntree .k-multiselect-wrap {
+  background-color: #f4f4f4 !important;
+}
+.archivedrecord {
+  opacity: 0.6;
+}
+/*for cross browser placeholder css*/
+.msFilter .k-searchbar .k-input::-webkit-input-placeholder {
+  color: #656565;
+}
+.msFilter .k-searchbar .k-input::placeholder {
+  color: #656565;
+}
+
+.dashboard-grid.k-grid tr.k-alt {
+  background-color: transparent !important;
+  /* .k-grid tr.k-state-selected>td */
+}
+
+.dashboard-grid.k-grid td,
+.dashboard-grid.k-grid th {
+  border-width: 0 0 0 0 !important;
+}

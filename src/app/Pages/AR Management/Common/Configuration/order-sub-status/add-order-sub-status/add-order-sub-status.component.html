@@ -1,0 +1,173 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <ng-container *ngIf="!isupdate"> Add Encounter Sub-Status</ng-container>
+      <ng-container *ngIf="isupdate"
+        ><ng-container *ngIf="!systemdefined">Update</ng-container> Encounter
+        Sub-Status</ng-container
+      >
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="onCloseClick()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <ng-container *ngIf="systemdefined && subStatusDataItem">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Status </label>
+            {{ subStatusDataItem.statusname }}
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Sub-Status Name </label>
+            {{ subStatusDataItem.substatusname }}
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Sub-Status Description </label>
+            {{ subStatusDataItem.substatusdescription }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!systemdefined">
+      <form [formGroup]="SubStatusGroup">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">*</strong>Status
+              </label>
+              <kendo-dropdownlist
+                class="form-control form-control-sm"
+                formControlName="fcStatus"
+                [class.is-invalid]="fbcStatus.invalid && fbcStatus.touched"
+                [data]="statusData"
+                [textField]="'status'"
+                [valueField]="'statuscode'"
+                [valuePrimitive]="true"
+                [disabled]="isupdate"
+              >
+              </kendo-dropdownlist>
+              <div *ngIf="fbcStatus.invalid && fbcStatus.touched">
+                <small *ngIf="fbcStatus.errors.required" class="text-danger"
+                  >Status is required</small
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">*</strong>Sub-Status Name
+              </label>
+              <input
+                kendoTextBox
+                formControlName="fcSubStatusName"
+                type="text"
+                class="form-control form-control-sm"
+              />
+              <div *ngIf="fbcSubStatusName.invalid && fbcSubStatusName.touched">
+                <small
+                  *ngIf="fbcSubStatusName.errors.required"
+                  class="text-danger"
+                  >Sub-Status Name is required</small
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label">
+                <!-- <strong class="text-danger">*</strong> -->
+                Sub-Status Description
+              </label>
+              <input
+                kendoTextBox
+                formControlName="fcSubStatusDescription"
+                type="text"
+                class="form-control form-control-sm"
+              />
+              <!-- <div
+              *ngIf="
+                fbcSubStatusDescription.invalid &&
+                fbcSubStatusDescription.touched
+              "
+            >
+              <small
+                *ngIf="fbcSubStatusDescription.errors.required"
+                class="text-danger"
+                >Sub-Status Description is required</small
+              >
+            </div> -->
+            </div>
+          </div>
+        </div>
+      </form>
+    </ng-container>
+    <!--Confirmation Model -->
+    <div
+      *ngIf="isupdate && isSubStatusNameChange"
+      class="modal fade"
+      data-backdrop="static"
+      data-keyboard="false"
+      id="updateconfirmationModal"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <app-action-confirmation
+          [InputConfirmationTitle]="'Update Confirmation'"
+          [InputConfirmationMessage]="InputStatusMessage"
+          (OutputConfirmationResult)="OutputStatusResult($event)"
+        >
+          <!--  -->
+        </app-action-confirmation>
+      </div>
+    </div>
+    <!--Confirmation Model -->
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="onCloseClick()"
+    >
+      Close
+    </button>
+    <button
+      *ngIf="!isupdate"
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="saveSubStatus()"
+      [ngClass]="{ readonlybtn: !validateFields() }"
+    >
+      <!-- appNoDblClick -->
+      Save
+    </button>
+    <button
+      *ngIf="isupdate && !systemdefined"
+      type="button"
+      class="btn btn-primary btn-sm"
+      data-toggle="modal"
+      data-target="#updateconfirmationModal"
+      (click)="saveSubStatus()"
+      [ngClass]="{ readonlybtn: !validateFields() }"
+    >
+      <!-- appNoDblClick -->
+      Update
+    </button>
+  </div>
+</div>

@@ -1,0 +1,262 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title mb-0" id="exampleModalLabel" *ngIf="newClientlogin">
+      Add ClientLogin
+    </h4>
+    <h4 class="modal-title mb-0" id="exampleModalLabel" *ngIf="!newClientlogin">
+      Update ClientLogin
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="AddClientLoginGroup" autocomplete="off">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcClient"
+              id="ddClient"
+              [class.is-invalid]="ClientName.invalid && ClientName.touched"
+              [data]="Clientdetail"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div
+              *ngIf="submitted || (ClientName.invalid && ClientName.touched)"
+            >
+              <small *ngIf="!!ClientName.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Payer
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcPayer"
+              id="ddPayer"
+              [class.is-invalid]="PayerName.invalid && PayerName.touched"
+              [data]="Payerdetail"
+              [textField]="'spayername'"
+              [valueField]="'npayerid'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="submitted || (PayerName.invalid && PayerName.touched)">
+              <small *ngIf="!!PayerName.errors?.required" class="text-danger"
+                >Payer is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Login Using
+            </label>
+            <input
+              type="radio"
+              name="fcUsing"
+              id="UsingCredentials"
+              class="k-radio"
+              value="Credentials"
+              formControlName="fcUsing"
+              [class.is-invalid]="Using.touched && Using.invalid"
+              (click)="OnLoginUsingChange('Credentials')"
+              checked
+            />
+            <label for="UsingCredentials" class="k-radio-label">
+              Credentials
+            </label>
+
+            <input
+              type="radio"
+              name="fcUsing"
+              id="UsingTIN"
+              class="k-radio"
+              value="TIN"
+              formControlName="fcUsing"
+              [class.is-invalid]="Using.touched && Using.invalid"
+              (click)="OnLoginUsingChange('TIN')"
+              checked
+            />
+            <label for="UsingTIN" class="k-radio-label">
+              TIN
+            </label>
+
+            <div
+              *ngIf="submitted || (Using.touched && Using.errors)"
+              class="text-danger"
+            >
+              <small *ngIf="!!Using.errors?.required"
+                >Login Using is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="bIsLoginUsingCredentials">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">* </strong>Username</label
+              >
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  LoginUsername.invalid && LoginUsername.touched
+                "
+                type="text"
+                id="Username"
+                class="form-control form-control-sm"
+                hidden
+              />
+              <!-- this hidden input added to avoid autocomplete username & password fron chrome -->
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  LoginUsername.invalid && LoginUsername.touched
+                "
+                formControlName="fcUsername"
+                type="text"
+                id="txtUsername"
+                class="form-control form-control-sm"
+              />
+              <div
+                *ngIf="
+                  submitted || (LoginUsername.invalid && LoginUsername.touched)
+                "
+                class="text-danger"
+              >
+                <small
+                  *ngIf="!!LoginUsername.errors?.required"
+                  class="text-danger"
+                  >Username is required</small
+                >
+                <small
+                  *ngIf="!!LoginUsername.errors?.maxlength"
+                  class="text-danger"
+                  >Username allows 50 characters</small
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">* </strong>Password</label
+              >
+              <!-- this hidden input added to avoid autocomplete username & password fron chrome -->
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  LoginPassword.invalid && LoginPassword.touched
+                "
+                type="password"
+                id="Password"
+                class="form-control form-control-sm"
+                hidden
+              />
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  LoginPassword.invalid && LoginPassword.touched
+                "
+                formControlName="fcPassword"
+                type="password"
+                id="txtPassword"
+                class="form-control form-control-sm"
+              />
+              <div
+                *ngIf="
+                  submitted || (LoginPassword.invalid && LoginPassword.touched)
+                "
+                class="text-danger"
+              >
+                <small *ngIf="!!LoginPassword.errors?.required"
+                  >Password is required.</small
+                >
+                <!-- <small *ngIf="LoginPassword.errors?.minlength"
+                  >Password must have 8 characters</small
+                > -->
+                <small *ngIf="!!LoginPassword.errors?.maxlength"
+                  >Password allows 50 characters</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!bIsLoginUsingCredentials">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">* </strong>TIN</label
+              >
+              <input
+                kendoTextBox
+                [class.is-invalid]="TIN.invalid && TIN.touched"
+                formControlName="fcTIN"
+                type="text"
+                id="TIN"
+                class="form-control"
+              />
+              <div
+                *ngIf="submitted || (TIN.invalid && TIN.touched)"
+                class="text-danger"
+              >
+                <small *ngIf="!!TIN.errors?.required" class="text-danger"
+                  >TIN is required</small
+                >
+                <small *ngIf="!!TIN.errors?.maxlength" class="text-danger"
+                  >TIN allows 50 characters</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddClient"
+      [disabled]="!validateClientLogin()"
+      (click)="saveClientLogin()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingClientlogin">
+  <div class="k-i-loading"></div>
+</div>

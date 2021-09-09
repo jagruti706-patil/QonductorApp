@@ -1,0 +1,252 @@
+<div class="card">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- [ngClass]="{ 'col-md-12': leftside, 'col-md-9': !leftside }" -->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header p-1 d-block w-100">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="d-flex p-1 border-bottom">
+                    <ng-container *ngIf="!hideTitle">
+                      <h5 class="mb-0 mr-2">{{ this.title }} Documents</h5>
+                      <div class="small">
+                        Source:
+                        <span
+                          *ngIf="doclookuppreference === 'GCP'"
+                          class="font-weight-bold"
+                        >
+                          TRIARQ Storage
+                        </span>
+                        <span
+                          *ngIf="doclookuppreference === 'DV'"
+                          class="font-weight-bold"
+                        >
+                          DocsVault
+                        </span>
+                      </div>
+                      <div class="small ml-auto" *ngIf="statustype">
+                        Status :
+                        <span class="font-weight-bold">
+                          {{ statustype }}
+                        </span>
+                      </div>
+                    </ng-container>
+                    <div
+                      class="row w-100"
+                      *ngIf="
+                        calledFrom === 'encounteraction' &&
+                        SelectedOrder?.nstatus === 16 &&
+                        SelectedOrder.encountersource.toLowerCase() ==
+                          'biotech encounter'
+                      "
+                    >
+                      <div class="col-md-10">
+                        <button
+                          type="button"
+                          class="btn btn-kendo btn-sm mr-2"
+                          (click)="onPrintClick()"
+                        >
+                          Print All Docs
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-kendo btn-sm"
+                          (click)="onUploadClick()"
+                        >
+                          <!-- fileInput.click() -->
+                          Upload Completed Missing Information Sheet
+                        </button>
+                        <input
+                          hidden
+                          type="file"
+                          id="fileInput"
+                          #fileInput
+                          (change)="
+                            uploadFile($event.target.files);
+                            $event.target.value = ''
+                          "
+                          accept=".pdf"
+                        />
+                      </div>
+                      <div class="col-md-2">
+                        <kendo-switch
+                          class="w-100"
+                          [(ngModel)]="subStatus"
+                          (ngModelChange)="switchChange($event)"
+                          [offLabel]="'New'"
+                          [onLabel]="'In Process'"
+                        ></kendo-switch>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="left-block d-flex">
+                    <div
+                      class="nav-horizontal nav nav-pills col-md-12 m-1 pl-1"
+                      id="v-pills-tab"
+                      role="tablist"
+                      aria-orientation="horizontal"
+                      style="max-height: 11vh; overflow: auto"
+                    >
+                      <strong class="ml-2" *ngIf="loadingDocs">
+                        Loading...
+                      </strong>
+                      <ng-container *ngFor="let document of documentList">
+                        <a
+                          (click)="showDocument(document)"
+                          class="btn btn-sm button-secondary mr-1 mb-1 mt-1"
+                          data-toggle="pill"
+                          href="#v-pills-tabContent"
+                          role="tab"
+                          aria-controls="v-pills-client"
+                          aria-selected="true"
+                          routerLinkActive="active"
+                          id="doc_{{ document.filedisplayname }}"
+                          appNoDblClick
+                        >
+                          <sup
+                            *ngIf="document.hasNote"
+                            [title]="document.note"
+                            class="text-warning"
+                            style="cursor: help; font-size: smaller"
+                            ><em class="fas fa-sticky-note rounded-circle"></em
+                          ></sup>
+                          {{
+                            document.filedisplayname
+                              .toString()
+                              .replace(".pdf", "")
+                          }}
+                          <!-- <i
+                            *ngIf="document.hasNote"
+                            class="far fa-sticky-note"
+                            [title]="document.note"
+                            style="cursor: help; font-size: smaller;"
+                          ></i> -->
+                        </a>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <div class="right-block" *ngIf="showActionPane">
+                    <em
+                      class="fe pointer sidebar-icon ml-auto"
+                      [ngClass]="{
+                        'fe-arrow-right-circle': !leftside,
+                        'fe-arrow-left-circle': leftside
+                      }"
+                      (click)="sidebar()"
+                    ></em>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <div *ngIf="loadingPDF">
+                <div class="k-i-loading"></div>
+              </div>
+              <div style="height: 81.4vh">
+                <ng2-pdfjs-viewer
+                  #pdfViewerAutoLoad
+                  [viewBookmark]="false"
+                  [showSpinner]="true"
+                  [download]="false"
+                  [openFile]="false"
+                  [print]="false"
+                ></ng2-pdfjs-viewer>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="card mt-0 mb-0"
+        *ngIf="this.encouterpagenotes && this.encouterpagenotes.length > 0"
+      >
+        <div
+          class="card-header d-block pl-3 p-1"
+          style="background-color: #e5f2ff; color: #00274e; font-weight: 600"
+        >
+          <div class="row">
+            <div class="col-md-2">Notes</div>
+            <div class="col-md-4 offset-md-6">
+              <span class="float-right">
+                <em
+                  [ngClass]="{
+                    'fa-chevron-circle-down': !noteCollapse,
+                    'fa-chevron-circle-up': noteCollapse
+                  }"
+                  class="fa"
+                  (click)="noteCollapseClick()"
+                ></em
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="card-body p-1"
+          id="collapseExample"
+          style="max-height: 108px; overflow-x: hidden"
+          *ngIf="noteCollapse"
+        >
+          <div class="row">
+            <ng-container *ngFor="let item of encouterpagenotes">
+              <div class="col-md-12">
+                <span class="h6 text-muted mr-2">{{
+                  item.createdon | date: "MM-dd-yyyy hh:mm:ss a"
+                }}</span>
+                <span class="h6 text-orange">{{ item.username }}</span>
+                <div class="h6 text-dark p-1">{{ item.ordernote }}</div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loader" class="black-box">
+  <div class="k-i-loading"></div>
+</div>
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="actionConfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="inputConfirmationTitle"
+      [InputConfirmationMessage]="confirmationMsg"
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="YesNoCancelModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-yes-no-cancel-confirmation
+      [InputConfirmationTitle]="inProcessConfirmationTitle"
+      [InputConfirmationMessage]="inProcessConfirmationMsg"
+      [InputButtonInformation]="inputButtonInfo"
+      (OutputConfirmationResult)="OutputYesNoCancelResult($event)"
+    >
+    </app-yes-no-cancel-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Model -->

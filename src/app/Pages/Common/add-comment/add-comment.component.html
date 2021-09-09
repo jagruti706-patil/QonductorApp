@@ -1,0 +1,245 @@
+<form [formGroup]="orderDetailsForm">
+  <div class="card-body p-3">
+    <div class="row">
+      <div
+        class="col-md-3"
+        *ngIf="!isAcknowledgeDocument && !isAnswerNote && !isComment"
+      >
+        <div class="form-group">
+          <label class="form-label">Page </label>
+          <kendo-dropdownlist
+            class="form-control form-control-sm"
+            [data]="documentList"
+            formControlName="fcPage"
+            [textField]="'filedisplayname'"
+            [valueField]="'docid'"
+            [valuePrimitive]="true"
+            [defaultItem]="PageDefaultValue"
+            [filterable]="true"
+            (filterChange)="handleFilter($event)"
+          >
+          </kendo-dropdownlist>
+        </div>
+      </div>
+      <div
+        class="col-md-3"
+        *ngIf="!isAcknowledgeDocument && !isAnswerNote && !isComment"
+      >
+        <div class="form-group">
+          <label class="form-label"
+            >{{ isFromRcmDocs ? "Note" : "Comment" }} Type
+          </label>
+          <kendo-dropdownlist
+            class="form-control form-control-sm"
+            [data]="commentTypeList"
+            formControlName="fcCmtType"
+            [textField]="'commenttype'"
+            [valueField]="'id'"
+            [valuePrimitive]="true"
+            [defaultItem]="cmtTypeDefaultValue"
+            (selectionChange)="isFromRcmDocs ? noteTypeChanged($event) : null"
+          >
+          </kendo-dropdownlist>
+          <!-- <div
+            *ngIf="showIncompleteWarning"
+            id="incompleteWarning"
+            class="alert alert-warning fadeIn p-1"
+          >
+            Page {{ documentList[currentindex]?.filedisplayname }} will be mark
+            as incomplete
+          </div> -->
+          <small *ngIf="showIncompleteWarning" class="mr-auto"
+            ><b>*Note</b>: Page
+            {{ documentList[currentindex]?.filedisplayname }} will be mark as
+            incomplete
+          </small>
+        </div>
+      </div>
+      <div
+        [ngClass]="
+          isAnswerNote || isAcknowledgeDocument || isComment
+            ? 'col-md-12'
+            : 'col-md-6'
+        "
+      >
+        <label class="form-label" *ngIf="!isAnswerNote"
+          ><strong class="text-danger">*</strong
+          >{{ isFromRcmDocs ? "Note" : "Comment" }}</label
+        >
+        <label class="form-label mb-2" *ngIf="isAnswerNote">Answer</label>
+        <textarea
+          class="w-100"
+          formControlName="fcTriarqNote"
+          kendoTextArea
+        ></textarea>
+        <div *ngIf="fbcTriarqNote.touched && fbcTriarqNote.invalid">
+          <small *ngIf="!!fbcTriarqNote.errors?.required" class="text-danger"
+            >{{
+              isFromRcmDocs ? (isAnswerNote ? "Answer" : "Note") : "Comment"
+            }}
+            is required</small
+          >
+          <small
+            *ngIf="
+              !fbcTriarqNote.errors?.required &&
+              !!fbcTriarqNote.hasError('whitespace')
+            "
+            class="text-danger"
+            >Please enter valid
+            {{
+              isFromRcmDocs ? (isAnswerNote ? "answer" : "note") : "comment"
+            }}</small
+          >
+        </div>
+      </div>
+    </div>
+    <!-- <div class="d-flex">
+          <div class="form-group flex-fill">
+            <label class="form-label" *ngIf="!isAnswerNote"
+              ><strong class="text-danger">*</strong
+              >{{ isFromRcmDocs ? "Note" : "Comment" }}</label
+            >
+            <label class="form-label mb-2" *ngIf="isAnswerNote">Answer</label>
+            <textarea
+              class="w-100"
+              formControlName="fcTriarqNote"
+              kendoTextArea
+            ></textarea>
+            <div *ngIf="fbcTriarqNote.touched && fbcTriarqNote.invalid">
+              <small
+                *ngIf="!!fbcTriarqNote.errors?.required"
+                class="text-danger"
+                >{{
+                  isFromRcmDocs ? (isAnswerNote ? "Answer" : "Note") : "Comment"
+                }}
+                is required</small
+              >
+              <small
+                *ngIf="
+                  !fbcTriarqNote.errors?.required &&
+                  !!fbcTriarqNote.hasError('whitespace')
+                "
+                class="text-danger"
+                >Please enter valid
+                {{
+                  isFromRcmDocs ? (isAnswerNote ? "answer" : "note") : "comment"
+                }}</small
+              >
+            </div>
+          </div>
+          <div class="mt-5 ml-3"></div>
+        </div> -->
+    <div
+      class="d-flex"
+      *ngIf="isFromRcmDocs && !isAcknowledgeDocument && !isAnswerNote"
+    >
+      <div class="form-group mr-4">
+        <label class="form-label" for="supplementarypages"
+          >Add supplementary pages</label
+        ><kendo-switch
+          [onLabel]="'Yes'"
+          [offLabel]="'No'"
+          formControlName="fcAddsupplementaryPages"
+        ></kendo-switch>
+      </div>
+      <div
+        class="flex-fill"
+        *ngIf="!isAcknowledgeDocument && !isAnswerNote && showPdfViewer"
+      >
+        <div class="form-group">
+          <label class="form-label">Select supplementary Page(s) </label>
+          <kendo-multiselect
+            class="form-control form-control-sm"
+            [data]="supplementaryDocumentList"
+            formControlName="fcsupplementaryPages"
+            [textField]="'filedisplayname'"
+            [valueField]="'docid'"
+            [valuePrimitive]="true"
+            [filterable]="true"
+            (filterChange)="handlesupplementaryPageFilter($event)"
+            (keydown.enter)="$event.preventDefault()"
+          >
+          </kendo-multiselect>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- <div class="col-md-12">
+            <div class="row">
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label" for="supplementarypages"
+                    >Add suplimentory pages</label
+                  ><kendo-switch
+                    [onLabel]="'Yes'"
+                    [offLabel]="'No'"
+                    formControlName="fcAddSuplimentoryPages"
+                  ></kendo-switch>
+                </div>
+              </div>
+              <div
+                class="col-md-6"
+                *ngIf="!isAcknowledgeDocument && !isAnswerNote && showPdfViewer"
+              >
+                <div class="form-group">
+                  <label class="form-label">Page </label>
+                  <kendo-multiselect
+                    class="form-control form-control-sm"
+                    [data]="suplimentoryDocumentList"
+                    formControlName="fcSuplimentoryPages"
+                    [textField]="'filedisplayname'"
+                    [valueField]="'docid'"
+                    [valuePrimitive]="true"
+                  >
+                  </kendo-multiselect>
+                </div>
+              </div>
+            </div>
+          </div> -->
+      <div class="col-md-12">
+        <div
+          [ngClass]="showPdfViewer == false ? 'd-none' : 'd-block'"
+          style="height: 50vh"
+        >
+          <ng2-pdfjs-viewer
+            #pdfViewerNote
+            [viewBookmark]="false"
+            [showSpinner]="true"
+            [download]="false"
+            [openFile]="false"
+          ></ng2-pdfjs-viewer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer p-0">
+    <div class="pull-right">
+      <button
+        class="btn btn-primary btn-sm m-2 ml-0"
+        data-toggle="collapse"
+        data-target="#note"
+        aria-expanded="false"
+        aria-controls="note"
+        [ngClass]="{ readonlybtn: this.orderDetailsForm.invalid }"
+        (click)="saveTriarqNote()"
+        appNoDblClick
+      >
+        Save
+      </button>
+      <button
+        class="btn btn-secondary btn-sm m-2 ml-0"
+        data-toggle="collapse"
+        data-target="#note"
+        aria-expanded="false"
+        aria-controls="note"
+        (click)="clearCommentControls(); onCancelClick()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</form>
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>

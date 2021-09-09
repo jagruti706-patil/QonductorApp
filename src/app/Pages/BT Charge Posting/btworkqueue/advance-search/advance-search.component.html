@@ -1,0 +1,386 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Advance Search</h4>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-filters
+          [CallingPage]="'AdvanceSearchOrder'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="OrderGridView"
+          [skip]="OrderSkip"
+          [height]="650"
+          class="w-100 wrap-grid"
+          [selectable]="selectableSettings"
+          [kendoGridSelectBy]="selectedCallback"
+          [selectedKeys]="OrderSelected"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="OrderSort"
+          (sortChange)="OrderSortChange($event)"
+          [loading]="loadingOrderGrid"
+          [pageable]="true"
+          [pageSize]="pagesize"
+          (pageChange)="OrderPageChange($event)"
+          (dataStateChange)="dataStateChange($event)"
+        >
+          <ng-template *ngIf="vwExportButton" kendoGridToolbarTemplate>
+            <button
+              class="pull-right mr-1"
+              type="button"
+              (click)="exportToExcelLog()"
+              kendoGridExcelCommand
+            >
+              Export to Excel
+            </button>
+          </ng-template>
+          <!-- <kendo-grid-checkbox-column width="12" showSelectAll="true">
+          </kendo-grid-checkbox-column> -->
+          <kendo-grid-column
+            field="assignmenttype"
+            title=""
+            width="20"
+            class="text-center"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [sortable]="false"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <i
+                [title]="
+                  dataItem.assignmenttype == 1 && dataItem.nstatus != 0
+                    ? 'Group Assignment'
+                    : 'Individual Assignment'
+                "
+                class="fas"
+                [ngClass]="{
+                  'fa-user text-teal':
+                    dataItem.assignmenttype == 0 && dataItem.nstatus != 0,
+                  'fa-users text-cyan':
+                    dataItem.assignmenttype == 1 && dataItem.nstatus != 0
+                }"
+              ></i>
+              <i
+                class="fas ml-1"
+                [ngClass]="{
+                  'fa-file-pdf text-red':
+                    dataItem.encountersource?.toLowerCase() == 'rcm encounter',
+                  'fa-flask text-indigo':
+                    dataItem.encountersource?.toLowerCase() ==
+                    'biotech encounter'
+                }"
+                [title]="dataItem.encountersource"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            *ngIf="!isHidden('orderqueuegroupid')"
+            field="orderqueuegroupid"
+            title="Work Group #"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderyear"
+            title="Year"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderday"
+            title="Folder"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordercategory"
+            title="Category"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientname"
+            title="Practice"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderqueuegroupcode"
+            title="Accession #"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="mintransactiondate"
+            title="DOS"
+            [filterable]="false"
+            width="38"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.mintransactiondate }}">{{
+                dataItem.mintransactiondate
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="patientname"
+            title="Patient Name"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.patientname }}">{{
+                dataItem.patientname
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="dob"
+            title="DOB(Gender)"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span *ngIf="dataItem.dob && dataItem.gender">{{
+                dataItem.dob + "(" + dataItem.gender + ")"
+              }}</span>
+              <span *ngIf="dataItem.dob == '' && dataItem.gender">{{
+                "(" + dataItem.gender + ")"
+              }}</span>
+              <span *ngIf="dataItem.dob && dataItem.gender == ''">{{
+                dataItem.dob
+              }}</span>
+              <span *ngIf="dataItem.dob == '' && dataItem.gender == ''"></span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="patientaddress"
+            title="Patient Address"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.patientaddress }}">{{
+                dataItem.patientaddress
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="insurance_company_name"
+            title="Insurance"
+            [filterable]="false"
+            width="45"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.insurance_company_name }}">{{
+                dataItem.insurance_company_name
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="claimreferencenumber"
+            title="QClaim#"
+            [filterable]="false"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.claimreferencenumber }}">
+                {{
+                  dataItem.encountersource?.toLowerCase() == "rcm encounter"
+                    ? ""
+                    : dataItem.claimreferencenumber
+                }}
+              </span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="status"
+            title="Current Status"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span
+                [attr.title]="
+                  dataItem.nstatus === 18
+                    ? 'Status before archived: ' + dataItem.statusbeforearchived
+                    : null
+                "
+              >
+                {{ dataItem.status }}
+              </span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="documentcount"
+            title=""
+            [sortable]="false"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <i
+                (click)="onOpenViewdetails(dataItem)"
+                data-toggle="modal"
+                data-target="#viewdetailsModal"
+                class="fas fa-eye mr-1 pointer text-primary"
+                title="View"
+              ></i>
+              <i
+                *ngIf="vwAddComment && dataItem.nstatus !== 18"
+                (click)="onAddCommentClicked(dataItem)"
+                data-toggle="modal"
+                data-target="#viewAddComment"
+                class="fas fa-comment pointer mr-1 text-info"
+                title="Add Comment"
+              ></i>
+              <i
+                *ngIf="dataItem.hl7present"
+                class="fas fa-notes-medical mr-1 text-orange"
+                title="HL7 is available"
+              ></i>
+              <i
+                *ngIf="dataItem.clientbilling"
+                class="fas fa-file-invoice-dollar text-green"
+                title="Client billed encounter"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+          <kendo-grid-excel fileName="{{ exportFilename }}.xlsx">
+            <!-- [fetchData]="allData" -->
+            <kendo-excelexport-column
+              field="encountersource"
+              title="Encounter Type"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderyear" title="Year">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderday" title="Folder">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordercategory" title="Category">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="clientname" title="Practice">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="orderqueuegroupcode"
+              title="Accession #"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="mintransactiondate" title="DOS">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="patientname" title="Patient Name">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="dob" title="DOB">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="gender" title="Gender">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="patientaddress"
+              title="Patient Address"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="insurance_company_name"
+              title="Insurance"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="claimreferencenumber"
+              title="QClaim#"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="status" title="Current Status">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="hl7present" title="HL7">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="clientbilling"
+              title="Client Billing"
+            >
+            </kendo-excelexport-column>
+          </kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+    <!--View Details Model GRID---  -->
+    <div
+      class="modal bd-example-modal-lg"
+      data-backdrop="static"
+      data-keyboard="false"
+      id="viewdetailsModal"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <app-order-details #OrderDetailsComponent></app-order-details>
+      </div>
+    </div>
+    <!--View Details Model -->
+  </div>
+</div>
+
+<div class="black-box" *ngIf="loadingOrderGrid">
+  <div class="k-i-loading"></div>
+</div>
+
+<!-- Add comment modal -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewAddComment"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Comment</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="onCommentClose()"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <app-add-comment
+          (iscommentsaved)="outputCommentResult($event)"
+          #AddCommentComponent
+        ></app-add-comment>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add comment modal -->

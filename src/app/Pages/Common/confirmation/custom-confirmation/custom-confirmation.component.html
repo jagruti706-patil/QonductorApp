@@ -1,0 +1,23 @@
+<div class="modal-content box-shadow">
+  <div class="modal-header">
+    <h5 class="modal-title">{{ ConfirmationTitle }}</h5>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="onNo()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div style="white-space: pre-line;" [innerHTML]="ConfirmationMessage"></div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="onNo()">
+      No
+    </button>
+    <button type="button" class="btn btn-primary" (click)="onYes()">
+      <!-- appNoDblClick -->
+      Yes
+    </button>
+  </div>
+</div>

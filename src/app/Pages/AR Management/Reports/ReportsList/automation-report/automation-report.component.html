@@ -1,0 +1,268 @@
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <span *ngIf="AutomationgridView != undefined">
+          {{ displaytotalrecordscount }} records found
+        </span>
+
+
+      </div>
+      <div class="col-md-6">
+        <div class="float-right">
+          <i
+          *ngIf="!filterApplied && !loadingAutomation"
+            class="fe fe-filter ml-auto pointer"
+            title="Default filter is applied.."
+            data-toggle="collapse"
+            data-target="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          ></i>
+          <i
+          *ngIf="filterApplied && !loadingAutomation"      
+            class="fa fa-filter ml-auto pointer"
+            title="Some filter is applied.."
+            data-toggle="collapse"
+            data-target="#collapseExample"
+            aria-expanded="false"
+            aria-controls="collapseExample"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+      <app-filters
+        [CallingPage]="'Automation'"                
+        (FilterData)="ApplyFilter($event)"
+      ></app-filters>
+    </div>
+
+
+
+
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridAutomation"
+        [data]="AutomationgridView"
+        [selectable]="true"
+        [sortable]="true"
+        [sort]="Automationsort"
+        (sortChange)="sortAutomationChange($event)"
+        [loading]="loadingAutomationGrid"
+        style="height: 66vh"
+      >
+        <!-- <kendo-grid-column
+          field="createdon"
+          title="Date"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.createdon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column
+        field="staskcode"
+        title="Task Code"
+        width="5"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+
+
+
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          field="sagentname"
+          title="Agent"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column
+          field="totalassigntask"
+          title="Assigned Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+
+        <kendo-grid-column
+          field="payername"
+          title="Insurance"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field="patientcode"
+          title="Account #"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimno"
+          title="Claim #"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        
+        
+        <!-- <kendo-grid-column
+          field="AutoClaimStatus"
+          title="Automation Claim Status"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+
+
+        <kendo-grid-column
+        field="accuracystatus"
+        title="Accuracy Status"
+        width="5"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span >
+          <div *ngIf="dataItem.accuracystatus == 'Yes'">Match</div>
+          <div *ngIf="dataItem.accuracystatus == 'No'">Not match</div>
+          <div *ngIf="dataItem.accuracystatus == 'N/A'">N/A</div>
+        </span>
+      </ng-template>
+      </kendo-grid-column>
+
+        <kendo-grid-column
+        field="automationerrordesc"
+        title="Reason"
+        width="5"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span>
+            <div *ngIf="dataItem.accuracystatus == 'No'">{{dataItem.automationerrordesc}}</div>
+          </span>
+        </ng-template>
+      </kendo-grid-column>
+
+      
+  
+
+
+
+
+
+        <!-- <kendo-grid-column
+          field="accuracystatus"
+          title="Audit Status"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+
+        </kendo-grid>
+        </div>
+
+
+
+
+
+        <!-- <kendo-grid-column
+          field="auditedtaskcount"
+          title="Audit Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+      <!-- </div> -->
+
+
+
+<!--         
+        <kendo-grid-column
+          field="totalerrorcount"
+          title="Error Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="auditedtaskpercentage"
+          title="Audit (%)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.auditedtaskpercentage == 0">
+              {{ dataItem.auditedtaskpercentage }}
+            </div>
+            <div *ngIf="dataItem.auditedtaskpercentage != 0">
+              {{ dataItem.auditedtaskpercentage }} %
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="errortaskpercentage"
+          title="Error (%)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.errortaskpercentage == 0">
+              {{ dataItem.errortaskpercentage }}
+            </div>
+            <div *ngIf="dataItem.errortaskpercentage != 0">
+              {{ dataItem.errortaskpercentage }} %
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid> -->
+      <!-- <div *ngIf="!this.ProductiongridView" class="k-icon k-i-loading" style="font-size: 64px; ">
+      </div> -->
+
+
+
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+
+    </div>
+    </div>
+    </div>

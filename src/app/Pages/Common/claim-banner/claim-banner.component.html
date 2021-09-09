@@ -1,0 +1,146 @@
+<div class="row">
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">Claim #</small>
+    <label class="form-label d-inline-block mb-0">{{
+      claiminfo.claimnumber
+    }}</label>
+  </div>
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">DOS</small>
+    <label class="form-label mb-0 d-inline-block">{{
+      claiminfo.dos | date: "MM-dd-yyyy"
+    }}</label>
+  </div>
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">Ins ID</small>
+    <label class="mb-0 d-inline-block form-label">{{
+      claiminfo.insuranceid
+    }}</label>
+  </div>
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">Billed Amt</small>
+    <label class="mb-0 d-inline-block form-label">{{
+      claiminfo.billed_amount
+    }}</label>
+  </div>
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">Ins. Due Amt</small>
+    <label class="mb-0 d-inline-block form-label">{{
+      claiminfo.insurancedue
+    }}</label>
+  </div>
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">TFL Days</small>
+    <label class="mb-0 d-inline-block form-label">{{
+      claiminfo.tfl == "NULL" ? 0 : claiminfo.tfl
+    }}</label>
+  </div>
+
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">DFL Days</small>
+    <label class="mb-0 d-inline-block form-label">{{
+      claiminfo.dfl == "NULL" ? 0 : claiminfo.dfl
+    }}</label>
+  </div>
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-md-3 pr-0">
+        <small class="mb-0 mr-2 text-muted">Insurance</small>
+      </div>
+      <div class="col-md-9 pl-0">
+        <label
+          class="mb-0 d-inline-block form-label text-truncate w-100"
+          title="{{ claiminfo.responsibleinsurance }}"
+          >{{ claiminfo.responsibleinsurance }}</label
+        >
+      </div>
+    </div>
+  </div>
+  <div class="col-md-2">
+    <small class="mb-0 mr-2 text-muted">Follow-Up Date</small>
+    <label class="mb-0 d-inline-block form-label">{{
+      claiminfo.nextactiondate | date: "MM-dd-yyyy"
+    }}</label>
+  </div>
+  <div class="col-md-4">
+    <div class="row">
+      <div class="col-md-4 pr-0">
+        <small class="mb-0 text-muted">Follow-Up Action</small>
+      </div>
+      <div class="col-md-8 pl-0">
+        <label
+          class="mb-0 d-inline-block form-label w-100 text-truncate"
+          title="{{ claiminfo.scheduleaction }}"
+          >{{ claiminfo.scheduleaction }}</label
+        >
+      </div>
+    </div>
+    <!-- <label
+      class="mb-0 d-inline-block form-label"
+      style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box !important; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"
+      title="{{ claiminfo.scheduleaction }}"
+      >{{ claiminfo.scheduleaction }}</label
+    > -->
+  </div>
+
+  <div
+    class="ml-auto col-md-3 text-right"
+    *ngIf="isCallingWorkQueueby == false && isTaskViewDetails == false"
+  >
+    <a (click)="onOpenViewdetails()" class="text-info mr-3 pointer view-btn">
+      <i class="fa fa-eye mr-1"></i>View Details
+    </a>
+    <a
+      [routerLink]="null"
+      [class.disabled]="disabled ? true : null"
+      routerLinkActive="active"
+      class="text-primary pointer"
+    >
+      <i class="fa fa-link mr-1"></i>Claim History
+    </a>
+  </div>
+
+  <!-- <div class="col-md-2" *ngIf="isCallingWorkQueueby==false && isTaskViewDetails == false">
+    <div class="row"><a (click)="onOpenViewdetails()"><i class="fa fa-link mr-1"></i>View Details</a></div>
+    <div class="row"><a routerLink="null" routerLinkActive="active" style="pointer-events: none; cursor: default"><i
+          class="fa fa-link mr-1"></i>Claim History</a></div>
+  </div> -->
+</div>
+
+<!--View Details Model GRID---  -->
+<div
+  *ngIf="isCallingWorkQueueby == false && isTaskViewDetails == false"
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-viewdetails #ViewdetailsComponent></app-viewdetails>
+  </div>
+</div>
+<!--View Details Model -->
+
+<!-- <div class="row">
+  <div class="col-md-10">
+    <div class="row">
+      <div class="col-md-3"><span class="font-weight-bold">Claim #</span> {{claiminfo.claimnumber}}</div>
+      <div class="col-md-3"><span class="font-weight-bold">DOS</span> {{claiminfo.dos}}</div>
+      <div class="col-md-4"><span class="font-weight-bold">Responsibility</span> {{claiminfo.responsibleinsurance}}</div>
+    </div>
+    <div class="row">
+      <div class="col-md-4"><span class="font-weight-bold">Billed Amt</span> </div>
+      <div class="col-md-4"><span class="font-weight-bold">Ins. Due Amt</span> {{claiminfo.insurancedue}}</div>
+      <div class="col-md-4"><span class="font-weight-bold">Ins ID</span> </div>
+
+    </div>
+  </div>
+  <div class="col-md-2">
+    <div class="row"><a routerLink="/" routerLinkActive="active"><i class="fa fa-link mr-1"></i>View Details</a></div>
+    <div class="row"><a routerLink="/" routerLinkActive="active"><i class="fa fa-link mr-1"></i>Claim History</a></div>
+  </div>
+
+</div> -->

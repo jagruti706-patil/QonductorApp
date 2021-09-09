@@ -1,0 +1,902 @@
+<!-- <div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="mdAssignWork">Assign Work</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="card">
+      <div class="card-header ">
+        <label class="mb-0">{{SelectedTasks.length}} task selected</label>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4">This event is fired when a collapse element has been made visible to the user (will wait
+            for CSS transitions to complete).This event is fired when a collapse element has been made visible to the
+            user (will wait for CSS transitions to complete).This event is fired when a collapse element has been made
+            visible to the user (will wait for CSS transitions to complete).This event is fired when a collapse element
+            has been made visible to the user (will wait for CSS transitions to complete).This event is fired when a
+            collapse element has been made visible to the user (will wait for CSS transitions to complete).</div>
+          <div class="col-md-4">asdfsadf</div>
+          <div class="col-md-4">asdfasdfsdfsadf</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    <button type="button" class="btn btn-kendo" (click)="GenerateWorkitemAssignment()">Assign</button>
+  </div>
+</div> -->
+
+<div class="card">
+  <div
+    class="card-header header-padding"
+    style="background-color: #5179a2; color: #fff;height: 38px;"
+  >
+    <div *ngIf="gcurrentTask != null" class="col-md-3">
+      <small class="mb-0"> Task # </small>
+      <span class="form-label mt-minus mb-0">{{ gcurrentTask.taskcode }}</span>
+    </div>
+    <div *ngIf="gcurrentTask != null" class="col-md-3">
+      <small>Work Group #</small>
+      <span class="form-label mt-minus mb-0"
+        >{{ gcurrentTask.workgroupcode }}
+      </span>
+    </div>
+    <div *ngIf="gcurrentTask != null" class="col-md-4">
+      <small class="mb-0">Assigned By</small>
+      <span class="form-label mt-minus mb-0"
+        >{{ gcurrentTask.susername }}
+        <small
+          >(
+          {{ gcurrentTask.assigneddate | date: "MM-dd-yyyy hh:mm:ss a" }}
+          )</small
+        >
+      </span>
+    </div>
+    <div *ngIf="gcurrentTask != null" class="col-md-2 text-right">
+      <span class="form-label mb-0"
+        >{{ gcurrentIndex + 1 }} of {{ gtotalSelectedTaskCount }} tasks</span
+      >
+    </div>
+  </div>
+
+  <div class="card-body" style=" padding: 5px 0.75rem;">
+    <!-- {{selectedTsk|json}} -->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card mt-0 mb-1">
+          <div
+            class="card-header d-block pl-3 p-1"
+            style="background-color: #e5f2ff; color: #00274e; font-weight: 600;height: 30px;"
+          >
+            <app-patient-banner
+              *ngIf="this.gcurrentTask != null"
+            ></app-patient-banner>
+          </div>
+          <div class="card-body pt-1 pb-1 p-1" style="height:148px">
+            <app-claim-banner
+              *ngIf="this.gcurrentTask != null"
+            ></app-claim-banner>
+            <hr class="mb-1" />
+            <app-status-banner
+              *ngIf="this.gcurrentTask != null"
+            ></app-status-banner>
+            <!--  <div class="row">
+                <app-status-banner></app-status-banner>
+              <div class="col-md-6"><strong>Patient Details</strong>
+                <app-patient-banner></app-patient-banner>
+              </div>
+              <div class="col-md-6"><strong>Status</strong>
+                <app-status-banner></app-status-banner>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-6">
+        <div class="card mt-0 mb-1">
+          <div class="card-header m-0 p-1" style="background-color:#ef736a; ">Patient Details</div>
+          <div class="card-body pt-1 pb-1">
+            <app-patient-banner class="" [PatientDetails]="PatientData"></app-patient-banner>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card mt-0 mb-1">
+          <div class="card-header p-1" style="background-color: #e5f2ff; color: #00274e; font-weight: 600;">Status</div>
+          <div class="card-body pt-1 pb-1">
+            <app-status-banner></app-status-banner>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="row">
+      <div class="col-md-8">
+        <form [formGroup]="ActionFormGroup">
+          <div class="card mt-0 mb-1">
+            <div
+              class="card-header m-0 p-1 text-center"
+              style="background-color: #e5f2ff; color: #00274e; font-weight: 600;"
+            >
+              Action
+            </div>
+            <div class="card-body pt-1 pb-1">
+              <div class="row mb-1">
+                <div class="col-md-2 pl-2">
+                  <strong class="text-danger">*</strong>Status
+                </div>
+                <div class="col-md-10 mb-1">
+                  <kendo-combobox
+                    id="cmbStatus"
+                    formControlName="fcStatus"
+                    [data]="Status"
+                    [valuePrimitive]="true"
+                    textField="sstatusdescription"
+                    valueField="nstatusid"
+                    style="width:100%"
+                  >
+                  </kendo-combobox>
+                  <div
+                    *ngIf="
+                      submitted || (fbcStatus.invalid && fbcStatus.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcStatus.errors?.required"
+                      class="text-danger"
+                      >Status is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-md-2 pl-2">
+                  <strong class="text-danger">*</strong>Sub-Status
+                </div>
+                <div class="col-md-10 mb-1">
+                  <kendo-combobox
+                    id="cmbSubStatus"
+                    formControlName="fcSubStatus"
+                    [data]="SubStatus"
+                    [valuePrimitive]="true"
+                    textField="ssubstatusdescription"
+                    valueField="nsubstatusid"
+                    style="width:100%"
+                  >
+                  </kendo-combobox>
+                  <div
+                    *ngIf="
+                      submitted ||
+                      (fbcSubStatus.invalid && fbcSubStatus.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcSubStatus.errors?.required"
+                      class="text-danger"
+                      >Sub-Status is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-md-2  pl-2">
+                  <strong class="text-danger">*</strong>Action
+                </div>
+                <div class="col-md-10">
+                  <kendo-combobox
+                    id="cmbAction"
+                    formControlName="fcAction"
+                    [data]="Actions"
+                    [valuePrimitive]="true"
+                    textField="sactiondescription"
+                    valueField="nactionid"
+                    style="width:100%"
+                  >
+                  </kendo-combobox>
+                  <div
+                    *ngIf="
+                      submitted || (fbcAction.invalid && fbcAction.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcAction.errors?.required"
+                      class="text-danger"
+                      >Action is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-md-2  pl-2">
+                  <strong class="text-danger">*</strong>Log Action
+                </div>
+                <div class="col-md-10">
+                  <kendo-combobox
+                    id="cmbFolloupLogAction"
+                    formControlName="fcFolloupLogAction"
+                    [data]="ScheduledAction"
+                    [valuePrimitive]="true"
+                    textField="displayaction"
+                    valueField="id"
+                    style="width:100%"
+                  >
+                  </kendo-combobox>
+                  <div
+                    *ngIf="
+                      submitted ||
+                      (fbcFolloupLogAction.invalid &&
+                        fbcFolloupLogAction.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcFolloupLogAction.errors?.required"
+                      class="text-danger"
+                      >Log Action is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-md-2 pl-2">
+                  Schedule Action
+                </div>
+                <div class="col-md-10">
+                  <kendo-combobox
+                    id="cmbFolloupScheduleAction"
+                    formControlName="fcFolloupScheduleAction"
+                    [data]="ScheduledAction"
+                    [valuePrimitive]="true"
+                    textField="displayaction"
+                    valueField="id"
+                    class="mr-2"
+                    style="width:60%"
+                  >
+                  </kendo-combobox>
+                  <kendo-numerictextbox
+                    class="mr-2"
+                    id="txtFolloupScheduleDays"
+                    formControlName="fcFolloupScheduleDays"
+                    [max]="45"
+                    [min]="1"
+                    [autoCorrect]="true"
+                    style="width:15%"
+                  >
+                  </kendo-numerictextbox>
+                  <strong
+                    *ngIf="fbcFolloupScheduleAction.value > 0"
+                    class="text-danger"
+                    >*</strong
+                  >
+                  <kendo-datepicker
+                    id="dtpFollowupDate"
+                    [format]="'MM/dd/yyyy'"
+                    formControlName="fcFolloupScheduleDate"
+                    [min]="min"
+                    style="width:20%"
+                  >
+                  </kendo-datepicker>
+                  <div
+                    *ngIf="
+                      fbcFolloupScheduleAction.value > 0 &&
+                      fbcFolloupScheduleDate.invalid
+                    "
+                  >
+                    <small
+                      *ngIf="fbcFolloupScheduleDate.errors?.required"
+                      class="text-danger"
+                      >Schedule Follow-up date is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-1">
+                <div class="col-md-2  pl-2">
+                  <strong class="text-danger">*</strong>Note
+                </div>
+                <div class="col-md-10">
+                  <div class="row gutters-xs">
+                    <div class="col">
+                      <textarea
+                        id="txtActionNote"
+                        formControlName="fcActionNote"
+                        kendoTextArea
+                        style="width: 100%; height: 80px;"
+                        cols="21"
+                        [value]="ActionNote"
+                        maxlength="1000"
+                        #ActionNote
+                        >{{ ActionNote }}</textarea
+                      >
+                      <!-- {{fbcActionNote.value}}   -->
+                    </div>
+                    <span class="col-auto">
+                      <button
+                        class="btn btn-secondary btn-sm"
+                        type="button"
+                        (click)="copyInputMessage(ActionNote)"
+                        title="Copy to clipboard"
+                      >
+                        <i class="fe fe-copy"></i>
+                      </button>
+                      <br />
+                      <button
+                        class="btn btn-secondary btn-sm mt-1"
+                        type="button"
+                        title="Reason & Remark Code"
+                        data-target="#ReasonRemarkModal"
+                        data-toggle="modal"
+                      >
+                        <i class="fe fe-list"></i>
+                      </button>
+                      <!-- <i class="fe fe-copy"></i> -->
+                    </span>
+                  </div>
+                  <div
+                    *ngIf="
+                      submitted ||
+                      (fbcActionNote.invalid && fbcActionNote.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcActionNote.errors?.required"
+                      class="text-danger"
+                      >Note is required</small
+                    >
+                    <small
+                      *ngIf="fbcActionNote.errors?.maxlength"
+                      class="text-danger"
+                      >Note allows 1000 characters</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-md-2  pl-2">TFL from DOS</div>
+                <div class="col-md-4 ">
+                  <input
+                    kendoTextBox
+                    id="txtTLFFromDOS"
+                    formControlName="fcTFLFromDOS"
+                    type="text"
+                    id="txt1"
+                  />
+                  <!-- <kendo-dropdownlist textField="value" valueField="id" [defaultItem]="default"></kendo-dropdownlist> -->
+                </div>
+                <div class="col-md-2  pl-2">
+                  <strong class="text-danger">*</strong>Work Type
+                </div>
+                <div class="col-md-4 pr-0">
+                  <kendo-dropdownlist
+                    class="form-control form-control-sm"
+                    formControlName="fcWorkType"
+                    id="ddlWorkType"
+                    [class.is-invalid]="
+                      fbcWorkType.invalid && fbcWorkType.touched
+                    "
+                    [data]="ddlWorkType"
+                    textField="text"
+                    valueField="value"
+                    [valuePrimitive]="true"
+                  >
+                  </kendo-dropdownlist>
+                  <!-- <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      name="fcWorkType"
+                      formControlName="fcWorkType"
+                      id="TypeOnCall"
+                      class="k-radio"
+                      value="On Call"
+                    />
+                    <label for="TypeOnCall" class="k-radio-label">
+                      On Call
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      name="fcWorkType"
+                      formControlName="fcWorkType"
+                      id="TypeWebsite"
+                      class="k-radio"
+                      value="Website"
+                    />
+                    <label for="TypeWebsite" class="k-radio-label">
+                      Website
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      name="fcWorkType"
+                      formControlName="fcWorkType"
+                      id="TypeOther"
+                      class="k-radio"
+                      value="Other"
+                    />
+                    <label for="TypeOther" class="k-radio-label">
+                      Other
+                    </label>
+                  </div> -->
+                  <div
+                    *ngIf="
+                      submitted ||
+                      fbcWorkType.value !== '' ||
+                      (fbcWorkType.invalid && fbcWorkType.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcWorkType.errors?.required"
+                      class="text-danger"
+                      >Work type is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="row mb-1">
+                <div class="col-md-2 mb-1 ">
+                  <strong class="text-danger">*</strong>Auto. Status
+                </div>
+                <div class="col-md-4 pr-0">
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      name="fcAutomationError"
+                      formControlName="fcAutomationError"
+                      id="TypeYes"
+                      class="k-radio"
+                      value="Yes"
+                      (click)="OnAutomationErrorClick('YES')"
+                    />
+                    <label for="TypeYes" class="k-radio-label">
+                      Match
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      name="fcAutomationError"
+                      formControlName="fcAutomationError"
+                      id="TypeNo"
+                      class="k-radio"
+                      value="No"
+                      (click)="OnAutomationErrorClick('NO')"
+                    />
+                    <label for="TypeNo" class="k-radio-label">
+                      Not Match
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <input
+                      type="radio"
+                      name="fcAutomationError"
+                      formControlName="fcAutomationError"
+                      id="TypeNotApplicable"
+                      class="k-radio"
+                      value="N/A"
+                      (click)="OnAutomationErrorClick('N/A')"
+                    />
+                    <label for="TypeNotApplicable" class="k-radio-label">
+                      N/A
+                    </label>
+                  </div>
+                  <div
+                    *ngIf="
+                      submitted ||
+                      (fbcAutomationError.invalid && fbcAutomationError.touched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcAutomationError.errors?.required"
+                      class="text-danger"
+                      >Auto. status is required</small
+                    >
+                  </div>
+                </div>
+                <div *ngIf="showAutomationStatus" class="col-md-2 mb-1 pl-2">
+                  <strong class="text-danger">*</strong>Reason
+                </div>
+                <div class="col-md-4 mb-1">
+                  <kendo-dropdownlist
+                    *ngIf="showAutomationStatus"
+                    id="cmbTaskType"
+                    formControlName="fcAutomationStatus"
+                    [data]="AutomationError"
+                    textField="sautomationerrordescription"
+                    valueField="nautomationerrorid"
+                    [valuePrimitive]="true"
+                    class="w-100"
+                  >
+                  </kendo-dropdownlist>
+                  <div
+                    *ngIf="
+                      fbcAutomationError.value == 'No' &&
+                      fbcAutomationStatus.invalid &&
+                      (fbcAutomationStatus.touched ||
+                        fbcAutomationStatus.untouched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcAutomationStatus.errors?.required"
+                      class="text-danger"
+                      >Auto. status not match reason is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr />
+
+              <div class="row mb-1">
+                <div class="col-md-4">
+                  <label class="form-label font-weight-normal mb-0"
+                    >Assign To</label
+                  >
+                  <kendo-dropdownlist
+                    id="cmbAssignTo"
+                    formControlName="fcAssignTo"
+                    [data]="Agents"
+                    textField="displayname"
+                    valueField="ngcpuserid"
+                    [valuePrimitive]="true"
+                    class="w-100"
+                  >
+                  </kendo-dropdownlist>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label font-weight-normal mb-0"
+                    ><strong *ngIf="fbcAssignTo.value > 0" class="text-danger"
+                      >*</strong
+                    >Task Type</label
+                  >
+                  <kendo-dropdownlist
+                    id="cmbTaskType"
+                    formControlName="fcTaskType"
+                    [data]="TaskType"
+                    textField="stype"
+                    valueField="ntypeid"
+                    [valuePrimitive]="true"
+                    class="w-100"
+                  >
+                  </kendo-dropdownlist>
+                  <div
+                    *ngIf="
+                      fbcAssignTo.value > 0 &&
+                      fbcTaskType.invalid &&
+                      (fbcTaskType.touched || fbcTaskType.untouched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcTaskType.errors?.required"
+                      class="text-danger"
+                      >Task Type is required</small
+                    >
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label font-weight-normal mb-0">
+                    <strong *ngIf="fbcAssignTo.value > 0" class="text-danger"
+                      >*</strong
+                    >Due Date
+                  </label>
+                  <kendo-datepicker
+                    class="w-100"
+                    id="dtpDueDate"
+                    [min]="minDueDate"
+                    [format]="'MM/dd/yyyy'"
+                    formControlName="fcDueDate"
+                  >
+                  </kendo-datepicker>
+                  <!-- <div *ngIf="
+                      submitted &&
+                      fbcAssignTo.value > 0 &&
+                      fbcDueDate.invalid &&
+                      (fbcDueDate.touched || fbcDueDate.untouched)
+                    "> -->
+                  <div *ngIf="fbcAssignTo.value > 0 && fbcDueDate.invalid">
+                    <small
+                      *ngIf="fbcDueDate.errors?.required"
+                      class="text-danger"
+                      >Due date is required</small
+                    >
+                    <small
+                      *ngIf="fbcDueDate.errors?.minError"
+                      class="text-danger"
+                      >Due Date must be greater or equal to today</small
+                    >
+                  </div>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label font-weight-normal mb-0">
+                    <strong *ngIf="fbcAssignTo.value > 0" class="text-danger"
+                      >*</strong
+                    >Comment
+                  </label>
+                  <!-- <input kendoTextBox type="text" id="txt1" /> -->
+                  <textarea
+                    id="txtAssignComment"
+                    formControlName="fcAssignComment"
+                    style="width:100%; height: 30px;"
+                    id="txt1"
+                  >
+                  </textarea>
+                  <div
+                    *ngIf="
+                      fbcAssignTo.value > 0 &&
+                      fbcAssignComment.invalid &&
+                      (fbcAssignComment.touched || fbcAssignComment.untouched)
+                    "
+                  >
+                    <small
+                      *ngIf="fbcAssignComment.errors?.required"
+                      class="text-danger"
+                      >Comment is required</small
+                    >
+                  </div>
+                </div>
+              </div>
+              <hr hidden />
+              <!-- <div class="row mb-1" hidden>
+                <div class="col-md-2">
+                  <label class="custom-control custom-checkbox">
+                    <input id="chkFollowup" formControlName="fcFollowup" type="checkbox" class="custom-control-input"
+                      name="example-checkbox1" value="option1" checked>
+                    <span class="custom-control-label">Follow up</span>
+                  </label>
+                </div>
+                <div class="col-md-4">Date&nbsp;<kendo-datepicker id="dtpFollowupDate" formControlName="fcFollowupDate">
+                  </kendo-datepicker>
+                </div>
+                <div class="col-md-6">
+                  <div class="row">
+                    <div class="col-md-2">Note</div>
+                    <div class="col-md-10">
+                      <textarea id="txtFollowupNote" formControlName="fcFollowupNote" style="width:80%; height: 27px;"
+                        id="txt1"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div> -->
+              <!-- <div class="card mt-0 mb-1">
+                <div class="card-header m-0 p-1 text-center" style="background-color: #e5f2ff; color: #00274e; font-weight: 600;">
+                  Assign
+                </div>
+                <div class="card-body pt-1 pb-1">
+                  <div class="row mb-1">
+                    <div class="col-md-2">Assign To</div>
+                    <div class="col-md-4">
+                      <kendo-dropdownlist textField="value" valueField="id" class="mb-1" [defaultItem]="default">
+                      </kendo-dropdownlist>
+                    </div>
+                    <div class="col-md-2">Assign Date</div>
+                    <div class="col-md-4">
+                      <kendo-datepicker class="w-100"></kendo-datepicker>
+                    </div>
+                    <div class="col-md-2">Comment</div>
+                    <div class="col-md-10">
+                        <input kendoTextBox type="text" id="txt1" />
+                      <textarea  style="width:100%; height: 30px;" id="txt1">
+                      </textarea>
+                    </div>
+                  </div>
+      
+                </div>
+              </div>
+              <div class="card mt-0 mb-1">
+                  <div class="card-header m-0 p-1 text-center" style="background-color: #e5f2ff; color: #00274e; font-weight: 600;">
+                    Follow up
+                  </div>
+                  <div class="card-body pt-1 pb-1">
+                    <div class="row  mb-1">
+                      <div class="col-md-12 mb-3"><input type="checkbox" text="" />I want to follow up</div>
+                      <div class="col-md-2">Follow up Date</div>
+                      <div class="col-md-4">
+                        <kendo-datepicker></kendo-datepicker>
+                      </div>
+                      <div class="col-md-1">Note</div>
+                      <div class="col-md-5">
+                        <textarea  style="width:100%; height: 50px;" id="txt1"></textarea>
+        
+                      </div>
+                    </div>
+                  </div>
+                </div> -->
+            </div>
+          </div>
+          <div
+            class="modal fade bd-example-modal-md"
+            data-backdrop="static"
+            data-keyboard="false"
+            id="ReasonRemarkModal"
+            role="dialog"
+            aria-labelledby="buttonLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-md">
+              <div class="modal-content">
+                <div class="modal-header p-2 pl-3">
+                  <h5 class="modal-title" id="mdReasonRemarkCode">
+                    Reason & Remark Code
+                  </h5>
+                  <button
+                    type="button"
+                    class="close pr-5"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    (click)="onCancelReasonRemarkCode('close')"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row mb-1">
+                    <div class="col-md-3 ">Reason Code</div>
+                    <div class="col-md-9">
+                      <kendo-multiselect
+                        id="cmbReasonCode"
+                        formControlName="fcReasonCode"
+                        [data]="reasoncode"
+                        [textField]="'groupreasoncode'"
+                        [valueField]="'groupreasoncode'"
+                        [valuePrimitive]="true"
+                        [autoClose]="false"
+                      >
+                      </kendo-multiselect>
+                    </div>
+                  </div>
+                  <div class="row mb-1">
+                    <div class="col-md-3 ">Remark Code</div>
+                    <div class="col-md-9">
+                      <kendo-multiselect
+                        id="cmbRemarkCode"
+                        formControlName="fcRemarkCode"
+                        [data]="remarkcode"
+                        [textField]="'sremarkcode'"
+                        [valueField]="'sremarkcode'"
+                        [valuePrimitive]="true"
+                        [autoClose]="false"
+                      >
+                      </kendo-multiselect>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    data-dismiss="modal"
+                    (click)="onCancelReasonRemarkCode('cancel')"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-secondary btn-sm"
+                    id="SaveReasonRemark"
+                    data-dismiss="modal"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card mt-0 mb-1">
+          <div
+            class="card-header m-0 p-1 text-center"
+            style="background-color: #e5f2ff; color: #00274e; font-weight: 600;"
+          >
+            Qcriber
+          </div>
+          <div
+            class="card-body pt-1 pb-1"
+            style="height: 455px; overflow: scroll;"
+          >
+            <!-- <app-qcriber (SelectedNote)="NoteChanged($event)"></app-qcriber> -->
+            <app-qcriber #Qcriber></app-qcriber>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <!-- <app-assign-task></app-assign-task> -->
+
+      <!-- <div class="col-md-6">
+        <div class="card mt-0 mb-1">
+          <div class="card-header m-0 p-1 text-center" style="background-color: #e5f2ff; color: #00274e; font-weight: 600;">
+            Assign
+          </div>
+          <div class="card-body pt-1 pb-1">
+            <div class="row mb-1">
+              <div class="col-md-2">Assign To</div>
+              <div class="col-md-4">
+                <kendo-dropdownlist textField="value" valueField="id" class="mb-1" [defaultItem]="default">
+                </kendo-dropdownlist>
+              </div>
+              <div class="col-md-2">Assign Date</div>
+              <div class="col-md-4">
+                <kendo-datepicker class="w-100"></kendo-datepicker>
+              </div>
+              <div class="col-md-2">Comment</div>
+              <div class="col-md-10">
+                <textarea  style="width:100%; height: 50px;" id="txt1">
+                </textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div> -->
+
+      <!-- <div class="col-md-6">
+        <div class="card mt-0 mb-1">
+          <div class="card-header m-0 p-1 text-center" style="background-color: #e5f2ff; color: #00274e; font-weight: 600;">
+            Follow up
+          </div>
+          <div class="card-body pt-1 pb-1">
+            <div class="row  mb-1">
+              <div class="col-md-12 mb-3"><input type="checkbox" text="" />I want to follow up</div>
+              <div class="col-md-2">Follow up Date</div>
+              <div class="col-md-4">
+                <kendo-datepicker></kendo-datepicker>
+              </div>
+              <div class="col-md-1">Note</div>
+              <div class="col-md-5">
+                <textarea  style="width:100%; height: 50px;" id="txt1"></textarea>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </div>
+  <div class="card-footer">
+    <div class="text-center">
+      <button
+        type="button"
+        class="btn btn-kendo ml-4"
+        [disabled]="disableNext"
+        (click)="btnSave_Next_click()"
+        id="btnSave_Next"
+      >
+        Save&Next
+      </button>
+      <button
+        type="button"
+        class="btn btn-kendo ml-4"
+        (click)="btnSave_Close_click()"
+        id="btnSave_Close"
+      >
+        Save&Close
+      </button>
+      <button
+        type="button"
+        class="btn btn-kendo ml-4"
+        (click)="btnNext_click()"
+        [disabled]="disableNext"
+        id="btnNext"
+      >
+        Next
+      </button>
+      <button
+        type="button"
+        class="btn btn-kendo ml-4"
+        (click)="btnClose_click()"
+        id="btnClose"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+  <div class="black-box" *ngIf="loadingTask">
+    <div class="k-i-loading"></div>
+  </div>
+</div>

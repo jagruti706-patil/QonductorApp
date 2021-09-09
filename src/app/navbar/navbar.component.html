@@ -1,0 +1,314 @@
+<div class="header py-4">
+  <div class="container">
+    <div class="d-flex">
+      <a class="header-brand text-light" routerLink="/{{ navigation }}">
+        <img
+          src="./assets/img/Qonductor_Logo.png"
+          class="header-brand-img"
+          alt="Qonductor logo"
+        />
+        <!-- QONDUCTOR -->
+      </a>
+
+      <div
+        *ngIf="vwAdvanceSearch"
+        class="form-group has-search form-control-sm ml-auto p-0 m-0 w-50"
+        style="width: 50%"
+      >
+        <span class="fa fa-search form-control-feedback"></span
+        ><input
+          #advanceSearch
+          class="form-control"
+          name="search"
+          placeholder="Search Encounter, QClaimNo (e.g. #2020) and Patient Name (e.g. @Mickey)"
+          type="search"
+          (keyup.enter)="onEnter(advanceSearch)"
+        />
+      </div>
+
+      <div class="d-flex" [ngClass]="vwAdvanceSearch ? 'ml-4' : 'ml-auto'">
+        <div *ngIf="appEnvironment != 'Production'">
+          <div class="badge bg-orange mt-1 pulse-btn">
+            {{ appEnvironment }}
+          </div>
+          <!-- <div *ngIf="appEnvironment == 'QA'" class="badge bg-orange mt-1">
+            {{ appEnvironment }}
+          </div> -->
+          <!-- <div *ngIf="appEnvironment == 'Staging'" class="badge bg-lime mt-1">
+            {{ appEnvironment }}
+          </div>
+          <div *ngIf="appEnvironment == 'Local'" class="badge bg-cyan mt-1">
+            {{ appEnvironment }}
+          </div> -->
+        </div>
+        <!-- <div class="dropdown d-none d-md-flex">
+            <a class="nav-link icon" data-toggle="dropdown">
+              <i class="fe fe-bell"></i>
+              <span class="nav-unread"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+              <a  class="dropdown-item d-flex">
+                <span class="avatar mr-3 align-self-center" style="background-image: url(demo/faces/male/41.jpg)"></span>
+                <div>
+                  <strong>Nathan</strong> pushed new commit: Fix page load performance issue.
+                  <div class="small text-muted">10 minutes ago</div>
+                </div>
+              </a>
+              <a  class="dropdown-item d-flex">
+                <span class="avatar mr-3 align-self-center" style="background-image: url(demo/faces/female/1.jpg)"></span>
+                <div>
+                  <strong>Alice</strong> started new task: Tabler UI design.
+                  <div class="small text-muted">1 hour ago</div>
+                </div>
+              </a>
+              <a  class="dropdown-item d-flex">
+                <span class="avatar mr-3 align-self-center" style="background-image: url(demo/faces/female/18.jpg)"></span>
+                <div>
+                  <strong>Rose</strong> deployed new version of NodeJS REST Api V3
+                  <div class="small text-muted">2 hours ago</div>
+                </div>
+              </a>
+              <div class="dropdown-divider"></div>
+              <a  class="dropdown-item text-center text-muted-dark">Mark all as read</a>
+            </div>
+          </div> -->
+        <div class="dropdown">
+          <a class="nav-link pr-0 leading-none" data-toggle="dropdown">
+            <span
+              class="avatar"
+              style="background-image: url(./assets/img/default-user.jpg)"
+            ></span>
+            <span class="ml-2 d-none d-lg-block">
+              <span class="text-white">{{ loginName }} </span>
+              <small class="text-muted d-block mt-1">{{ roleName }}</small>
+            </span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+            <a class="dropdown-item" (click)="onChangePassword()">
+              <i class="dropdown-icon fa fa-key"></i> Change Password
+            </a>
+            <form action="">
+              <a
+                class="dropdown-item d-flex"
+                data-toggle="collapse"
+                data-target="#menuCollapse"
+                (click)="collaspeMenu = !collaspeMenu"
+              >
+                <div><i class="dropdown-icon fe fe-help-circle"></i> Help</div>
+                <div class="ml-auto">
+                  <i
+                    class="fe"
+                    [ngClass]="
+                      collaspeMenu ? 'fe-chevron-down' : 'fe-chevron-up'
+                    "
+                  ></i>
+                </div>
+              </a>
+              <div
+                *ngIf="!collaspeMenu"
+                class="collapse border-top"
+                id="menuCollapse"
+                style="background-color: #f8f8f8"
+              >
+                <li *ngFor="let item of releaseInfo">
+                  <a
+                    class="dropdown-item"
+                    target="_blank"
+                    href="{{ item.doclocation }}"
+                    >{{ item.docname }}</a
+                  >
+                </li>
+              </div>
+            </form>
+            <a
+              class="dropdown-item"
+              data-toggle="modal"
+              (click)="showAboutQonductor()"
+            >
+              <!-- data-target="#aboutModal" -->
+              <i class="dropdown-icon fa fa-info"></i> About
+            </a>
+            <hr class="mb-0 mt-0" />
+            <a class="dropdown-item" (click)="onLogout()">
+              <i class="dropdown-icon fe fe-log-out"></i> Sign out
+            </a>
+          </div>
+        </div>
+      </div>
+      <a
+        class="header-toggler d-lg-none ml-3 ml-lg-0"
+        data-toggle="collapse"
+        data-target="#headerMenuCollapse"
+      >
+        <span class="header-toggler-icon"></span>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="header-bottom collapse d-lg-flex p-0 mb-2" id="headerMenuCollapse">
+  <div class="container">
+    <!-- <div class="row align-items-center ">
+        <div class="col-lg order-lg-first">
+          <ul class="nav nav-tabs border-0 flex-column flex-lg-row">
+            <!-- <li class="nav-item">
+              <a routerLink="/Home" routerLinkActive="active" class="nav-link"><i class="fe fe-home"></i> Home</a>
+            </li> 
+            <li class="nav-item">
+              <a routerLink="/{{navigation}}" routerLinkActive="active" class="nav-link"><i class="fe fe-home"></i> My Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/WorkQueue" routerLinkActive="active" class="nav-link"><i class="fa fa-warehouse"></i> AR Inventory</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a routerLink="/MyTask" routerLinkActive="active" class="nav-link"><i class="fa fa-tasks"></i> My Tasks</a>
+                <div class="dropdown-menu dropdown-content mt-2 p-0">
+                  <a href="#" class="dropdown-item ">Completed Task</a>
+                </div>
+              </li>
+            <li class="nav-item">
+              <a routerLink="/Assistant" routerLinkActive="active" class="nav-link"><i class="fa fa-info"></i> Assistant</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/Agent" routerLinkActive="active" class="nav-link"><i class="fa fa-users"></i> Agents</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/File" routerLinkActive="active" class="nav-link"><i class="fa fa-file"></i> Files</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/Production" routerLinkActive="active" class="nav-link"><i class="fe fe-pie-chart"></i> Production</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/Announcement" routerLinkActive="active" class="nav-link"><i class="fa fa-bullhorn"></i> Announcement</a>
+            </li>
+            <li class="nav-item">
+              <a routerLink="/Configuration" routerLinkActive="active" class="nav-link"><i class="fe fe-settings"></i> Configuration</a>
+            </li>
+          </ul>
+        </div>
+      </div> -->
+    <app-navbarlinks></app-navbarlinks>
+  </div>
+</div>
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="releaseNotesModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content box-shadow">
+      <div
+        class="avatar avatar-sm close-icon bg-red pointer"
+        (click)="onCancelReleaseNote()"
+        data-dismiss="modal"
+      >
+        <i class="fe fe-x text-white"></i>
+      </div>
+      <!-- <div class="modal-header p-3">
+        <h5 class="modal-title">Qonductor Updated!!</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="onCancelReleaseNote()"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div> -->
+      <div class="modal-body p-3 text-center">
+        <div class="my-4">
+          <i
+            class="fe fe-check-circle text-success"
+            style="font-size: 58px"
+          ></i>
+        </div>
+        <h4>Qonductor Updated!!</h4>
+        <div style="white-space: pre-line">
+          New updates are available for Qonductor.
+          <br />
+          Checkout new feature list in release note. <br />
+          Latest version:<strong>{{
+            currentReleaseInfo?.releaseversion
+          }}</strong>
+        </div>
+      </div>
+      <div class="modal-footer p-2 justify-content-center">
+        <!-- <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="onCancelReleaseNote()"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button> -->
+        <a
+          href=""
+          class="btn btn-outline-primary btn-sm"
+          (click)="onViewReleaseNote()"
+          data-dismiss="modal"
+          >View Release Notes</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="aboutModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content box-shadow">
+      <div
+        class="avatar avatar-sm close-icon bg-red pointer"
+        data-dismiss="modal"
+      >
+        <i class="fe fe-x text-white"></i>
+      </div>
+      <div class="modal-body p-3 text-center">
+        <div class="my-4">
+          <i
+            class="fe fe-check-circle text-success"
+            style="font-size: 58px"
+          ></i>
+        </div>
+
+        <h4>Qonductor</h4>
+        <div style="white-space: pre-line">
+          Version {{ latestReleaseInfo?.releaseversion }}
+          <br />
+          Release Date:
+          {{ latestReleaseInfo?.releasedate | date: "EEEE, MMMM d, y" }}
+          <br /><em class="far fa-copyright"></em>TRIARQ Health Inc.<br />
+        </div>
+      </div>
+      <!-- <div class="modal-footer p-2 justify-content-center"> -->
+      <!-- <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="onCancelReleaseNote()"
+          data-dismiss="modal"
+        >
+          Cancel
+        </button> -->
+      <!-- <a
+          href=""
+          class="btn btn-outline-primary btn-sm"
+          (click)="onViewReleaseNote()"
+          data-dismiss="modal"
+          >View Release Notes</a
+        > -->
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+<div *ngIf="loader" class="black-box">
+  <div class="k-i-loading"></div>
+</div>

@@ -1,0 +1,151 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title">Import Documents</h5>
+    <button
+      type="button"
+      class="close p-0 m-0"
+      (click)="onClose()"
+      data-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="importFormGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <label class="form-label"
+            ><strong class="text-danger">*</strong>Client</label
+          >
+          <kendo-dropdownlist
+            class="form-control form-control-sm"
+            formControlName="fcClient"
+            [data]="clients"
+            textField="clientcodename"
+            valueField="nclientid"
+            [valuePrimitive]="true"
+            filterable="true"
+            (filterChange)="handleClientFilter($event)"
+            (selectionChange)="clientChange($event)"
+            [ngClass]="{
+              disableFilters: clients && clients.length == 1
+            }"
+          >
+          </kendo-dropdownlist>
+          <div *ngIf="fbcClient.touched && fbcClient.invalid">
+            <small *ngIf="!!fbcClient.errors?.required" class="text-danger"
+              >Client is required</small
+            >
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label"
+            ><strong class="text-danger">*</strong>Category</label
+          >
+          <kendo-dropdownlist
+            class="form-control form-control-sm"
+            formControlName="fcCategory"
+            [data]="categories"
+            textField="category"
+            valueField="category"
+            [valuePrimitive]="true"
+            filterable="true"
+            (filterChange)="handleCategoryFilter($event)"
+          >
+          </kendo-dropdownlist>
+          <div *ngIf="fbcCategory.touched && fbcCategory.invalid">
+            <small *ngIf="!!fbcCategory.errors?.required" class="text-danger"
+              >Category is required</small
+            >
+          </div>
+        </div>
+      </div>
+    </form>
+    <div
+      class="uploadfilecontainer"
+      (click)="fileInput.click()"
+      appDragDrop
+      (onFileDropped)="uploadFile($event)"
+    >
+      <input
+        hidden
+        type="file"
+        #fileInput
+        (change)="uploadFile($event.target.files); $event.target.value = ''"
+        accept=".pdf"
+      />
+      <div class="file-text text-muted my-3">
+        <div>Drag & Drop Files to Import</div>
+        <button class="btn btn-secondary btn-sm">Select File to Import</button>
+      </div>
+    </div>
+
+    <div class="card" *ngFor="let item of files; let i = index">
+      <div class="card-body p-2">
+        <div class="row">
+          <div class="col-md-8">
+            <div class="d-flex">
+              <span class="col">
+                <h6 class="mb-1">{{ item.file.name }}</h6>
+                <div class="small text-muted">{{ item.size }}</div>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <!-- <span *ngIf="!item.action">{{ item?.status | titlecase }}</span> -->
+            <i
+              class="fa fa-close fa-lg text-danger float-right pointer"
+              title="Delete"
+              (click)="files.splice(i, 1)"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <!-- <span class="alert alert-warning p-0 mb-0 mr-auto"
+      >Document size should be less than 30 MB</span
+    > -->
+    <small class="mr-auto"
+      ><b>*Note</b>: Document size should be less than 30 MB
+    </small>
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="onClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="onSaveImportDocuments()"
+      appNoDblClick
+      [class.readonlybtn]="importFormGroup.invalid || files.length == 0"
+    >
+      Submit
+    </button>
+  </div>
+  <div class="black-box" *ngIf="kendoLoader">
+    <div class="k-i-loading"></div>
+  </div>
+  <div class="progress-box" *ngIf="percentageLoader">
+    <div class="col-md-3 mx-auto" style="top: 30%">
+      <circle-progress
+        [percent]="percentage"
+        [startFromZero]="false"
+        [animation]="true"
+        [animationDuration]="300"
+        subtitleColor="#000"
+        titleColor="#000"
+        unitsColor="#000"
+        innerStrokeColor="#fd9644"
+        outerStrokeColor="#e76800"
+        subtitleFontSize="12"
+      ></circle-progress>
+      <!-- [subtitle]="accessionInProgress" -->
+    </div>
+  </div>
+</div>

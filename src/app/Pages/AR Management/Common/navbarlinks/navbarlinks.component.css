@@ -1,0 +1,56 @@
+.nav-tabs .nav-link.active {
+  border: none !important;
+}
+.logo-text {
+  position: absolute;
+  top: 10px;
+  font-weight: normal;
+  font-size: 22px;
+}
+.header-brand-img {
+  /* height: 2rem; */
+  line-height: 2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  width: 180px;
+  height: auto;
+}
+.second-menu {
+  display: none;
+}
+.menu:hover .second-menu {
+  display: block;
+}
+/* Navbar hover */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+  /* top: 50px; */
+  position: absolute;
+  transform: translate3d(12px, 56px, 0px);
+  top: 0px;
+  left: 0px;
+  will-change: transform;
+}
+.nav-tabs .nav-link {
+  font-size: 15px;
+}
+.biotech-nav .nav-item {
+  display: inline-block !important;
+}
+
+.middle {
+  float: left;
+  width: 90%;
+  overflow: auto;
+  /*will change this to hidden later to deny scolling to user*/
+  white-space: nowrap;
+}

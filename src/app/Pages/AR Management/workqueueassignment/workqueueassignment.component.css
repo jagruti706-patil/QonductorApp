@@ -1,0 +1,61 @@
+.filled {
+  color: #ffdd00;
+}
+.work-color {
+  color: #000;
+  font-size: 1.5em;
+  font-weight: 700;
+  line-height: 1em;
+  font-family: Roboto, sans-serif;
+}
+.work-text-color {
+  color: #707070;
+}
+.work-top-border {
+  border-top: 1px solid rgba(0, 40, 100, 0.12);
+  background-color: #f6f6f6;
+}
+.work-right-border {
+  border-right: 1px solid rgba(0, 40, 100, 0.12);
+}
+
+.card-profile-agent .card-header-agent {
+  height: 4rem;
+  background-size: cover;
+}
+.text-black {
+  color: #000;
+}
+.bg-blue {
+  background-color: #007aff;
+}
+.bg-orange {
+  background-color: #ff9500;
+}
+.bg-pink {
+  background-color: #ff2d55;
+}
+.bg-purple {
+  background-color: #5856d6;
+}
+.bg-aqua {
+  background-color: #5ac8fa;
+}
+.bg-yellow {
+  background-color: #ffcc00;
+}
+.bg-green {
+  background-color: #4cd964;
+}
+.alert-red {
+  text-decoration-color: red;
+}
+.tag {
+  font-size: 14px;
+  font-weight: 600;
+}
+.card-profile-img {
+  max-width: 5rem;
+  text-align: center;
+  line-height: 4.5rem;
+}

@@ -1,0 +1,99 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newClientUserMapping">
+      Add Client User Mapping
+    </h4>
+    <h4
+      class="modal-title"
+      id="exampleModalLabel"
+      *ngIf="!newClientUserMapping"
+    >
+      Update Client User Mapping
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="ClientUserMappingGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcClient"
+              id="ddClient"
+              [class.is-invalid]="ClientName.invalid && ClientName.touched"
+              [data]="Clientdetail"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [disabled]="!newClientUserMapping"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div
+              *ngIf="submitted || (ClientName.invalid && ClientName.touched)"
+            >
+              <small *ngIf="!!ClientName.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Agent
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcAgent"
+              id="ddAgent"
+              [class.is-invalid]="AgentName.invalid && AgentName.touched"
+              [data]="Agentdetail"
+              [textField]="'displayname'"
+              [valueField]="'ngcpuserid'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="submitted || (AgentName.invalid && AgentName.touched)">
+              <small *ngIf="!!AgentName.errors?.required" class="text-danger"
+                >Agent is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddClientUserMapping"
+      [disabled]="!validateClientUserMapping()"
+      (click)="saveClientUserMapping()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingClientUserMapping">
+  <div class="k-i-loading"></div>
+</div>

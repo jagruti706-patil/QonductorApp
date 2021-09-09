@@ -1,0 +1,486 @@
+<!-- <div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Document Count</h4>
+  </div>
+  <div class="card-body p-4"> -->
+<div class="row">
+  <div class="col-md-12">
+    <app-filters
+      [CallingPage]="'DocumentCount'"
+      (FilterData)="ApplyFilter($event)"
+    ></app-filters>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card" style="max-height: 90vh;">
+      <div class="card-status bg-orange"></div>
+      <div class="card-header pl-2 border-0 d-flex align-items-center">
+        <h5 class="mb-0">
+          Biotech Document Count
+        </h5>
+        <i
+          [ngClass]="{ 'fa-spin': biotechCountLoader }"
+          class="fa fa-refresh ml-2 text-secondary pointer ml-auto"
+          title="Refresh Data"
+          (click)="getDocumentCounts('biotechcount')"
+        ></i>
+      </div>
+      <div class="card-body p-2">
+        <div class="row">
+          <div class="col-sm-6 col-md-4">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-blue mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ biotechdocumentcounts?.totaldocumentcount }}
+                  </h4>
+                  <small class="text-muted">Total Document</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-green mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ biotechdocumentcounts?.gcpuploadcount }}
+                  </h4>
+
+                  <small class="text-muted">GCP Upload</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-danger mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ biotechdocumentcounts?.pendinggcpuplodedcount }}
+                  </h4>
+                  <small class="text-muted">Pending GCP Upload</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="biotechCountLoader" class="k-i-loading"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="card" style="max-height: 90vh;">
+      <div class="card-status bg-cyan"></div>
+      <div class="card-header pl-2 border-0 d-flex align-items-center">
+        <h5 class="mb-0">
+          RCM Document Count
+        </h5>
+        <i
+          [ngClass]="{ 'fa-spin': rcmDocCountLoader }"
+          class="fa fa-refresh ml-2 text-secondary pointer ml-auto"
+          title="Refresh Data"
+          (click)="getDocumentCounts('rcmdocumentcount')"
+        ></i>
+      </div>
+      <div class="card-body p-2">
+        <div class="row">
+          <div class="col-sm-6 col-md-3">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-primary mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ totalrcmdocumentcounts?.totaldocuments }}
+                  </h4>
+                  <small class="text-muted">Total Documents</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-yellow mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ totalrcmdocumentcounts?.totaldocumentcount }} ({{
+                      totalrcmdocumentcounts?.totalencountercount
+                    }})
+                  </h4>
+                  <small class="text-muted">Total Pages (Encounter)</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-green mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ totalrcmdocumentcounts?.gcpuploadcount }}
+                  </h4>
+
+                  <small class="text-muted">GCP Upload Pages</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-danger mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ totalrcmdocumentcounts?.pendinggcpuplodedcount }}
+                  </h4>
+                  <small class="text-muted">Pending GCP Upload Pages</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-sm-6 col-md-2">
+            <div class="card p-3">
+              <div class="d-flex align-items-center">
+                <span class="stamp bg-orange mr-3">
+                  <em class="fas fa-file-pdf"></em>
+                </span>
+                <div>
+                  <h4 class="m-0">
+                    {{ totalrcmdocumentcounts?.totalencountercount }}
+                  </h4>
+                  <small class="text-muted">Total Encounters</small>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <kendo-grid
+          class="w-100 filter-grid"
+          style="max-height: 30vh;"
+          [data]="rcmDocCountsGridView"
+          [sort]="state.sort"
+          [filter]="state.filter"
+          [sortable]="true"
+          [filterable]="true"
+          (dataStateChange)="dataStateChange($event)"
+        >
+          <kendo-grid-column
+            width="95"
+            field="documentname"
+            title="Document Name"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+            [footerClass]="'text-right'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              Total
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="60"
+            field="totaldocumentcount"
+            title="Pages (Encounter)"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{ dataItem.totaldocumentcount }}({{
+                dataItem.totalencountercount
+              }})
+            </ng-template>
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumDocumentCount(column.field) }} ({{
+                sumDocumentCount("totalencountercount")
+              }})
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="60"
+            field="gcpuploadcount"
+            title="GCP Upload Pages"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [class]="'text-center'"
+            [filterable]="false"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumDocumentCount(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="60"
+            field="pendinggcpuplodedcount"
+            title="Pending GCP Upload Pages"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [class]="'text-center'"
+            [filterable]="false"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumDocumentCount(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+            width="60"
+            field="totalencountercount"
+            title="Total Encounters"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [class]="'text-center'"
+            [filterable]="false"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumDocumentCount(column.field) }}
+            </ng-template>
+          </kendo-grid-column> -->
+        </kendo-grid>
+
+        <div *ngIf="rcmDocCountLoader" class="k-i-loading"></div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-md-12">
+    <div class="card" style="max-height: 90vh;">
+      <div class="card-status bg-yellow"></div>
+      <div class="card-header pl-2 border-0 d-flex align-items-center">
+        <h5 class="mb-0">
+          RCM Document Status Wise Count
+        </h5>
+        <i
+          [ngClass]="{ 'fa-spin': rcmStatusCountLoader }"
+          class="fa fa-refresh ml-2 text-secondary pointer ml-auto"
+          title="Refresh Data"
+          (click)="getDocumentCounts('rcmstatuscount')"
+        ></i>
+      </div>
+      <div class="card-body p-2">
+        <kendo-grid
+          class="w-100 filter-grid disableDropdownOperator wrap-grid"
+          style="max-height: 40vh;"
+          [data]="rcmDocStatusCountsGridView"
+          [sort]="statusstate.sort"
+          [filter]="statusstate.filter"
+          [sortable]="true"
+          [filterable]="true"
+          (dataStateChange)="statusDataStateChange($event)"
+        >
+          <kendo-grid-column
+            width="95"
+            field="category"
+            title="Category"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+            [footerClass]="'text-right'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              Total
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="120"
+            field="documentname"
+            title="Document Name"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="90"
+            field="scandate"
+            title="Date"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="totalencounter"
+            title="Total Encounters"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="encounter"
+            title="New"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [class]="'text-center'"
+            [filterable]="false"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="assigned"
+            title="Assigned"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="assistance"
+            title="Assistance"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="completed"
+            title="Completed"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="practiceassigned"
+            title="Practice Assigned"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="void"
+            title="Void"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid>
+        <div *ngIf="rcmStatusCountLoader" class="k-i-loading"></div>
+      </div>
+    </div>
+  </div> -->
+</div>
+<!-- </div>
+</div> -->

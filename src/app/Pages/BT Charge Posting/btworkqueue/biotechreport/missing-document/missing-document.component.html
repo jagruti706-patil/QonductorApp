@@ -1,0 +1,289 @@
+<!-- <div class="row">
+  <div class="col-md-12">
+    <div class="card border-0">
+      <div class="card-body p-2">
+        <button
+          type="button"
+          class="mb-2"
+          kendoButton
+          [primary]="true"
+          [disabled]="selectedMissingDocAccessions.length == 0"
+          data-toggle="modal"
+          data-target="#updateReasonModal"
+        >
+          Update Status
+        </button>
+
+        <kendo-grid
+          class="w-100"
+          style="height: 67vh"
+          [data]="accesssionGridView"
+          [selectable]="selectableSettings"
+          [kendoGridSelectBy]="selectedCallback"
+          [selectedKeys]="selectedMissingDocAccessions"
+          [sort]="state.sort"
+          [sortable]="true"
+          (dataStateChange)="dataStateChange($event)"
+          [loading]="loader"
+          (cellClick)="cellClickHandler($event)"
+          (cellClose)="cellCloseHandler($event)"
+          [navigable]="true"
+        >
+          <kendo-grid-checkbox-column width="5" showSelectAll="true">
+          </kendo-grid-checkbox-column>
+          <kendo-grid-column
+            width="20"
+            field="cabinetname"
+            title="Year"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="20"
+            field="folder"
+            title="Folder"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="30"
+            field="transactionid"
+            title="Transaction #"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="50"
+            field="filename"
+            title="File Name"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="30"
+            field="comment"
+            title="Comment"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [footerClass]="'text-right'"
+          >
+            <ng-template
+              kendoGridFooterTemplate
+              let-column
+              let-columnIndex="columnIndex"
+            >
+              <button
+                type="button"
+                class="btn btn-sm btn-primary"
+                (click)="onSaveClick()"
+                [disabled]="loader"
+              >
+                Save
+              </button>
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="updateReasonModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-add-reason
+      [calledFrom]="'missingdocument'"
+      [selectedMissingDocAccessions]="selectedMissingDocAccessions"
+      (missingReportSaved)="onReportSaved($event)"
+    ></app-add-reason>
+  </div>
+</div> -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="card border-0">
+      <div class="card-body p-2">
+        <button
+          type="button"
+          class="mb-2"
+          kendoButton
+          [primary]="true"
+          [disabled]="selectedMissingDocAccessions.length == 0"
+          data-toggle="modal"
+          data-target="#updateReasonModal"
+        >
+          Update Status
+        </button>
+        <div class="small text-danger">
+          Note: This includes files received till date 09/09/2020 We are not
+          able to locate the order document for this HL7 messages that we
+          received.
+        </div>
+        <div class="small text-success">
+          NOTE: We have now skipped orders prior to 343 from the report
+        </div>
+        <div class="row">
+          <div class="col-md-8">
+            <kendo-grid
+              class="w-100 filter-grid disableDropdownOperator wrap-grid"
+              [data]="missingDocAccesssionGridView"
+              [selectable]="selectableSettings"
+              [kendoGridSelectBy]="selectedCallback"
+              [selectedKeys]="selectedMissingDocAccessions"
+              [sortable]="true"
+              [filterable]="true"
+              [sort]="missingDocAccessionGridState.sort"
+              [filter]="missingDocAccessionGridState.filter"
+              (dataStateChange)="dataStateChange($event)"
+              [loading]="loader"
+              (cellClick)="cellClickHandler($event)"
+              (cellClose)="cellCloseHandler($event)"
+              [navigable]="true"
+            >
+              <kendo-grid-checkbox-column width="5" showSelectAll="true">
+              </kendo-grid-checkbox-column>
+              <kendo-grid-column
+                width="10"
+                field="srno"
+                title="#"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+                [filterable]="false"
+              >
+                <ng-template kendoGridCellTemplate let-rowIndex="rowIndex">
+                  {{ rowIndex + 1 }}
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="10"
+                field="filter"
+                title="Filter"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+                [filterable]="false"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="20"
+                field="juliandate"
+                title="Julian Date"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="accession"
+                title="Accession #"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="hl7filename"
+                title="HL7 Filename"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="hl7filenamedate"
+                title="HL7 Filename Date"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="30"
+                field="comment"
+                title="Comment"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+                [footerClass]="'text-right'"
+                [filterable]="false"
+              >
+                <!-- <ng-template
+                  kendoGridFooterTemplate
+                  let-column
+                  let-columnIndex="columnIndex"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="onSaveClick()"
+                    [disabled]="loader"
+                  >
+                    Save
+                  </button>
+                </ng-template> -->
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+          <div class="col-md-4">
+            <kendo-grid class="w-100" [data]="accessionRowLabels">
+              <kendo-grid-column
+                width="10"
+                field="rowlabel"
+                title="Row Labels"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridFooterTemplate let-column>
+                  Grand Total
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="10"
+                field="countofaccession"
+                title="Count of Accession #"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridFooterTemplate let-column>
+                  {{ getSumByFieldName(accessionRowLabels, column.field) }}
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+            <hr class="mb-2" />
+            <kendo-grid class="w-100" [data]="folderRowLabels">
+              <kendo-grid-column
+                width="10"
+                field="rowlabel"
+                title="Row Labels"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridFooterTemplate let-column>
+                  Grand Total
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                width="10"
+                field="countofaccession"
+                title="Count of Accession #"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridFooterTemplate let-column>
+                  {{ getSumByFieldName(folderRowLabels, column.field) }}
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="updateReasonModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-add-reason
+      [calledFrom]="'missingdocument'"
+      [selectedAccessions]="selectedMissingDocAccessions"
+      (missingReportSaved)="onReportSaved($event)"
+    ></app-add-reason>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+.grid-wrapper {
+  position: relative;
+}
+
+.k-i-loading {
+  position: initial;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  bottom: 30;
+  font-size: 64px;
+  background-color: rgba(255, 255, 255, 0.3);
+  color: #ff6757;
+}
+
+.collapse-overlay {
+  position: absolute;
+  top: 7%;
+  left: 12px;
+  z-index: 100;
+  width: 98%;
+}

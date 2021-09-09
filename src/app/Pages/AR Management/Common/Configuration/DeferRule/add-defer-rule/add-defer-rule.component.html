@@ -1,0 +1,253 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newDeferRule">
+      Add Inventory Rule
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newDeferRule">
+      Update Inventory Rule
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="DeferRuleGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcClientID"
+              id="ddlClient"
+              [class.is-invalid]="fbcClientID.invalid && fbcClientID.touched"
+              [data]="ddlClientdetail"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div
+              *ngIf="submitted || (fbcClientID.invalid && fbcClientID.touched)"
+            >
+              <small *ngIf="!!fbcClientID.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Rule Category
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcRuleCategory"
+              id="ddlRuleCategory"
+              [class.is-invalid]="
+                fbcRuleCategory.invalid && fbcRuleCategory.touched
+              "
+              [data]="ddlRuleCategory"
+              [textField]="'scategoryname'"
+              [valueField]="'scategoryname'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div
+              *ngIf="
+                submitted ||
+                (fbcRuleCategory.invalid && fbcRuleCategory.touched)
+              "
+            >
+              <small
+                *ngIf="fbcRuleCategory.errors?.required"
+                class="text-danger"
+                >Rule Category is required</small
+              >
+            </div>
+          </div>
+        </div> -->
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Rule Title
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="fbcRuleTitle.invalid && fbcRuleTitle.touched"
+              formControlName="fcRuleTitle"
+              type="text"
+              id="txtpayer"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (fbcRuleTitle.invalid && fbcRuleTitle.touched)
+              "
+            >
+              <small *ngIf="!!fbcRuleTitle.errors?.required" class="text-danger"
+                >Rule Title is required</small
+              >
+              <small
+                *ngIf="!!fbcRuleTitle.errors?.maxlength"
+                class="text-danger"
+                >Rule Title allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Rule Description</label>
+            <textarea
+              kendoTextArea
+              id="txtRuleDescription"
+              formControlName="fcRuleDescription"
+              [class.is-invalid]="
+                fbcRuleDescription.invalid && fbcRuleDescription.touched
+              "
+              class="form-control form-control-sm w-100"
+              rows="2"
+            ></textarea>
+            <div
+              *ngIf="
+                submitted ||
+                (fbcRuleDescription.invalid && fbcRuleDescription.touched)
+              "
+              class="text-danger"
+            >
+              <small
+                *ngIf="!!fbcRuleDescription.errors?.maxlength"
+                class="text-danger"
+                >Rule Description allows 250 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="card p-2">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">Before DOS</label>
+                  <kendo-datepicker
+                    id="dtpDOSBefore"
+                    [format]="'MM/dd/yyyy'"
+                    formControlName="fcDOSBefore"
+                    class="w-100"
+                    [disabled]="!IsClientSelected"
+                  >
+                  </kendo-datepicker>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="form-label">After DOS</label>
+                  <kendo-datepicker
+                    id="dtpDOSAfter"
+                    [format]="'MM/dd/yyyy'"
+                    formControlName="fcDOSAfter"
+                    class="w-100"
+                    [disabled]="!IsClientSelected"
+                  >
+                  </kendo-datepicker>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Insurance</label>
+            <kendo-multiselect
+              id="cmbInsurance"
+              formControlName="fcInsurance"
+              [data]="ddlInsurnace"
+              [textField]="'companyname'"
+              [valueField]="'companyid'"
+              [valuePrimitive]="true"
+              [autoClose]="false"
+              [disabled]="!IsClientSelected"
+            >
+            </kendo-multiselect>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Billing Provider</label>
+            <kendo-multiselect
+              id="cmbBillingProvider"
+              formControlName="fcBillingProvider"
+              [data]="ddlBillingProvider"
+              [textField]="'providername'"
+              [valueField]="'providerid'"
+              [valuePrimitive]="true"
+              [autoClose]="false"
+              [disabled]="!IsClientSelected"
+            >
+            </kendo-multiselect>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label">Rendering Provider</label>
+            <kendo-multiselect
+              id="cmbRenderingProvider"
+              formControlName="fcRenderingProvider"
+              [data]="ddlRenderingProvider"
+              [textField]="'providername'"
+              [valueField]="'providerid'"
+              [valuePrimitive]="true"
+              [autoClose]="false"
+              [disabled]="!IsClientSelected"
+            >
+            </kendo-multiselect>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row"></div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="row"></div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="row"></div>
+        </div>
+
+        <div class="col-md-12"></div>
+        <div class="col-md-12"></div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddDeferRule"
+      [disabled]="!validateDeferRule()"
+      (click)="saveDeferRule()"
+    >
+      Save
+    </button>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newSubStatus">
+      Add SubStatus
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newSubStatus">
+      Update SubStatus
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="SubStatusGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Code
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                SubStatusCode.invalid && SubStatusCode.touched
+              "
+              formControlName="fcSubStatusCode"
+              type="text"
+              id="txtsubstatuscode"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (SubStatusCode.invalid && SubStatusCode.touched)
+              "
+            >
+              <small *ngIf="SubStatusCode.errors?.required" class="text-danger"
+                >Code is required</small
+              >
+              <small *ngIf="SubStatusCode.errors?.maxlength" class="text-danger"
+                >Code allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Description
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                SubStatusDescription.invalid && SubStatusDescription.touched
+              "
+              formControlName="fcSubStatusDescription"
+              type="text"
+              id="txtsubstatusdescription"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted ||
+                (SubStatusDescription.invalid && SubStatusDescription.touched)
+              "
+            >
+              <small
+                *ngIf="SubStatusDescription.errors?.required"
+                class="text-danger"
+                >Description is required</small
+              >
+              <small
+                *ngIf="SubStatusDescription.errors?.maxlength"
+                class="text-danger"
+                >Description allows 150 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddSubStatus"
+      (click)="saveSubStatus()"
+    >
+      Save
+    </button>
+  </div>
+</div>

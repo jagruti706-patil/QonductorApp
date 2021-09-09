@@ -1,0 +1,305 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Defer AR Inventory</h4>
+  </div>
+  <div class="card-body">
+    <div class="row mb-3">
+      <button
+        *ngIf="ShowUndeferWorkItem"
+        type="button"
+        class="ml-3"
+        data-target="#undeferredModal"
+        data-toggle="modal"
+        kendoButton
+        [primary]="true"
+        (click)="CheckWorkQueueSelected()"
+        [disabled]="loadingWorkqueue"
+      >
+        Activate Workitem
+      </button>
+    </div>
+    <div class="row mb-1">
+      <div *ngIf="DeferWorkgroupGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+      <em
+        *ngIf="!filterApplied && !loadingWorkqueue"
+        class="fe fe-filter ml-auto pointer"
+        title="Default filter is applied.."
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      ></em>
+      <em
+        *ngIf="filterApplied && !loadingWorkqueue"
+        class="fa fa-filter ml-auto pointer"
+        title="Some filter is applied.."
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      ></em>
+      <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+        <app-filters
+          [CallingPage]="'deferworkqueue'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row">
+      <kendo-grid
+        [data]="DeferWorkgroupGridView"
+        [skip]="DeferWorkgroupSkip"
+        [height]="650"
+        style="width: 100%"
+        [selectable]="selectableSettings"
+        [kendoGridSelectBy]="selectedCallback"
+        [selectedKeys]="DeferWorkGroupSelected"
+        [sortable]="true"
+        [sort]="DeferWorkgroupSort"
+        (sortChange)="DeferWorkgroupSortChange($event)"
+        [loading]="loadingDeferWorkqueueGrid"
+      >
+        <kendo-grid-checkbox-column width="14" showSelectAll="true">
+        </kendo-grid-checkbox-column>
+
+        <kendo-grid-column
+          *ngIf="!isHidden('nworkqueuegroupid')"
+          field="nworkqueuegroupid"
+          title="Work Group #"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          field="workitemstatus"
+          title=""
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span *ngIf="dataItem.workitemstatus"
+              ><i
+                title="Assigned. Open task present against this workitem"
+                class="fe fe-user-x"
+              ></i
+            ></span>
+          </ng-template>
+        </kendo-grid-column> -->
+
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="80"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.sclientname }}">{{
+              dataItem.sclientname
+            }}</span>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field="planname"
+          title="Insurance"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field="patientcode"
+          title="Account #"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimno"
+          title="Claim #"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <a
+              [href]=""
+              (click)="onOpenViewdetails(dataItem)"
+              data-toggle="modal"
+              data-target="#viewdetailsModal"
+              class="text-info mr-3 pointer view-btn"
+              >{{ dataItem.claimno }}</a
+            >
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dos"
+          title="DOS"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dos | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="remainingbalance"
+          title="Ins. Due"
+          width="38"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.remainingbalance }}
+            <!-- {{dataItem.remainingbalance|currency}} -->
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimage"
+          title="Claim Age"
+          type="number"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          field="lastworkeddate"
+          title="QPM Last Worked"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.lastworkeddate | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column
+          field="autolastworkeddate"
+          title="Follow-Up Date"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.nextactiondate | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          field="dtdeferdate"
+          title="Defer Date"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dtdeferdate | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sdefercategory"
+          title="Defer Category"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.sdefercategory }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sdefertype"
+          title="Defer Type"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.sdefertype }}
+          </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          field="automationstatus"
+          title="Auto Last Status"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.autolastworkeddate }}">{{
+              dataItem.automationstatus
+            }}</span>
+          </ng-template>
+        </kendo-grid-column> -->
+        <ng-template kendoGridNoRecordsTemplate>
+          No records available.
+        </ng-template>
+      </kendo-grid>
+    </div>
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+<!--View Details Model GRID---  -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-viewdetails #ViewdetailsComponent></app-viewdetails>
+  </div>
+</div>
+<!--View Details Model -->
+
+<!-- BUTTON -->
+<div
+  class="modal fade bd-example-modal-lg"
+  *ngIf="DeferWorkGroupSelected.length > 0"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="assigntaskModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-workqueueassignment #WorkqueueassignmentComponent>
+    </app-workqueueassignment>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  *ngIf="DeferWorkGroupSelected.length > 0"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="undeferredModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-note-modal #NoteModalComponent></app-note-modal>
+  </div>
+</div>

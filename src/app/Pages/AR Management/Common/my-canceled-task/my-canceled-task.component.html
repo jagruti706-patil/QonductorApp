@@ -1,0 +1,227 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 *ngIf="Status == 3" class="mb-0">Canceled Task</h4>
+    <h4 *ngIf="Status == 4" class="mb-0">System Closed Task</h4>
+  </div>
+  <div class="card-body pt-2">
+    <form [formGroup]="DropDownGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Status
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcTaskStatus"
+              id="ddClients"
+              [class.is-invalid]="TaskStatus.invalid && TaskStatus.touched"
+              [data]="sTaskStatus"
+              textField="text"
+              valueField="value"
+              [(ngModel)]="TaskDefaultStatusValue"
+              [valuePrimitive]="true"
+              [disabled]="loadingCanceledtask"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="TaskStatus.invalid && TaskStatus.touched">
+              <small *ngIf="!!TaskStatus.errors?.required" class="text-danger"
+                >Status is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <!-- <div class="row mb-1">
+      <div *ngIf="CanceledTaskGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+
+      <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+        <app-filters
+          [CallingPage]="'CanceledTask'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div> -->
+    <div class="row mb-1">
+      <div *ngIf="CanceledTaskGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+    </div>
+    <div class="row">
+      <kendo-grid
+        [data]="CanceledTaskGridView"
+        [skip]="skip"
+        [height]="650"
+        style="width:100%"
+        [sortable]="true"
+        [sort]="CanceledTaskSort"
+        (sortChange)="CanceledTaskSortChange($event)"
+        [selectable]="true"
+        [loading]="loadingCanceledtaskGrid"
+        id="grCancelTask"
+      >
+        <!-- <kendo-grid-column
+          field="staskcode"
+          title="Task Code"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="70"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.sclientname }}">{{
+              dataItem.sclientname
+            }}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="planname"
+          title="Insurance"
+          width="80"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="patientcode"
+          title="Account #"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimno"
+          title="Claim #"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.staskcode }}">{{ dataItem.claimno }}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dos"
+          title="DOS"
+          width="40"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dos | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="remainingbalance"
+          title="Ins. Due"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.remainingbalance }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimage"
+          title="Claim Age"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="priority"
+          title="Priority"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.priority == 1" class="text-danger">HIGH</div>
+            <div *ngIf="dataItem.priority == 2" class="text-success">
+              MEDIUM
+            </div>
+            <div *ngIf="dataItem.priority == 3" class="text-primary">LOW</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="assignedby"
+          title="Assigned By"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="createdon"
+          title="Assigned Date"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.createdon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          *ngIf="Status == 3"
+          field="modifiedon"
+          title="Canceled Date"
+          width="55"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.modifiedon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          *ngIf="Status == 4"
+          field="modifiedon"
+          title="System Closed Date"
+          width="70"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.modifiedon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <ng-template kendoGridNoRecordsTemplate>
+          No records available.
+        </ng-template>
+      </kendo-grid>
+    </div>
+
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="black-box" *ngIf="loadingCanceledtask">
+  <div class="k-i-loading"></div>
+</div> -->

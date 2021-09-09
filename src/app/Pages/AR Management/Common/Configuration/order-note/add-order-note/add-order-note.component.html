@@ -1,0 +1,102 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">
+      <ng-container *ngIf="!isupdate"> Add Encounter Note</ng-container>
+      <ng-container *ngIf="isupdate"> Update Encounter Note</ng-container>
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="onCloseClick()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="OrderNoteGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Status
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcStatus"
+              [class.is-invalid]="fbcStatus.invalid && fbcStatus.touched"
+              [data]="statusData"
+              [textField]="'status'"
+              [valueField]="'statuscode'"
+              [valuePrimitive]="true"
+              [disabled]="isupdate"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="fbcStatus.invalid && fbcStatus.touched">
+              <small *ngIf="fbcStatus.errors.required" class="text-danger"
+                >Status is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Note Title
+            </label>
+            <input
+              kendoTextBox
+              formControlName="fcNoteTitle"
+              type="text"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="fbcNoteTitle.invalid && fbcNoteTitle.touched">
+              <small *ngIf="fbcNoteTitle.errors.required" class="text-danger"
+                >Note Title is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Note
+            </label>
+            <input
+              kendoTextBox
+              formControlName="fcNote"
+              type="text"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="fbcNote.invalid && fbcNote.touched">
+              <small *ngIf="fbcNote.errors.required" class="text-danger"
+                >Note is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="onCloseClick()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="saveUpdateOrderNote()"
+      [ngClass]="{ readonlybtn: !validateFields() }"
+      appNoDblClick
+    >
+      <ng-container *ngIf="!isupdate">Save</ng-container>
+      <ng-container *ngIf="isupdate">Update</ng-container>
+    </button>
+  </div>
+</div>

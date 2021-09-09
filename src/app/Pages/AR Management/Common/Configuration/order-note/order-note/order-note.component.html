@@ -1,0 +1,169 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Encounter Note</h4>
+    <div class="row ml-auto">
+      <button
+        class="ml-auto"
+        kendoButton
+        [primary]="true"
+        data-toggle="modal"
+        data-target="#addOrderNoteModal"
+        (click)="AddOrderNote()"
+      >
+        Add Encounter Note
+      </button>
+    </div>
+  </div>
+  <div class="card-body" style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        [data]="orderNoteGridView"
+        class="w-100"
+        style="max-height: 68vh;"
+        [pageSize]="orderNotePageSize"
+        [pageable]="true"
+        [skip]="orderNoteSkip"
+        (pageChange)="pageChangeOrderNote($event)"
+        [sortable]="true"
+        [sort]="orderNoteSort"
+        (sortChange)="sortOrderNoteChange($event)"
+        [selectable]="true"
+        [loading]="loadingGrid"
+        (edit)="EditOrderNote($event)"
+      >
+        <kendo-grid-column
+          field="statusname"
+          title="Status Name"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="notetitle"
+          title="Note Title"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="note"
+          title="Note"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="isactive"
+          title="Status"
+          width="15"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.isactive == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.isactive == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editorderNoteconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="!dataItem.isactive"
+              data-toggle="modal"
+              data-target="#noteconfirmationModal"
+              class="k-button"
+              (click)="OnUpdateOrderNoteStatus(dataItem, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.isactive"
+              class="k-button"
+              data-toggle="modal"
+              data-target="#noteconfirmationModal"
+              (click)="OnUpdateOrderNoteStatus(dataItem, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+    </div>
+  </div>
+</div>
+
+<!-- Add orderNote -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addOrderNoteModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-add-order-note
+      (OutputOrderNoteEditResult)="OutputOrderNoteEditResult($event)"
+      #AddOrderNoteChild
+    ></app-add-order-note>
+  </div>
+</div>
+<!-- Add orderNote -->
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editorderNoteconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+<!--Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="noteconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="'Update Status'"
+      [InputConfirmationMessage]="InputStatusMessage"
+      (OutputConfirmationResult)="OutputStatusResult($event, SelectedDataItem)"
+    >
+    </app-action-confirmation>
+  </div>
+</div>
+<!--Confirmation Model -->

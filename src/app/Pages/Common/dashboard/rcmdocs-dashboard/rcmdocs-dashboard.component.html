@@ -1,0 +1,473 @@
+<form [formGroup]="RCMDOCSFilter">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="form-group">
+        <label class="form-label"
+          ><strong class="text-danger">*</strong>Client
+        </label>
+        <kendo-dropdownlist
+          class="form-control"
+          formControlName="fcClientName"
+          id="ddClients"
+          [class.is-invalid]="fbcClientName.invalid && fbcClientName.touched"
+          [data]="lstClients"
+          textField="clientcodename"
+          valueField="nclientid"
+          [defaultItem]="ClientDefaultValue"
+          [valuePrimitive]="true"
+          filterable="true"
+          (filterChange)="handleClientFilter($event)"
+        >
+        </kendo-dropdownlist>
+        <div *ngIf="fbcClientName.invalid && fbcClientName.touched">
+          <small *ngIf="!!fbcClientName.errors?.required" class="text-danger"
+            >Client is required</small
+          >
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>From Date:
+            </label>
+            <kendo-datepicker
+              formControlName="fcFromDate"
+              id="dtFromDate"
+              class="w-100"
+              [format]="'MM/dd/yyyy'"
+              [max]="fbcToDate.value"
+            >
+            </kendo-datepicker>
+            <small *ngIf="fbcFromDate.errors?.required" class="text-danger"
+              >From Date is required</small
+            >
+            <small *ngIf="fbcFromDate.errors?.maxError" class="text-danger"
+              >From Date should be less than To Date</small
+            >
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>To Date:
+            </label>
+            <kendo-datepicker
+              formControlName="fcToDate"
+              id="dtToDate"
+              [format]="'MM/dd/yyyy'"
+              class="w-100"
+              [min]="fbcFromDate.value"
+            >
+            </kendo-datepicker>
+            <small *ngIf="fbcToDate.errors?.required" class="text-danger"
+              >To Date is required</small
+            >
+            <small *ngIf="fbcToDate.errors?.minError" class="text-danger"
+              >To Date should be greater than From Date</small
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-1 border-left">
+      <button
+        class="col-md-12"
+        type="button"
+        kendoButton
+        [primary]="true"
+        id="btnApplyFilter"
+        [disabled]="!validateFilter()"
+        (click)="btnApplyFilter_Click()"
+        data-toggle="collapse"
+        data-target="#collapseExample"
+      >
+        Apply
+      </button>
+      <button
+        class="col-md-12 mt-2"
+        type="button"
+        kendoButton
+        (click)="ClearFilter()"
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        id="btnClearFilter"
+      >
+        Clear Filter
+      </button>
+    </div>
+  </div>
+</form>
+
+<div class="row mt-3">
+  <div class="col-sm-6 col-md-4">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-blue mr-3">
+          <em class="fas fa-file-pdf"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ TotalDocs }}</h4>
+          <small class="text-muted">Total RCM Document</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-green mr-3">
+          <em class="fas fa-file-pdf"></em>
+        </span>
+        <div>
+          <h4 class="m-0">
+            {{ TotalAcknowledgeDocs }}
+          </h4>
+
+          <small class="text-muted">Acknowledged Document</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-danger mr-3">
+          <em class="fas fa-file-pdf"></em>
+        </span>
+        <div>
+          <h4 class="m-0">
+            {{ TotalPendingAcknowledgeDocs }}
+          </h4>
+          <small class="text-muted">Pending for Acknowledgement</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="card" style="max-height: 90vh;">
+      <div class="card-status bg-cyan"></div>
+      <div class="card-header pl-2 border-0">
+        <h6 class="mb-0">Categorywise Document Count</h6>
+      </div>
+      <kendo-grid
+        id="gdCategoryDocsList"
+        [data]="RCMgridView"
+        style="width: 100%; max-height: 60vh;"
+        [groupable]="true"
+        [group]="RCMgroups"
+        (groupChange)="RCMgroupChange($event)"
+        [pageable]="true"
+        [pageSize]="RCMpageSize"
+        (pageChange)="pageChangeRCM($event)"
+        [skip]="RCMskip"
+        [sortable]="{
+          mode: 'multiple'
+        }"
+        [sort]="RCMsort"
+        (sortChange)="sortRCMChange($event)"
+      >
+        <kendo-grid-column
+          field="clientname"
+          width="140"
+          title="Client"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridGroupFooterTemplate>
+            <span class="pull-right" style="padding-right: 10px;">
+              Total
+            </span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="category"
+          width="140"
+          title="Category"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template
+            kendoGridGroupFooterTemplate
+            let-aggregates
+            let-field="field"
+          >
+            Category: {{ aggregates[field]?.count }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="scandate"
+          width="60"
+          class="text-center"
+          title="Date"
+          [headerStyle]="{ 'font-weight': 'bold', 'text-align': 'center' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="doccount"
+          width="140"
+          class="text-center"
+          title="Total RCM Document"
+          [headerStyle]="{ 'font-weight': 'bold', 'text-align': 'center' }"
+        >
+          <ng-template
+            kendoGridGroupFooterTemplate
+            let-aggregates
+            let-field="field"
+            style="text-align: center;"
+          >
+            RCM Document: {{ aggregates[field]?.sum }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="ackdocscount"
+          width="140"
+          class="text-center"
+          title="Acknowledged Document"
+          [headerStyle]="{ 'font-weight': 'bold', 'text-align': 'center' }"
+        >
+          <ng-template
+            kendoGridGroupFooterTemplate
+            let-aggregates
+            let-field="field"
+          >
+            Acknowledged Document: {{ aggregates[field]?.sum }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="pendingackdocscount"
+          width="160"
+          class="text-center"
+          title="Pending for Acknowledgement"
+          [headerStyle]="{ 'font-weight': 'bold', 'text-align': 'center' }"
+        >
+          <ng-template
+            kendoGridGroupFooterTemplate
+            let-aggregates
+            let-field="field"
+          >
+            Pending for Acknowledgement: {{ aggregates[field]?.sum }}
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="card" style="max-height: 90vh;">
+      <div class="card-status bg-yellow"></div>
+      <div class="card-header pl-2 border-0">
+        <h6 class="mb-0">RCM Document Status Wise Count</h6>
+      </div>
+      <!-- <div class="card-header pl-2 border-0 d-flex align-items-center">
+        <h5 class="mb-0">
+          RCM Document Status Wise Count
+        </h5>
+      </div> -->
+      <!-- <i
+          [ngClass]="{ 'fa-spin': rcmStatusCountLoader }"
+            class="fa fa-refresh ml-2 text-secondary pointer ml-auto"
+            title="Refresh Data"
+            (click)="getDocumentCounts('rcmstatuscount')"
+          ></i> -->
+      <div class="card-body p-2">
+        <kendo-grid
+          class="w-100 filter-grid disableDropdownOperator wrap-grid"
+          style="max-height: 34vh;"
+          [data]="rcmDocStatusCountsGridView"
+          [sort]="statusstate.sort"
+          [filter]="statusstate.filter"
+          [sortable]="true"
+          [filterable]="true"
+          (dataStateChange)="statusDataStateChange($event)"
+        >
+          <kendo-grid-column
+            width="95"
+            field="category"
+            title="Category"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+            [footerClass]="'text-right'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              Total
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="120"
+            field="documentname"
+            title="Document Name"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="90"
+            field="scandate"
+            title="Date"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="totalencounter"
+            title="Total Encounters"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+              width="80"
+              field="pendingencountercount"
+              title="Pending Encounters"
+              [headerStyle]="{
+                'font-weight': 'bold',
+                'text-align': 'center'
+              }"
+              [footerStyle]="{
+                'font-weight': 'bold',
+                'text-align': 'center'
+              }"
+              [class]="'text-center'"
+              [filterable]="false"
+            >
+              <ng-template kendoGridFooterTemplate let-column>
+                {{ sumStatusCounts(column.field) }}
+              </ng-template>
+            </kendo-grid-column> -->
+          <kendo-grid-column
+            width="80"
+            field="encounter"
+            title="New"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [class]="'text-center'"
+            [filterable]="false"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="assigned"
+            title="Assigned"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="assistance"
+            title="Assistance"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="completed"
+            title="Completed"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="practiceassigned"
+            title="Practice Assigned"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            width="80"
+            field="void"
+            title="Void"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [footerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [class]="'text-center'"
+          >
+            <ng-template kendoGridFooterTemplate let-column>
+              {{ sumStatusCounts(column.field) }}
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid>
+        <!-- <div *ngIf="rcmStatusCountLoader" class="k-i-loading"></div> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="loadingDashboard" class="k-i-loading"></div>

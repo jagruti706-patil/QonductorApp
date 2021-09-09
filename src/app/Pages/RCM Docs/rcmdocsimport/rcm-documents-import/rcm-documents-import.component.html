@@ -1,0 +1,90 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">RCM Docs Import</h4>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="documentsGridView"
+          class="w-100"
+          style="height: 75vh;"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="gridSort"
+          (sortChange)="sortChange($event)"
+          [skip]="pageSkip"
+          [pageable]="true"
+          [pageSize]="pageSize"
+          (pageChange)="pageChange($event)"
+          [loading]="loadingGrid"
+        >
+          <kendo-grid-column
+            field="clientname"
+            title="Client Name"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="category"
+            title="Category"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="filename"
+            title="Document Name"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="size"
+            title="Document Size"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="uplodedby"
+            title="Import By"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="createdon"
+            title="Import On"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{ dataItem.createdon | date: "MM-dd-yyyy hh:mm:ss a" }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="statusdescription"
+            title="Status"
+            width="15"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span *ngIf="dataItem.status == 1" class="text-success">{{
+                dataItem.statusdescription.toUpperCase()
+              }}</span>
+              <span *ngIf="dataItem.status == 0" class="text-danger">{{
+                dataItem.statusdescription.toUpperCase()
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>

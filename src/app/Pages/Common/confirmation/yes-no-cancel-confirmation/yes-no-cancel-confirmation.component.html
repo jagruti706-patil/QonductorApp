@@ -1,0 +1,65 @@
+<div class="modal-content">
+  <div class="modal-header pt-1 pb-1">
+    <h5 class="modal-title">{{ InputConfirmationTitle }}</h5>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="onButtonClick(2)"
+    ></button>
+  </div>
+  <div class="modal-body pt-1 pb-1">
+    <div
+      style="white-space: pre-line"
+      [innerHTML]="InputConfirmationMessage"
+    ></div>
+    <ul
+      class="mt-1 ml-0 mb-1"
+      *ngIf="
+        InputButtonInformation.Yes != '' && InputButtonInformation.No != ''
+      "
+    >
+      <li *ngIf="InputButtonInformation.Yes">
+        <b>Yes: </b>{{ InputButtonInformation.Yes }}
+      </li>
+      <li *ngIf="InputButtonInformation.No">
+        <b>No: </b>{{ InputButtonInformation.No }}
+      </li>
+      <li *ngIf="InputButtonInformation.Cancel">
+        <b>Cancel: </b>{{ InputButtonInformation.Cancel }}
+      </li>
+    </ul>
+    <!-- <p
+      *ngIf="
+        InputButtonInformation.Yes != '' && InputButtonInformation.No != ''
+      "
+      class="m-0"
+    >
+      <span *ngIf="InputButtonInformation.Yes"
+        ><b>Yes</b>: {{ InputButtonInformation.Yes }}</span
+      ><br />
+      <span *ngIf="InputButtonInformation.No"
+        ><b>No</b>: {{ InputButtonInformation.No }}</span
+      ><br />
+      <span *ngIf="InputButtonInformation.Cancel"
+        ><b>Cancel</b>: {{ InputButtonInformation.Cancel }}</span
+      >
+    </p> -->
+  </div>
+  <div class="modal-footer pt-1 pb-1">
+    <button type="button" class="btn btn-primary" (click)="onButtonClick(1)">
+      Yes
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="onButtonClick(0)">
+      No
+    </button>
+    <button
+      *ngIf="InputButtonInformation.Cancel != ''"
+      type="button"
+      class="btn btn-secondary"
+      (click)="onButtonClick(2)"
+    >
+      Cancel
+    </button>
+  </div>
+</div>

@@ -1,0 +1,120 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Incomplete Summary</h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          class="w-100 disableDropdownOperator wrap-grid"
+          [data]="OrderGridView"
+          [skip]="state.skip"
+          [height]="650"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="state.sort"
+          [loading]="loadingOrderGrid"
+          [pageable]="true"
+          [pageSize]="state.take"
+          [filterable]="true"
+          [filter]="state.filter"
+          (dataStateChange)="gridFilter($event)"
+        >
+          <ng-template *ngIf="vwExportButton" kendoGridToolbarTemplate>
+            <button
+              class="pull-right mr-1"
+              type="button"
+              (click)="exportToExcelLog()"
+              kendoGridExcelCommand
+            >
+              Export to Excel
+            </button>
+            <b class="float-right h6 mb-0 mt-2 mr-2"
+              >Total Encounter Count:
+              {{ totalEncounterCount ? totalEncounterCount : 0 }}</b
+            >
+            <!-- <button class="pull-right mr-1" type="button" kendoGridPDFCommand>
+          Export to PDF
+        </button> -->
+          </ng-template>
+          <kendo-grid-column
+            *ngIf="!isHidden('clientid')"
+            field="clientid"
+            title="Practice id"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="clientcode"
+            title="Practice Code"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientname"
+            title="Practice Name"
+            width="70"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="city"
+            title="City"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="zip"
+            title="Zip"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="ordercount"
+            title="Encounter Count"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [filterable]="false"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <a
+                [href]=""
+                (click)="NavigatetoDetails(dataItem)"
+                class="text-info pointer view-btn pr-1"
+                >{{ dataItem.ordercount }}</a
+              >
+              <!--[href]=""
+                routerLink="/OrderAssisted/{{ dataItem.clientid }}"
+                 (click)="NavigatetoDetails(dataItem)" -->
+            </ng-template>
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+          <kendo-grid-excel fileName="{{ exportFilename }}.xlsx">
+            <kendo-excelexport-column field="clientcode" title="Practice code">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="clientname" title="Practice Name">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="city" title="City">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="zip" title="Zip">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="ordercount"
+              title="Encounter Count"
+            >
+            </kendo-excelexport-column>
+          </kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>

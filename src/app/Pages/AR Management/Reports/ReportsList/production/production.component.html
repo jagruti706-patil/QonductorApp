@@ -1,0 +1,204 @@
+<div class="card">
+  <div class="card-body">
+    <div class="d-block w-100">
+      <span *ngIf="ProductiongridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </span>
+      <div class="float-right">
+        <i
+          *ngIf="!filterApplied && !loadingProduction"
+          class="fe fe-filter ml-auto pointer"
+          title="Default filter is applied.."
+          data-toggle="collapse"
+          data-target="#collapseExample"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+          id="lnkProductionFilterDefault"
+        ></i>
+        <i
+          *ngIf="filterApplied && !loadingProduction"
+          class="fa fa-filter ml-auto pointer"
+          title="Some filter is applied.."
+          data-toggle="collapse"
+          data-target="#collapseExample"
+          aria-expanded="false"
+          aria-controls="collapseExample"
+          id="lnkProductionFilterSome"
+        ></i>
+        <!-- <span
+          class="ml-2"
+          *ngIf="!loadingProduction"
+          (click)="RetriveMasterData()"
+          title="Refresh"
+        >
+          <i class="fe fe-rotate-cw"></i>
+        </span> -->
+      </div>
+    </div>
+
+    <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+      <app-filters
+        [CallingPage]="'Production'"
+        (FilterData)="ApplyFilter($event)"
+      ></app-filters>
+    </div>
+
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridProduction"
+        [data]="ProductiongridView"
+        [sortable]="true"
+        [sort]="Productionsort"
+        (sortChange)="sortProductionChange($event)"
+        [selectable]="true"
+        [loading]="loadingProductionGrid"
+        style="height: 66vh"
+        class="wrap-grid"
+      >
+        <kendo-grid-column
+          field="createdon"
+          title="Date"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.createdon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sagentname"
+          title="Agent"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalassigntask"
+          title="Assigned Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalescalatedtask"
+          title="Escalated Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalcompletedtask"
+          title="Worked Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalpendingtask"
+          title="Pending Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalcanceledtask"
+          title="Canceled Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalsystemclosedtask"
+          title="System Closed Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="auditedtaskcount"
+          title="Audit Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="totalerrorcount"
+          title="Error Task(s)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="auditedtaskpercentage"
+          title="Audit (%)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.auditedtaskpercentage == 0">
+              {{ dataItem.auditedtaskpercentage }}
+            </div>
+            <div *ngIf="dataItem.auditedtaskpercentage != 0">
+              {{ dataItem.auditedtaskpercentage }} %
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="errortaskpercentage"
+          title="Error (%)"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.errortaskpercentage == 0">
+              {{ dataItem.errortaskpercentage }}
+            </div>
+            <div *ngIf="dataItem.errortaskpercentage != 0">
+              {{ dataItem.errortaskpercentage }} %
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+      <!-- <div *ngIf="!this.ProductiongridView" class="k-icon k-i-loading" style="font-size: 64px; ">
+      </div> -->
+    </div>
+
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="black-box" *ngIf="loadingProduction">
+  <div class="k-i-loading"></div>
+</div> -->

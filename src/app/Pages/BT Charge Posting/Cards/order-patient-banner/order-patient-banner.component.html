@@ -1,0 +1,496 @@
+<div class="row">
+  <div
+    *ngIf="orderInfo != null"
+    class="col-md-12"
+    [ngClass]="{
+      'mb-1': orderInfo?.encountersource?.toLowerCase() == 'rcm encounter'
+    }"
+  >
+    <div class="card-header w-100 d-block header-style p-0 pl-2">
+      <div class="row">
+        <div
+          [ngClass]="{
+            'col-md-3':
+              orderInfo?.encountersource?.toLowerCase() != 'rcm encounter',
+            'col-md-6':
+              orderInfo?.encountersource?.toLowerCase() == 'rcm encounter'
+          }"
+        >
+          <div class="d-flex w-100">
+            <span class="text-small">{{ this.title }} #</span>
+            <!-- <textarea class="js-copytextarea">Hello I'm some text</textarea> -->
+            <span class="ml-3 flex-fill">
+              <textarea
+                class="copy-to-clipboard"
+                [ngStyle]="{
+                  width:
+                    orderInfo?.encountersource?.toLowerCase() == 'rcm encounter'
+                      ? '90%'
+                      : 'auto'
+                }"
+                [title]="orderInfo.orderqueuegroupcode"
+                readonly
+                #ordercode
+                >{{ orderInfo.orderqueuegroupcode }}</textarea
+              >
+              <em
+                class="pt-1 pull-right fe fe-copy ml-2 pointer"
+                title="Copy to clipboard"
+                (click)="copyInputMessage(ordercode)"
+              ></em>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="d-flex">
+            <span class="text-small">Category</span>
+            <span class="ml-3">{{ orderInfo.ordercategory }}</span>
+          </div>
+        </div>
+        <div
+          [ngClass]="{
+            'col-md-3':
+              orderInfo?.encountersource?.toLowerCase() != 'rcm encounter',
+            'col-md-2':
+              orderInfo?.encountersource?.toLowerCase() == 'rcm encounter'
+          }"
+        >
+          <div class="d-flex">
+            <span class="text-small">Folder</span>
+            <span class="ml-3">{{ orderInfo.orderday }}</span>
+          </div>
+        </div>
+        <div
+          [ngClass]="{
+            'col-md-3':
+              orderInfo?.encountersource?.toLowerCase() != 'rcm encounter',
+            'col-md-1 p-0':
+              orderInfo?.encountersource?.toLowerCase() == 'rcm encounter'
+          }"
+        >
+          <div class="d-flex">
+            <span class="text-small">Year</span>
+            <span class="ml-3">{{ orderInfo.orderyear }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="col-md-12"
+    *ngIf="orderInfo?.encountersource?.toLowerCase() != 'rcm encounter'"
+  >
+    <div *ngIf="orderPatientInfo != null" class="card mt-0 mb-1">
+      <div
+        class="card-header d-block pl-3 p-1"
+        style="
+          background-color: #e5f2ff;
+          color: #00274e;
+          font-weight: 600;
+          height: 30px;
+        "
+      >
+        <div class="row">
+          <div class="col-md-4">
+            <small class="mb-0 mr-2 text-muted">File Name</small>
+            <label class="form-label mb-0 d-inline-block">{{
+              orderPatientInfo.filename
+            }}</label>
+          </div>
+          <!-- <div class="col-md-2">
+            <small class="mb-0 mr-2 text-muted">Order Date</small>
+            <label class="form-label mb-0 d-inline-block">{{
+              orderPatientInfo.orderdate | date: "MM-dd-yyyy"
+            }}</label>
+          </div> -->
+          <div class="col-md-4">
+            <small class="mb-0 mr-2 text-muted">Patient</small>
+            <label class="form-label mb-0 d-inline-block">{{
+              orderPatientInfo.patientname
+            }}</label>
+          </div>
+          <div class="col-md-2">
+            <small class="mb-0 mr-2 text-muted">DOB</small>
+            <label class="form-label mb-0 d-inline-block">
+              {{ orderPatientInfo.dob }}</label
+            >
+          </div>
+          <div class="col-md-2">
+            <small class="mb-0 mr-2 text-muted">Gender</small>
+            <label
+              class="form-label mb-0 d-inline-block"
+              *ngIf="orderPatientInfo.gender == 'M'"
+              >Male</label
+            >
+            <label
+              class="form-label mb-0 d-inline-block"
+              *ngIf="orderPatientInfo.gender == 'F'"
+              >Female</label
+            >
+            <label
+              class="form-label mb-0 d-inline-block"
+              *ngIf="
+                orderPatientInfo.gender != 'M' && orderPatientInfo.gender != 'F'
+              "
+              >{{ orderPatientInfo.gender }}</label
+            >
+            <span class="pull-right">
+              <!-- <em
+                [ngClass]="{
+                  'fa-chevron-circle-down': !bannerCollapse,
+                  'fa-chevron-circle-up': bannerCollapse
+                }"
+                class="fa"
+                (click)="BannercollapseClick()"
+                data-toggle="collapse"
+                data-target="#collapseExample"
+                aria-expanded="false"
+                aria-controls="collapseExample"
+              ></em
+            > -->
+              <em
+                [ngClass]="{
+                  'fa-chevron-circle-down': !bannerCollapse,
+                  'fa-chevron-circle-up': bannerCollapse
+                }"
+                class="fa"
+                (click)="BannercollapseClick()"
+              ></em
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="card-body p-1 o-auto"
+        id="collapseExample"
+        *ngIf="bannerCollapse"
+      >
+        <div class="row w-100">
+          <div class="col-md-4">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-3 pr-0">
+                  <small class="mb-0 mr-2 text-muted">Address</small>
+                </div>
+                <div class="col-md-9 pl-0">
+                  <label
+                    class="mb-0 d-inline-block form-label text-truncate w-100"
+                    title="{{ orderPatientInfo.patientaddress }}"
+                    >{{ orderPatientInfo.patientaddress }}</label
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Phone</small>
+              <label class="form-label mb-0 d-inline-block">{{
+                orderPatientInfo.phone
+              }}</label>
+            </div>
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Business Phone</small>
+              <label class="mb-0 d-inline-block form-label">{{
+                orderPatientInfo.businessphone
+              }}</label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Guarantor Name</small>
+              <label class="mb-0 d-inline-block form-label">{{
+                orderPatientInfo.guarantorname
+              }}</label>
+            </div>
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-5 pr-0">
+                  <small class="mb-0 mr-2 text-muted">Guarantor Address</small>
+                </div>
+                <div class="col-md-7 pl-0">
+                  <label
+                    class="mb-0 d-inline-block form-label text-truncate w-100"
+                    title="{{ orderPatientInfo.guarantoraddress }}"
+                    >{{ orderPatientInfo.guarantoraddress }}</label
+                  >
+                </div>
+              </div>
+              <!-- <small class="mb-0 mr-2 text-muted">Guarantor Address</small>
+              <label class="mb-0 d-inline-block form-label text-truncate w-100">{{
+                orderPatientInfo.guarantoraddress
+              }}</label> -->
+            </div>
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Guarantor Phone</small>
+              <label class="mb-0 d-inline-block form-label">{{
+                orderPatientInfo.guarantor_telephone_number
+              }}</label>
+            </div>
+            <!-- <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Guarantor Relationship</small>
+              <label class="mb-0 d-inline-block form-label text-truncate">{{
+                orderPatientInfo.guarantor_relationship
+              }}</label>
+            </div> -->
+          </div>
+          <div class="col-md-4">
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Referring Provider</small>
+              <label class="mb-0 form-label d-inline text-truncate w-100">{{
+                orderPatientInfo.providername
+              }}</label>
+            </div>
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Referring Provider ID</small>
+              <label class="form-label mb-0 d-inline-block">{{
+                orderPatientInfo.referring_doctor_id
+              }}</label>
+            </div>
+            <div class="col-md-12">
+              <small class="mb-0 mr-2 text-muted">Attending Provider ID</small>
+              <label class="form-label mb-0 d-inline-block"
+                >{{ orderPatientInfo.attending_doctor_id }}
+                <span *ngIf="orderPatientInfo.attending_doctor_type != ''">
+                  ({{ orderPatientInfo.attending_doctor_type }})</span
+                ></label
+              >
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="float-right">
+              <div
+                class="badge badge-secondary pointer"
+                data-toggle="collapse"
+                data-target="#table"
+                (click)="RetriveInsuranceInfo()"
+              >
+                <em class="fa fa-vcard mr-1"></em>View Insurance Info
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 collapse show" id="table">
+            <kendo-grid
+              [data]="InsuranceGridView"
+              height="80"
+              [sortable]="true"
+              class="w-100 wrap-grid"
+            >
+              <kendo-grid-column
+                field="set_id_in1"
+                title="Sr. No."
+                width="10"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="insurance_company_name"
+                title="Company Name"
+                width="20"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="insured_s_id_number"
+                title="Insurance ID"
+                width="20"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="subcribername"
+                title="Subcriber Name"
+                width="20"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="policy_number"
+                title="Policy #"
+                width="20"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="group_number"
+                title="Group #"
+                width="20"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="plan_type"
+                title="Plan Type"
+                width="15"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="insurance_plan_id"
+                title="Plan ID"
+                width="15"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+
+              <kendo-grid-column
+                field="insured_s_relationship_to_patient"
+                title="Relationship"
+                width="15"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="coveragestatus"
+                title="Coverage Status"
+                width="20"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <ng-container *ngIf="dataItem.coveragestatus">
+                    <span
+                      *ngIf="dataItem.coveragestatus.toLowerCase() == 'active'"
+                      class="text-success"
+                      >{{ dataItem.coveragestatus }}</span
+                    >
+                    <span
+                      *ngIf="
+                        dataItem.coveragestatus.toLowerCase() == 'inactive'
+                      "
+                      class="text-black"
+                      >{{ dataItem.coveragestatus }}</span
+                    >
+                    <span
+                      *ngIf="
+                        dataItem.coveragestatus.toLowerCase() == 'rejected'
+                      "
+                      class="text-danger"
+                      >{{ dataItem.coveragestatus }}</span
+                    >
+                    &nbsp;
+                    <i
+                      *ngIf="
+                        dataItem.coveragestatus.toLowerCase() != 'inactive'
+                      "
+                      class="fa fa-info-circle pointer"
+                      (click)="onViewEligibilityData(dataItem)"
+                      data-toggle="modal"
+                      data-target="#infoModal"
+                    ></i>
+                  </ng-container>
+                </ng-template>
+              </kendo-grid-column>
+              <ng-template kendoGridNoRecordsTemplate>
+                No records available.
+              </ng-template>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="orderPatientInfo == null" class="card mt-0 mb-1">
+      <div
+        class="card-header d-block pl-3 p-1"
+        style="
+          background-color: #e5f2ff;
+          color: #00274e;
+          font-weight: 600;
+          height: 30px;
+        "
+      >
+        No patient information available.
+      </div>
+    </div>
+  </div>
+</div>
+<div class="black-box-doc" *ngIf="loading">
+  <div class="k-i-loading"></div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="infoModal"
+  role="dialog"
+  aria-labelledby="info"
+  aria-hidden="true"
+>
+  <app-eligibility-information
+    [coveragestatus]="this.coveragestatus"
+  ></app-eligibility-information>
+  <!-- <div class="modal-dialog modal-eligibility">
+    <div
+      class="modal-content box-shadow"
+      [ngClass]="{
+        'modal-active': coveragestatus.toLowerCase() == 'active',
+        'modal-rejected': coveragestatus.toLowerCase() == 'rejected'
+      }"
+    >
+      <div class="modal-header p-2 pl-3">
+        <h5 class="modal-title">
+          Insurance Eligibility Information
+        </h5>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="onCloseClick()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div [innerHTML]="infoHtml"></div>
+      </div>
+    </div>
+  </div> -->
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  [id]="'vieworiginaldocfrom' + calledFrom"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header p-2 pl-3">
+        <h5 class="modal-title">View Document</h5>
+        <button
+          type="button"
+          class="close p-0 m-0"
+          (click)="onViewDocClose()"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <kendo-tabstrip #kendoTabStrip (tabSelect)="onTabSelect($event)">
+          <kendo-tabstrip-tab title="Documents" [selected]="index == 0">
+            <ng-template kendoTabContent>
+              <app-rcm-encounter-documents
+                [calledFrom]="'viewmasterdocument'"
+              ></app-rcm-encounter-documents>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Document Notes" [selected]="index == 1"
+            ><ng-template kendoTabContent>
+              <div style="height: 91vh">
+                <app-document-history
+                  [calledFrom]="'viewmasterdocument'"
+                ></app-document-history>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="onViewDocClose()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,138 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newPayercrosswalk">
+      Add Payer Crosswalk
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newPayercrosswalk">
+      Update Payer Crosswalk
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="PayercrosswalkGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcClient"
+              id="ddClient"
+              [class.is-invalid]="ClientName.invalid && ClientName.touched"
+              [data]="Clientdetail"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [valuePrimitive]="true"
+              [disabled]="!newPayercrosswalk"
+            >
+            </kendo-dropdownlist>
+            <div
+              *ngIf="submitted || (ClientName.invalid && ClientName.touched)"
+            >
+              <small *ngIf="!!ClientName.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Payer
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcPayer"
+              id="ddPayer"
+              [class.is-invalid]="PayerName.invalid && PayerName.touched"
+              [data]="Payerdetail"
+              [textField]="'spayername'"
+              [valueField]="'npayerid'"
+              [valuePrimitive]="true"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="submitted || (PayerName.invalid && PayerName.touched)">
+              <small *ngIf="!!PayerName.errors?.required" class="text-danger"
+                >Payer is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>FilePayer
+            </label>
+            <input
+              *ngIf="!newPayercrosswalk"
+              kendoTextBox
+              [class.is-invalid]="
+                FilePayerName.invalid && FilePayerName.touched
+              "
+              formControlName="fcFilePayerName"
+              type="text"
+              id="txtfilepayer"
+              class="form-control form-control-sm"
+              readonly
+            />
+            <input
+              *ngIf="newPayercrosswalk"
+              kendoTextBox
+              [class.is-invalid]="
+                FilePayerName.invalid && FilePayerName.touched
+              "
+              formControlName="fcFilePayerName"
+              type="text"
+              id="txtfilepayer"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (FilePayerName.invalid && FilePayerName.touched)
+              "
+            >
+              <small *ngIf="!!FilePayerName.errors?.required" class="text-danger"
+                >FilePayer is required</small
+              >
+              <small *ngIf="!!FilePayerName.errors?.maxlength" class="text-danger"
+                >FilePayer allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddPayercrosswalk"
+      [disabled]="!validatePayercrosswalk()"
+      (click)="savePayercrosswalk()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingPayercrosswalk">
+  <div class="k-i-loading"></div>
+</div>

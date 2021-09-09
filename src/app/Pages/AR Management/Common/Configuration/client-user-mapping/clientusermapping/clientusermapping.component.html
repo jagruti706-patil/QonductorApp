@@ -1,0 +1,155 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Client User Mapping</h4>
+    <div class="row ml-auto">
+      <div>
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#addclientusermappingModal"
+          (click)="AddClientUserMapping()"
+        >
+          Add Client User
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body"  style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridClientUserMapping"
+        [data]="ClientUserMappinggridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="ClientUserMappingpageSize"
+        [pageable]="true"
+        [skip]="ClientUserMappingskip"
+        (pageChange)="pageChangeClientUserMapping($event)"
+        [sortable]="true"
+        [sort]="ClientUserMappingsort"
+        (sortChange)="sortClientUserMappingChange($event)"
+        [selectable]="true"
+        (edit)="EditClientUserMappingTemplate($event)"
+      >
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="susername"
+          title="Agent"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column field="address" title="Address" width="15" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+        <kendo-grid-column field="sausid" title="AUSID" width="5" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+        <kendo-grid-column field="sdatabasename" title="Database" width="5" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          field="status"
+          title="Status"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.status == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.status == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="6"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editclientusermappingconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.status == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnClientUserMappingStatus(dataItem.nmappingid, 1)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.status == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnClientUserMappingStatus(dataItem.nmappingid, 0)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.ClientUserMappinggridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addclientusermappingModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addclientusermapping
+      [InputClientUserMappingEditid]="EditClientUserMappingid"
+      (OutputClientUserMappingEditResult)="
+        OutputClientUserMappingEditResult($event)
+      "
+      #AddClientUserMappingChild
+    ></app-addclientusermapping>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editclientusermappingconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

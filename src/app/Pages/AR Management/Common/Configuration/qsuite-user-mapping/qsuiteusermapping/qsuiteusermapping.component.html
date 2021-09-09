@@ -1,0 +1,176 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Qsuite User Mapping</h4>
+    <div class="row ml-auto">
+      <div>
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#addqsuiteusermappingModal"
+          (click)="AddQsuiteUserMapping()"
+        >
+          Add Qsuite User
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridQsuiteUserMapping"
+        [data]="QsuiteUserMappinggridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="QsuiteUserMappingpageSize"
+        [pageable]="true"
+        [skip]="QsuiteUserMappingskip"
+        (pageChange)="pageChangeQsuiteUserMapping($event)"
+        [sortable]="true"
+        [sort]="QsuiteUserMappingsort"
+        (sortChange)="sortQsuiteUserMappingChange($event)"
+        [selectable]="true"
+        (edit)="EditQsuiteUserMappingTemplate($event)"
+      >
+        <kendo-grid-column
+          field="clientname"
+          title="Client"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="gcpusername"
+          title="Agent"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sausid"
+          title="AUSID"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sdatabasename"
+          title="Database Name"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="qsuiteloginname"
+          title="Qsuite User Name"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column field="address" title="Address" width="15" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+        <kendo-grid-column field="sausid" title="AUSID" width="5" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+        <kendo-grid-column field="sdatabasename" title="Database" width="5" [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column
+          field="status"
+          title="Status"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.status == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.status == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-command-column
+          title="Action"
+          width="6"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editqsuiteusermappingconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.status == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnQsuiteUserMappingStatus(dataItem.nmappingid, 1)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.status == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnQsuiteUserMappingStatus(dataItem.nmappingid, 0)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.QsuiteUserMappinggridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addqsuiteusermappingModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addqsuiteusermapping
+      [InputQsuiteUserMappingEditid]="EditQsuiteUserMappingid"
+      (OutputQsuiteUserMappingEditResult)="
+        OutputQsuiteUserMappingEditResult($event)
+      "
+      #AddQsuiteUserMappingChild
+    ></app-addqsuiteusermapping>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editqsuiteusermappingconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

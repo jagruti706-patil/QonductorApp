@@ -1,0 +1,156 @@
+<div class="card">
+  <div class="card-header ">
+    <h4 class="mb-0">Inventory Rules</h4>
+    <div class="row ml-auto">
+      <div>
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#adddeferruleModal"
+          (click)="AddDeferRule()"
+        >
+          Add Rule
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body" style=" height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridDeferRule"
+        [data]="DeferRulegridView"
+        style="width:100%; max-height: 68vh;"
+        [pageSize]="DeferRulepageSize"
+        [pageable]="true"
+        [skip]="DeferRuleskip"
+        (pageChange)="pageChangeDeferRule($event)"
+        [sortable]="true"
+        [sort]="DeferRulesort"
+        (sortChange)="sortDeferRuleChange($event)"
+        [selectable]="true"
+        (edit)="EditDeferRule($event)"
+      >
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="15"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field="ruledata.ruletitle"
+          title="Title"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="ruledata.ruledescription"
+          title="Description"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="bstatus"
+          title="Status"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bstatus == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.bstatus == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editdeferruleconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bstatus == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnDeferRuleStatus(dataItem.nruleid, true)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.bstatus == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnDeferRuleStatus(dataItem.nruleid, false)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.DeferRulegridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="adddeferruleModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <!-- <app-add-defer-rule #AddDeferRuleChild></app-add-defer-rule> -->
+    <app-add-defer-rule
+      [InputDeferRuleid]="EditDeferRuleid"
+      (OutputDeferRuleEditResult)="OutputDeferRuleEditResult($event)"
+      #AddDeferRuleChild
+    ></app-add-defer-rule>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editdeferruleconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

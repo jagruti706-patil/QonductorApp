@@ -1,0 +1,116 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="newNoteTemplate">
+      Add Note
+    </h4>
+    <h4 class="modal-title" id="exampleModalLabel" *ngIf="!newNoteTemplate">
+      Update Note
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="NoteTemplateGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group" *ngIf="newNoteTemplate">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Status</label
+            >
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcStatusName"
+              id="ddStatus"
+              [class.is-invalid]="Status.invalid && Status.touched"
+              [data]="sMasterStatus"
+              [textField]="'sstatusdescription'"
+              [valueField]="'sstatuscode'"
+              [(ngModel)]="selectedStatusValue"
+              [valuePrimitive]="true"
+              (ngModelChange)="onStatusChange($event)"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="submitted || (Status.invalid && Status.touched)">
+              <small *ngIf="Status.errors?.required" class="text-danger"
+                >Status is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Title</label
+            >
+            <input
+              kendoTextBox
+              [class.is-invalid]="NoteTitle.invalid && NoteTitle.touched"
+              formControlName="fcNoteTitle"
+              type="text"
+              id="txtNoteTitle"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (NoteTitle.invalid && NoteTitle.touched)">
+              <small *ngIf="NoteTitle.errors?.required" class="text-danger"
+                >Title is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Template</label
+            >
+            <textarea
+              kendoTextArea
+              id="txtNoteText"
+              formControlName="fcNoteText"
+              [class.is-invalid]="NoteText.invalid && NoteText.touched"
+              class="form-control form-control-sm w-100"
+            ></textarea>
+            <div
+              *ngIf="submitted || (NoteText.invalid && NoteText.touched)"
+              class="text-danger"
+            >
+              <small *ngIf="NoteText.errors?.required"
+                >Template is required</small
+              >
+              <small *ngIf="NoteText.errors?.maxlength" class="text-danger"
+                >Template allows 600 characters</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddNote"
+      (click)="saveNote()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingNote">
+  <div class="k-i-loading"></div>
+</div>

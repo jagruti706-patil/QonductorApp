@@ -1,0 +1,371 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <!-- <label class="text-center">Completed Task</label> -->
+    <h4 class="mb-0">Completed Task</h4>
+  </div>
+  <div class="card-body pt-2">
+    <!-- <div class="row mb-4">
+      <button type="button" data-toggle="modal" data-target=".bd-example-modal-xl" kendoButton [primary]="true"
+        (click)="onWorkTask(1)">Edit Tasks</button>
+      <button type="button" class="ml-4" data-toggle="modal" data-target=".bd-example-modal-xl" kendoButton
+        [primary]="true" (click)="onWorkTask(1)">Work Selected Tasks</button>
+    </div> -->
+    <div class="row mb-1">
+      <div *ngIf="TaskGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+      <i
+        *ngIf="!filterApplied && !loadingCompletedtask"
+        class="fe fe-filter ml-auto pointer"
+        title="Default filter is applied.."
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+        id="lnkCompletedTaskFilterDefault"
+      ></i>
+      <i
+        *ngIf="filterApplied && !loadingCompletedtask"
+        class="fa fa-filter ml-auto pointer"
+        title="Some filter is applied.."
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+        id="lnkCompletedTaskFilterSome"
+      ></i>
+
+      <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+        <app-filters
+          [CallingPage]="'CompletedTask'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row">
+      <kendo-grid
+        [data]="TaskGridView"
+        [skip]="skip"
+        [height]="650"
+        style="width:100%"
+        [sortable]="true"
+        [sort]="TaskSort"
+        (sortChange)="TaskSortChange($event)"
+        [selectable]="true"
+        [kendoGridSelectBy]="selectedCallback"
+        [selectedKeys]="SelectedTasks"
+        (edit)="EditClientTemplate($event)"
+        [loading]="loadingCompletedtaskGrid"
+        id="grCompletedTask"
+      >
+        <!-- <kendo-grid-checkbox-column width="12" showSelectAll="true"></kendo-grid-checkbox-column> -->
+        <kendo-grid-column
+          *ngIf="!isHidden('ntaskid')"
+          field="ntaskid"
+          title="TaskID"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          title=""
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div #target>
+              <svg width="12" height="14" viewBox="0 0 17.792 19.547">
+                <rect
+                  id="Rectangle_595"
+                  data-name="Rectangle 595"
+                  width="2.792"
+                  height="19.547"
+                  fill="black"
+                />
+                <path
+                  id="Path_3605"
+                  data-name="Path 3605"
+                  d="M-1820.007-892v13.151l12.96-6.916Z"
+                  transform="translate(1824.839 892)"
+                  fill="gray"
+                />
+              </svg>
+            </div>
+            <kendo-contextmenu
+              [target]="target"
+              [items]="items"
+              (select)="
+                onMenuItemSelect(
+                  $event,
+                  dataItem.ntaskid,
+                  dataItem.nworkqueuegroupid
+                )
+              "
+              data-toggle="modal"
+              data-target="#qualityviewdetailsModal"
+            >
+            </kendo-contextmenu>
+          </ng-template>
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column
+          field="staskcode"
+          title="Task Code"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column title="Work Group #" width="100" [headerStyle]="{'font-weight': 'bold'}">
+          <ng-template kendoGridCellTemplate let-dataItem> -->
+        <!-- <a [href]="" (click)="onOpenClientFTPClick(dataItem)">{{dataItem.workgroupcode}}</a> -->
+        <!-- <a (click)="openWorkQueueDetails">{{dataItem.workgroupno}}</a> -->
+        <!-- </ng-template>
+        </kendo-grid-column> -->
+        <!-- <kendo-grid-column field="clientcode" title="Client Code" width="40" [headerStyle]="{'font-weight': 'bold'}">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{dataItem.sclientname}}">{{dataItem.clientcode}}</span>
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="55"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.sclientname }}">{{
+              dataItem.sclientname
+            }}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="planname"
+          title="Insurance"
+          width="70"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="patientcode"
+          title="Account #"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimno"
+          title="Claim #"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.staskcode }}">{{ dataItem.claimno }}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dos"
+          title="DOS"
+          width="40"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dos | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="remainingbalance"
+          title="Ins. Due"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.remainingbalance }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimage"
+          title="Claim Age"
+          width="55"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="priority"
+          title="Priority"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.priority == 1" class="text-danger">HIGH</div>
+            <div *ngIf="dataItem.priority == 2" class="text-success">
+              MEDIUM
+            </div>
+            <div *ngIf="dataItem.priority == 3" class="text-primary">LOW</div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="assignedby"
+          title="Assigned By"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="duedate"
+          title="Due Date"
+          width="40"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.duedate | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="createdon"
+          title="Assigned Date"
+          width="65"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.createdon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="modifiedon"
+          title="Completed Date"
+          width="55"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.modifiedon | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit Task"
+              data-toggle="modal"
+              data-target="#editclientconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              kendoButton
+              [primary]="true"
+              title="Task details"
+              data-toggle="modal"
+              data-target="#qualityviewdetailsModal"
+              (click)="
+                onActionButtonClick(
+                  'info',
+                  dataItem.ntaskid,
+                  dataItem.nworkqueuegroupid
+                )
+              "
+            >
+              <i class="fa fa-info-circle"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+        <ng-template kendoGridNoRecordsTemplate>
+          No records available.
+        </ng-template>
+      </kendo-grid>
+    </div>
+
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div *ngIf="isOpen">
+    <app-task-work-pane></app-task-work-pane>
+
+</div> -->
+<!-- <div class="collapse col-md-12 collapse-overlay" id="collapseWorkTask">
+    <i class="ml-auto fe fe-crosshair" data-dismiss="collapse" ></i>
+    <app-task-work-pane [SelectedTasks]="SelectedTasks"></app-task-work-pane>
+</div> -->
+
+<!-- <div class="modal bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        ...
+      </div>
+    </div>
+  </div> -->
+<!-- <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myHugeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <app-task-work-pane [SelectedTasks]="SelectedTasks"></app-task-work-pane>
+    </div>
+  </div> -->
+
+<!--Edit Confirmation Model -->
+<div
+  *ngIf="!bistasksyncinqpm"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editclientconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="qualityviewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-qualityviewdetails
+      (OutputViewDetailsEditResult)="OutputViewDetailsEditResult($event)"
+      #QualityViewdetailsComponent
+    ></app-qualityviewdetails>
+  </div>
+</div>
+
+<!-- <div class="black-box" *ngIf="loadingCompletedtask">
+  <div class="k-i-loading"></div>
+</div> -->

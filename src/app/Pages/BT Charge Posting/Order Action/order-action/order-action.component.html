@@ -1,0 +1,95 @@
+<div class="card" [ngClass]="{ 'card-fullscreen': fullscreen }">
+  <div class="card-header pt-1 pb-1">
+    <div class="card-options">
+      <i
+        class="fa fa-expand pointer text-dark"
+        title="Card fullscreen"
+        (click)="cardfullscreen()"
+      ></i>
+    </div>
+  </div>
+  <div class="card-body p-1">
+    <app-order-patient-banner
+      [calledFrom]="'encounteraction'"
+    ></app-order-patient-banner>
+    <div class="row">
+      <div [ngClass]="leftside ? 'col-md-12' : 'col-md-9'">
+        <!-- <app-order-documents
+          *ngIf="this.encountersource == 'biotech encounter'"
+          #OrderDocumentsComponent
+        ></app-order-documents> -->
+        <kendo-tabstrip
+          *ngIf="this.encountersource == 'biotech encounter'"
+          #EncounterTabStrip
+        >
+          <!-- (tabSelect)="onTabSelect($event)" -->
+          <ng-container *ngIf="this.gcurrentTask?.nstatus !== 16">
+            <kendo-tabstrip-tab title="Encounter Documents">
+              <ng-template kendoTabContent>
+                <app-order-documents
+                  [title]="'Encounter'"
+                  [calledFrom]="'encounteraction'"
+                  #OrderDocumentsComponent
+                ></app-order-documents>
+              </ng-template>
+            </kendo-tabstrip-tab>
+          </ng-container>
+          <ng-container *ngIf="this.gcurrentTask?.nstatus === 16">
+            <kendo-tabstrip-tab title="Answer Response">
+              <ng-template kendoTabContent>
+                <app-incomplete-order-action
+                  [calledFrom]="'encounteraction'"
+                  #IncompleteInfoOrder
+                ></app-incomplete-order-action>
+              </ng-template>
+            </kendo-tabstrip-tab>
+            <kendo-tabstrip-tab title="Paper">
+              <ng-template kendoTabContent>
+                <app-order-documents
+                  [calledFrom]="'encounteraction'"
+                  [hideTitle]="true"
+                  #OrderDocumentsComponent
+                ></app-order-documents>
+              </ng-template>
+            </kendo-tabstrip-tab>
+          </ng-container>
+        </kendo-tabstrip>
+        <kendo-tabstrip
+          *ngIf="this.encountersource == 'rcm encounter'"
+          #kendoTabStrip
+        >
+          <kendo-tabstrip-tab title="Documents" selected="true">
+            <ng-template kendoTabContent>
+              <app-rcm-encounter-documents
+                [calledFrom]="'encounteraction'"
+                #RcmDocumentComponent
+                [showAcknoledgeButton]="false"
+              ></app-rcm-encounter-documents>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Document Notes"
+            ><ng-template kendoTabContent>
+              <div style="height: 91vh">
+                <app-document-history
+                  [calledFrom]="'encounteraction'"
+                ></app-document-history>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </div>
+      <div class="col-md-3 pl-0">
+        <app-action-pane
+          [ngClass]="leftside ? 'd-none' : 'col-md-3 pl-0'"
+          (onclose)="OnClose()"
+          [encountersource]="this.encountersource"
+        ></app-action-pane>
+      </div>
+    </div>
+    <!-- {{ this.gselectedTasks | json }} -->
+  </div>
+</div>
+
+<div class="black-box" *ngIf="loadingTask">
+  <div class="k-i-loading"></div>
+</div>

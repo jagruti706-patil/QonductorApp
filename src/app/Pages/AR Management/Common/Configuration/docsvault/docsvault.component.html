@@ -1,0 +1,259 @@
+<kendo-tabstrip (tabSelect)="onTabSelect($event)">
+  <kendo-tabstrip-tab title="Edocs Manager" selected="true">
+    <ng-template kendoTabContent>
+      <div class="card">
+        <div class="card-header text-center bg-light pl-2">
+          <h5 class="mb-0">Edocs Manager</h5>
+        </div>
+        <div class="card-body p-2">
+          <div class="d-flex mb-2 align-items-center">
+            <h5 class="mb-0">Cabinets</h5>
+            <button
+              type="button"
+              *ngIf="gridData && viewAddCabinets"
+              kendoButton
+              [primary]="true"
+              (click)="onAddClick()"
+              class="ml-auto"
+            >
+              Add
+            </button>
+          </div>
+          <div class="d-flex">
+            <kendo-grid
+              [data]="gridData"
+              class="w-100"
+              [kendoGridSelectBy]="selectedCallback"
+              [selectable]="selectableSettings"
+              [selectedKeys]="CabinetsSelected"
+              style="max-height: 25vh"
+              [loading]="loadingCabinets"
+            >
+              <kendo-grid-checkbox-column width="12" showSelectAll="true">
+              </kendo-grid-checkbox-column>
+
+              <kendo-grid-column
+                field="folderID"
+                title="External Id"
+                width="80"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+
+              <kendo-grid-column
+                field="folderName"
+                title="Cabinet Name"
+                width="80"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+            </kendo-grid>
+            <!-- <div>
+                <button
+                  type="button"
+                  *ngIf="gridData && viewAddCabinets"
+                  kendoButton
+                  [primary]="true"
+                  (click)="onAddClick()"
+                  class="ml-5 mt-3"
+                >
+                  Add
+                </button>
+              </div> -->
+          </div>
+          <hr class="mt-4" />
+
+          <!-- <h5>Folders</h5> -->
+          <kendo-grid
+            [selectable]="true"
+            [sortable]="true"
+            [data]="foldergridData"
+            [loading]="loadingFolders"
+            style="max-height: 25vh"
+          >
+            <kendo-grid-column
+              field="cabinetid"
+              title="Cabinet Id"
+              width="3"
+              [hidden]="true"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="cabinetname"
+              title="Cabinet Name"
+              width="3"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+
+            <kendo-grid-column
+              field="externalid"
+              title="External Id"
+              width="3"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+
+            <kendo-grid-column
+              field="createdon"
+              title="Date"
+              width="5"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{ dataItem.createdon | date: "MM-dd-yyyy hh:mm:ss a" }}
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="createdby"
+              title="User Name"
+              width="3"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+
+            <kendo-grid-column
+              field="status"
+              title="Status"
+              width="3"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div *ngIf="dataItem.status == true" class="text-success">
+                  Active
+                </div>
+                <div *ngIf="dataItem.status == false" class="text-danger">
+                  Inactive
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+          </kendo-grid>
+        </div>
+      </div>
+    </ng-template>
+  </kendo-tabstrip-tab>
+  <kendo-tabstrip-tab title="Process Folder">
+    <ng-template kendoTabContent>
+      <div class="card">
+        <div class="card-header bg-light pl-2">
+          <h5 class="mb-0">Process Folder</h5>
+        </div>
+        <div class="card-body p-2">
+          <div class="d-flex mb-2">
+            <div class="mr-2 text-center" style="margin-top: 4px">Cabinets</div>
+            <kendo-dropdownlist
+              [data]="foldergridData"
+              textField="cabinetname"
+              [valuePrimitive]="true"
+              valueField="externalid"
+              (selectionChange)="selectionChange($event)"
+              [defaultItem]="cabinetDefaultValue"
+            >
+            </kendo-dropdownlist>
+            <button
+              type="button"
+              *ngIf="viewProcessFolders"
+              kendoButton
+              [primary]="true"
+              (click)="onProcessClick()"
+              class="ml-auto"
+            >
+              Process
+            </button>
+          </div>
+          <!-- <b>No. of selected folders : </b
+            >{{ FoldersSelected ? FoldersSelected.length : 0 }} -->
+          <div class="d-flex">
+            <kendo-grid
+              [data]="OrderGridView"
+              class="w-100 filter-grid disableDropdownOperator"
+              [kendoGridSelectBy]="selectedCallback"
+              [selectable]="{
+                checkboxOnly: true,
+                mode: 'single'
+              }"
+              [selectedKeys]="FoldersSelected"
+              style="height: 61vh"
+              [loading]="loadingProcessedFolders"
+              [sortable]="true"
+              [sort]="foldersSort"
+              (sortChange)="OrderSortChange($event)"
+              [skip]="OrderSkip"
+              [pageable]="true"
+              [pageSize]="pagesize"
+              (pageChange)="OrderPageChange($event)"
+              [filterable]="true"
+              [filter]="filter"
+              (filterChange)="gridFilter($event)"
+            >
+              <kendo-grid-checkbox-column width="20">
+              </kendo-grid-checkbox-column>
+
+              <kendo-grid-column
+                field="externalid"
+                title="External Id"
+                width="80"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+                [filterable]="false"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                field="foldername"
+                title="Folder Name"
+                width="80"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+              </kendo-grid-column>
+
+              <kendo-grid-column
+                field="createdon"
+                title="Created On"
+                width="60"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <!-- <ng-template kendoGridCellTemplate let-dataItem>
+                  {{ dataItem.createdon | date: "MM-dd-yyyy" }}
+                </ng-template> -->
+              </kendo-grid-column>
+
+              <kendo-grid-column
+                field="processedstatus"
+                title="Process Status"
+                width="80"
+                [headerStyle]="{ 'font-weight': 'bold' }"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <div *ngIf="dataItem.processedstatus == true">Processed</div>
+                  <div *ngIf="dataItem.processedstatus == false">
+                    Unprocessed
+                  </div>
+                </ng-template>
+                <ng-template kendoGridFilterCellTemplate>
+                  <kendo-dropdownlist
+                    class="h-100 w-100"
+                    [data]="[
+                      { displayname: 'Processed', value: true },
+                      { displayname: 'Unprocessed', value: false }
+                    ]"
+                    [textField]="'displayname'"
+                    [valueField]="'value'"
+                    [(value)]="filterDropdownValue"
+                    (valueChange)="processStatusChange($event)"
+                    [defaultItem]="{ displayname: 'All', value: -1 }"
+                    [valuePrimitive]="true"
+                  >
+                  </kendo-dropdownlist>
+                </ng-template>
+              </kendo-grid-column>
+            </kendo-grid>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </kendo-tabstrip-tab>
+</kendo-tabstrip>
+
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>

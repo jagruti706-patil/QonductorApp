@@ -1,0 +1,34 @@
+
+.d-none {
+    display: none !important;
+  }
+
+  .activeitem
+  {
+    border-left:3px orangered solid;
+  }
+
+  
+/**
+Card fullscreen
+ */
+.card-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  margin: 0;
+  /* overflow:auto; */
+  overflow:hidden;
+  overflow-x:hidden;
+}
+
+.card-fullscreen .card-options-fullscreen i:before {
+  content: '\e992';
+}
+
+.card-fullscreen .card-options-remove {
+  display: none;
+}

@@ -1,0 +1,17 @@
+.star {
+      font-size: 1.5rem;
+      color: #8b939c;
+    }
+    .filled {
+      color: #ffc31e;
+    }
+    /* .bad {
+      color: #deb0b0;
+    }
+    .filled.bad {
+      color: #ff1e1e;
+    } */
+
+    .alert-red {
+      text-decoration-color: red;
+    }

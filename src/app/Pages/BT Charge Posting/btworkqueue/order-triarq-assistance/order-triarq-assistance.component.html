@@ -1,0 +1,644 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Assistance</h4>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-filters
+          [CallingPage]="'OrderAssistance'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row mt-2 mb-2">
+      <div class="col-md-12">
+        <button
+          *ngIf="vwMarkComplete"
+          type="button"
+          class="mr-4"
+          data-toggle="modal"
+          kendoButton
+          [primary]="true"
+          (click)="onMarkComplete()"
+          [disabled]="loadingOrderGrid"
+          id="btnWorkSelectedTask"
+        >
+          Mark Complete
+          <!--same like update order status-->
+        </button>
+        <button
+          *ngIf="vwMarkIncomplete"
+          type="button"
+          class="mr-4"
+          data-toggle="modal"
+          kendoButton
+          [primary]="true"
+          (click)="onMarkIncomplete()"
+          [disabled]="loadingOrderGrid || disableIncompleteButton"
+        >
+          Mark Incomplete
+        </button>
+        <button
+          *ngIf="vwSendToPractice"
+          type="button"
+          class="mr-4"
+          data-toggle="modal"
+          kendoButton
+          [primary]="true"
+          (click)="onSendToPractice()"
+          [disabled]="loadingOrderGrid || disableCheckRCM"
+        >
+          Send To Practice
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="OrderGridView"
+          [skip]="OrderSkip"
+          [height]="650"
+          class="w-100 wrap-grid"
+          [kendoGridSelectBy]="selectedCallback"
+          [selectedKeys]="OrderSelected"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="OrderSort"
+          (sortChange)="OrderSortChange($event)"
+          [selectable]="selectableSettings"
+          [loading]="loadingOrderGrid"
+          [pageable]="true"
+          [pageSize]="pagesize"
+          (pageChange)="OrderPageChange($event)"
+        >
+          <ng-template *ngIf="vwExportButton" kendoGridToolbarTemplate>
+            <button
+              class="pull-right mr-1"
+              type="button"
+              (click)="exportToExcelLog()"
+              kendoGridExcelCommand
+            >
+              Export to Excel
+            </button>
+            <!-- <button class="pull-right mr-1" type="button" kendoGridPDFCommand>
+            Export to PDF
+          </button> -->
+          </ng-template>
+          <kendo-grid-checkbox-column width="12" showSelectAll="true">
+          </kendo-grid-checkbox-column>
+
+          <kendo-grid-column
+            field="assignmenttype"
+            title=""
+            width="15"
+            class="text-center"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [sortable]="false"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <i
+                [title]="
+                  dataItem.assignmenttype == 1
+                    ? 'Group Assignment'
+                    : 'Individual Assignment'
+                "
+                class="fas"
+                [ngClass]="{
+                  'fa-user text-teal': dataItem.assignmenttype == 0,
+                  'fa-users text-cyan': dataItem.assignmenttype == 1
+                }"
+              ></i>
+              <i
+                class="fas ml-1"
+                [ngClass]="{
+                  'fa-file-pdf text-red':
+                    dataItem.encountersource?.toLowerCase() == 'rcm encounter',
+                  'fa-flask text-indigo':
+                    dataItem.encountersource?.toLowerCase() ==
+                    'biotech encounter'
+                }"
+                [title]="dataItem.encountersource"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            *ngIf="!isHidden('orderqueuegroupid')"
+            field="orderqueuegroupid"
+            title="Work Group #"
+            width="60"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            *ngIf="!isHidden('assignedid')"
+            field="assignedid"
+            title="Assigned ID"
+            width="60"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [hidden]="true"
+          >
+          </kendo-grid-column>
+
+          <!-- <kendo-grid-column
+          field="orderdate"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+          title="Order Date"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.orderdate | date: "yyyy-MM-dd" }}
+            
+          </ng-template>
+        </kendo-grid-column> -->
+          <kendo-grid-column
+            field="orderyear"
+            title="Year"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderday"
+            title="Folder"
+            width="23"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordercategory"
+            title="Category"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientname"
+            title="Practice"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderqueuegroupcode"
+            title="Accession #"
+            width="32"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            <a
+              [href]=""
+              (click)="onOpenOrderHistory(dataItem)"
+              data-toggle="modal"
+              data-target="#viewdetailsModal"
+              class="text-info mr-3 pointer view-btn"
+              >{{ dataItem.orderqueuegroupcode }}</a
+            >
+          </ng-template> -->
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+          field="patientname"
+          title="Patient"
+          width="80"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dob"
+          title="Patient DOB"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+          <!-- <kendo-grid-column
+          field="gender"
+          title="Gender"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.gender == 'M'">
+              Male
+            </div>
+
+            <div *ngIf="dataItem.gender == 'F'">
+              Female
+            </div>
+            <div *ngIf="dataItem.gender != 'M' && dataItem.gender != 'F'">
+              {{ dataItem.gender }}
+            </div>
+          </ng-template>
+        </kendo-grid-column> -->
+
+          <!-- <kendo-grid-column
+          field="providername"
+          title="Provider"
+          width="80"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="providernpi"
+          title="Provider NPI"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column> -->
+          <kendo-grid-column
+            field="claimreferencenumber"
+            [filterable]="false"
+            title="QPM Claim #"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordernote"
+            title="Note"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordersubstatus"
+            title="Sub-Status"
+            [filterable]="false"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="assignedtoname"
+            title="Worked By"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="modifiedon"
+            title="Worked Date"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              {{ dataItem.modifiedon | date: "MM-dd-yyyy" }}
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="comment"
+            title="Comment"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+            field="hl7present"
+            title="HL7"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div
+                *ngIf="dataItem.hl7present"
+                class="text-success"
+                title="HL7 is present"
+              >
+                Yes
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientbilling"
+            title="Client Billing"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div
+                *ngIf="dataItem.clientbilling"
+                class="text-success"
+                title="Client billing is present"
+              >
+                Yes
+              </div>
+            </ng-template>
+          </kendo-grid-column> -->
+          <kendo-grid-column
+            field="documentcount"
+            title=""
+            width="25"
+            [sortable]="false"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <i
+                (click)="onOpenViewdetails(dataItem)"
+                data-toggle="modal"
+                data-target="#viewdetailsModal"
+                class="fas fa-eye mr-1 pointer text-primary"
+                title="View"
+              ></i>
+              <i
+                *ngIf="vwAddComment"
+                (click)="onAddCommentClicked(dataItem)"
+                data-toggle="modal"
+                data-target="#viewAddComment"
+                class="fas fa-comment pointer mr-1 text-info"
+                title="Add Comment"
+              ></i>
+              <i
+                *ngIf="dataItem.hl7present"
+                class="fas fa-notes-medical mr-1 text-orange"
+                title="HL7 is available"
+              ></i>
+              <i
+                *ngIf="dataItem.clientbilling"
+                class="fas fa-file-invoice-dollar text-success"
+                title="Client billed encounter"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+          <kendo-grid-excel fileName="{{ exportFilename }}.xlsx">
+            <!-- [fetchData]="allData" -->
+            <kendo-excelexport-column
+              field="encountersource"
+              title="Encounter Type"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderyear" title="Year">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderday" title="Folder">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordercategory" title="Category">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="clientname" title="Practice">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="orderqueuegroupcode"
+              title="Accession #"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="claimreferencenumber"
+              title="QPM Claim #"
+            >
+            </kendo-excelexport-column>
+            <!-- <kendo-excelexport-column field="documentcount" title="Document #">
+          </kendo-excelexport-column> -->
+            <kendo-excelexport-column field="ordernote" title="Note">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordersubstatus" title="Sub-Status">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="assignedtoname" title="Worked By">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="workeddate" title="Worked Date">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="comment" title="Comment">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="hl7present" title="HL7">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="clientbilling"
+              title="Client Billing"
+            >
+            </kendo-excelexport-column>
+          </kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+    <!-- <div class="row mt-2">
+        <button
+          id="btnprevious"
+          class="btn btn-secondary btn-sm float-left mr-2"
+          kendoButton
+          [primary]="true"
+          (click)="onClickPrevious()"
+          [disabled]="Ispreviousdisabled"
+        >
+          Previous
+        </button>
+        <button
+          id="btnnext"
+          class="btn btn-primary btn-sm float-right mr-2"
+          kendoButton
+          [primary]="true"
+          (click)="onClickNext()"
+          [disabled]="Isnextdisabled"
+        >
+          Next
+        </button>
+  
+        <div class="ml-auto">
+          {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+        </div>
+      </div> -->
+  </div>
+</div>
+<!--View Details Model GRID---  -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-order-details #OrderDetailsComponent></app-order-details>
+  </div>
+</div>
+<!--View Details Model -->
+
+<div
+  class="modal fade bd-example-modal-lg"
+  *ngIf="OrderSelected.length > 0"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="assignOrderModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-order-assignment #OrderAssignment></app-order-assignment>
+  </div>
+</div>
+
+<div
+  class="modal fade bd-example-modal-lg"
+  *ngIf="OrderSelected.length > 0"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="noteModalReview"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-note-modal #NoteModalComponent></app-note-modal>
+  </div>
+</div>
+
+<div
+  *ngIf="vwSendToPractice"
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="mdRCMEncounter"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header p-2 pl-3">
+        <h5 class="modal-title" id="mdAssignWork">Send To Practice</h5>
+        <button
+          type="button"
+          class="close p-0 m-0"
+          (click)="close()"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <app-order-patient-banner
+          [title]="'Encounter'"
+          [calledFrom]="'assistance'"
+          #OrderPatientBannerComponent
+        ></app-order-patient-banner>
+        <kendo-tabstrip #kendoTabStrip>
+          <kendo-tabstrip-tab title="Documents" selected="true">
+            <ng-template kendoTabContent>
+              <app-rcm-encounter-documents
+                [calledFrom]="'assistance'"
+                #RcmDocumentComponent
+                [showAcknoledgeButton]="false"
+              ></app-rcm-encounter-documents>
+            </ng-template>
+          </kendo-tabstrip-tab>
+          <kendo-tabstrip-tab title="Document Notes">
+            <ng-template kendoTabContent>
+              <div style="height: 91vh">
+                <app-document-history
+                  [calledFrom]="'assistance'"
+                  [showAddtoPracticeBucket]="true"
+                  #RcmDocumentHistoryComponent
+                ></app-document-history>
+              </div>
+            </ng-template>
+          </kendo-tabstrip-tab>
+        </kendo-tabstrip>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          id="dismissBtn"
+          data-dismiss="modal"
+          style="display: none"
+        ></button>
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="close()"
+          data-dismiss="modal"
+          id="CancelWork"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          id="AssignWork"
+          [disabled]="!validateAssignOrder()"
+          (click)="GenerateWorkitemAssignment()"
+        >
+          Save
+        </button>
+      </div>
+      <div class="black-box" *ngIf="loadingData">
+        <div class="k-i-loading"></div>
+      </div>
+      <!--Encounter Confirmation Modal -->
+      <div
+        class="modal fade"
+        data-backdrop="static"
+        data-keyboard="false"
+        id="checkPracticeConfirmationModal"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <app-custom-confirmation
+            [ConfirmationTitle]="'Confirmation'"
+            [ConfirmationMessage]="inputPracticeConfirmationMsg"
+            (OutputCustomConfirmation)="OutputCheckPracticeResult($event)"
+          ></app-custom-confirmation>
+        </div>
+      </div>
+      <!--Encounter Confirmation Modal -->
+    </div>
+  </div>
+</div>
+
+<!--Confirmation Modal -->
+<div
+  *ngIf="this.OrderSelected.length > 0"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="confirmationTitle"
+      [InputConfirmationMessage]="InputStatusMessage"
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation>
+  </div>
+</div>
+<!--Confirmation Modal -->
+<!-- Add comment modal -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewAddComment"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Comment</h5>
+        <button
+          type="button"
+          class="close"
+          (click)="onCommentClose()"
+          data-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <app-add-comment
+          (iscommentsaved)="outputCommentResult($event)"
+          #AddCommentComponent
+        ></app-add-comment>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add comment modal -->

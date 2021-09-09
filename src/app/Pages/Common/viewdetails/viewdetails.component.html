@@ -1,0 +1,181 @@
+<div class="modal-content">
+  <div class="modal-header p-2">
+    <h4 class="modal-title" id="exampleModalLabel">WorkQueue Details</h4>
+    <button
+      type="button"
+      class="close pr-5"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="card" *ngIf="IsWorkQueue == true">
+      <!-- Patient & Claim Details -->
+      <!-- Patint Details -->
+      <div
+        class="card-header p-2 d-block"
+        style="background-color: #e5f2ff; color: #00274e; font-weight: 600;"
+      >
+        <app-patient-banner *ngIf="lstpatientinfo != null"></app-patient-banner>
+      </div>
+      <!-- Patint Details -->
+
+      <!-- Claim Details -->
+      <div class="card-body p-2">
+        <app-claim-banner *ngIf="lstclaiminfo != null"></app-claim-banner>
+        <hr />
+        <app-status-banner *ngIf="lststatusinfo != null"></app-status-banner>
+      </div>
+
+      <!-- Claim Details -->
+      <!-- Patient & Claim Details -->
+    </div>
+
+    <div class="grid-wrapper">
+      <h4 class="mb-2 mt-4">Claim Lines</h4>
+      <kendo-grid
+        id="gridClaimlines"
+        [data]="ClaimlinesgridView"
+        style="width:100%"
+        [sortable]="true"
+        [sort]="Claimlinessort"
+        (sortChange)="sortClaimlinesChange($event)"
+        [selectable]="true"
+        style="height: 160px;"
+      >
+        <kendo-grid-column
+          field="dos"
+          title="DOS"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dos | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="charge"
+          title="CPT"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx1code"
+          title="Dx1"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx2code"
+          title="Dx2"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx3code"
+          title="Dx3"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dx4code"
+          title="Dx4"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="mod1code"
+          title="Mod1"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="mod2code"
+          title="Mod2"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="billed_amount"
+          title="Billed Amt"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="remainingbalance"
+          title="Ins.Due Amt"
+          width="5"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.ClaimlinesgridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+
+    <div class="grid-wrapper mt-4" *ngIf="IsWorkQueue == true">
+      <h4 class="mb-2">Workqueue History</h4>
+      <kendo-grid
+        id="gridHistory"
+        [data]="HistorygridView"
+        style="width:100%"
+        [sortable]="true"
+        [sort]="Historysort"
+        (sortChange)="sortHistoryChange($event)"
+        [selectable]="true"
+      >
+        <kendo-grid-column
+          field="type"
+          title="Type"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="description"
+          title="History"
+          width="150"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="date"
+          title="Date"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.date | date: "MM-dd-yyyy hh:mm:ss a" }}
+          </ng-template>
+        </kendo-grid-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.HistorygridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+  </div>
+</div>

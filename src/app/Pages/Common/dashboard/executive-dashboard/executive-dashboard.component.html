@@ -1,0 +1,474 @@
+<form [formGroup]="filterFormGroup">
+  <div class="row mb-4">
+    <!-- <div class="form-group col-md-12">
+      <b>Show All Practice: </b>
+      <kendo-switch formControlName="fcShowAllPractices"></kendo-switch>
+    </div> -->
+    <div class="form-group col-md-4 mb-0">
+      <label for="" class="form-label">
+        <strong class="text-danger">*</strong>Practice
+      </label>
+      <kendo-multiselect
+        class="msFilter inputLoader w-100"
+        id="ddlPractice"
+        [kendoMultiSelectSummaryTag]="1"
+        formControlName="fcPractice"
+        [data]="lstPractice"
+        [textField]="'client'"
+        [valueField]="'clientid'"
+        [valuePrimitive]="true"
+        [autoClose]="false"
+        [filterable]="true"
+        (filterChange)="handlePracticeFilter($event)"
+        [placeholder]="'All'"
+      >
+        <!-- (valueChange)="valueChange($event)"
+      (close)="close()" -->
+        <ng-template kendoMultiSelectItemTemplate let-dataItem>
+          <span class="pr-1">
+            <input
+              type="checkbox"
+              class="k-checkbox"
+              [checked]="isItemSelected(fbcPractice.value, dataItem.clientid)"
+          /></span>
+          <label class="k-checkbox-label">{{ dataItem.client }}</label>
+        </ng-template>
+        <ng-template kendoMultiSelectNoDataTemplate>
+          <h4>
+            <span class="k-icon k-i-warning"></span><br /><br />
+            No data here
+          </h4>
+        </ng-template>
+        <ng-template kendoMultiSelectTagTemplate let-dataItem>
+          <div
+            [title]="dataItem.client"
+            class="text-truncate text-left mb-0"
+            style="width: 150px"
+          >
+            {{ dataItem.client }}
+          </div>
+        </ng-template>
+        <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+          <span [title]="summaryTagSelectedValues(dataItems, 'client')"
+            >+{{ dataItems.length }}</span
+          >
+        </ng-template>
+      </kendo-multiselect>
+      <!-- <kendo-dropdownlist
+      id="ddlPractice"
+      class="w-100"
+      [data]="lstPractice"
+      textField="client"
+      [valuePrimitive]="true"
+      valueField="clientid"
+      [defaultItem]="PracticeDefaultValue"
+      filterable="true"
+      (filterChange)="handlePracticeFilter($event)"
+      (change)="onPracticeChange($event)"
+    >
+    </kendo-dropdownlist> -->
+    </div>
+
+    <div class="col-md-2 mt-auto">
+      <button
+        type="button"
+        kendoButton
+        [primary]="true"
+        id="btnApplyFilter"
+        (click)="applyFilter()"
+      >
+        Apply
+      </button>
+      <button
+        type="button"
+        class="ml-3"
+        kendoButton
+        (click)="clearFilter()"
+        id="btnClearFilter"
+      >
+        Clear Filter
+      </button>
+    </div>
+  </div>
+
+  <!-- <div class="row row-cards">
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.totalencounters }}</div>
+        <div class="text-muted mb-2">Total Encounters</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.newstatus }}</div>
+        <div class="text-muted mb-2">New</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.inprocess }}</div>
+        <div class="text-muted mb-2">In Process</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">
+          {{ practiceWiseCount.individualassigned }}
+        </div>
+        <div class="text-muted mb-2">Individual Assigned</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.pending }}</div>
+        <div class="text-muted mb-2">Pending</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.practicecompleted }}</div>
+        <div class="text-muted mb-2">Completed</div>
+      </div>
+    </div>
+  </div>
+</div> -->
+  <div class="row row-cards">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-status-start bg-info"></div>
+        <div class="d-flex align-items-center p-3">
+          <span class="stamp bg-info mr-3">
+            <em class="fas fa-file-medical-alt"></em>
+          </span>
+          <div>
+            <h4 class="m-0">{{ practiceWiseCount.totalencounters }}</h4>
+            <small class="text-muted">Total Orders</small>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="card">
+      <div class="card-status-start bg-warning"></div>
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.totalencounters }}</div>
+        <div class="text-muted mb-2">Total Orders</div>
+      </div>
+    </div> -->
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-status-start bg-primary"></div>
+        <div class="d-flex align-items-center p-3">
+          <span class="stamp bg-primary mr-3">
+            <em class="fas fa-file-medical-alt"></em>
+          </span>
+          <div>
+            <h4 class="m-0">{{ practiceWiseCount.pending }}</h4>
+            <small class="text-muted">Order Need Assistance</small>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="card">
+      <div class="card-status-start bg-primary"></div>
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.pending }}</div>
+        <div class="text-muted mb-2">Order Need Assistance</div>
+      </div>
+    </div> -->
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-status-start bg-success"></div>
+        <div class="d-flex align-items-center p-3">
+          <span class="stamp bg-success mr-3">
+            <em class="fas fa-file-medical-alt"></em>
+          </span>
+          <div>
+            <h4 class="m-0">{{ practiceWiseCount.practicecompleted }}</h4>
+            <small class="text-muted">Completed Orders</small>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="card">
+      <div class="card-status-start bg-success"></div>
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ practiceWiseCount.practicecompleted }}</div>
+        <div class="text-muted mb-2">Completed Orders</div>
+      </div>
+    </div> -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-status bg-primary"></div>
+        <div class="card-header pl-2 border-0 d-flex">
+          <h5 class="mb-0">Practice wise count</h5>
+          <div class="ml-auto mr-1">
+            <span style="font-size: smaller">
+              <em class="fas fa-circle text-primary mr-1"></em>
+              <i class="text-muted mr-2">Need Assistance Order</i>
+              <em class="fas fa-circle text-success mr-1"></em>
+              <i class="text-muted mr-3">Completed Order</i>
+            </span>
+            <input
+              placeholder="Search practice"
+              kendoTextBox
+              formControlName="fcSearchBy"
+              (input)="onFilter($event.target.value)"
+              [title]="fbcSearchBy.value.trim()"
+            />
+          </div>
+        </div>
+        <kendo-grid
+          class="w-100 filter-grid dashboard-grid"
+          style="max-height: 62vh"
+          [data]="executiveDashboardGridView"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="state.sort"
+          [filter]="state.filter"
+          [selectable]="true"
+          [pageable]="true"
+          [pageSize]="state.take"
+          [skip]="state.skip"
+          (pageChange)="pageChange($event)"
+          (dataStateChange)="dataStateChange($event)"
+        >
+          <!-- [filterable]="true"
+        [filter]="state.filter" -->
+          <kendo-grid-column
+            field="practicename"
+            title="Practice"
+            [width]="60"
+            [headerStyle]="{
+              'font-weight': 'bold'
+            }"
+            [filterable]="false"
+          >
+            <!-- <ng-template kendoGridFooterTemplate>Total</ng-template> -->
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+          field="practiceassigned"
+          title="Total"
+          [width]="30"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [class]="'text-center'"
+          [filterable]="false"
+        > -->
+          <!-- <ng-template kendoGridFooterTemplate let-column>
+            {{ sumStatusCount(column.field) }}
+          </ng-template> -->
+          <!-- </kendo-grid-column> -->
+          <!-- <kendo-grid-column
+          field="inprocess"
+          title="In Process"
+          [width]="25"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [class]="'text-center'"
+          [filterable]="false"
+        >
+          <ng-template kendoGridFooterTemplate let-column>
+            {{ sumStatusCount(column.field) }}
+          </ng-template>
+        </kendo-grid-column> -->
+          <!-- <kendo-grid-column
+          field="pending"
+          title="Need Assistance"
+          [width]="30"
+          [headerStyle]="{
+            'font-weight': 'bold',
+            'text-align': 'center'
+          }"
+          [class]="'text-center'"
+          [filterable]="false"
+        > -->
+          <!-- <ng-template kendoGridFooterTemplate let-column>
+            {{ sumStatusCount(column.field) }}
+          </ng-template> -->
+          <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            <div class="progress">
+              <div class="progress-bar bg-primary" role="progressbar" 
+              [ngStyle]="{'width':dataItem['practiceassigned']==0?0:(dataItem['pending']/dataItem['practiceassigned'])*100+'%'}"
+              
+              >
+                {{dataItem['pending']}}
+              </div>
+            </div>
+          </ng-template>
+        </kendo-grid-column> -->
+          <kendo-grid-column
+            field="practicecompleted"
+            title="Status"
+            [width]="70"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [class]="'text-center'"
+            [filterable]="false"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="small text-muted">
+                Completed {{ dataItem["practicecompleted"] }} out of
+                <b>{{ dataItem["practiceassigned"] }}</b>
+              </div>
+              <div class="progress">
+                <div
+                  class="progress-bar progress-bar-primary"
+                  role="progressbar"
+                  [ngStyle]="{
+                    width:
+                      dataItem['practiceassigned'] == 0
+                        ? 0
+                        : (dataItem['pending'] / dataItem['practiceassigned']) *
+                            100 +
+                          '%'
+                  }"
+                >
+                  <!-- [style.width]="(dataItem['pending']/dataItem['practiceassigned'])*100+'%'" -->
+                  {{ dataItem["pending"] }}
+                </div>
+                <!-- {{(dataItem["pending"]/dataItem["practiceassigned"])*100}} -->
+                <div
+                  class="progress-bar bg-success"
+                  role="progressbar"
+                  [ngStyle]="{
+                    width:
+                      dataItem['practiceassigned'] == 0
+                        ? 0
+                        : (dataItem['practicecompleted'] /
+                            dataItem['practiceassigned']) *
+                            100 +
+                          '%'
+                  }"
+                >
+                  <!-- [style.width]="(dataItem['practicecompleted']/dataItem['practiceassigned'])*100+'%'" -->
+                  {{ dataItem["practicecompleted"] }}
+                  <!-- <span  class="popOver" data-toggle="tooltip" data-placement="top" title="90%"> </span> -->
+                </div>
+              </div>
+            </ng-template>
+            <!-- <ng-template kendoGridFooterTemplate let-column>
+            {{ sumStatusCount(column.field) }}
+          </ng-template> -->
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="lastloginuser"
+            title="Last Login User"
+            [width]="50"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [sortable]="false"
+          >
+            <ng-template
+              kendoGridCellTemplate
+              let-dataItem
+              let-rowIndex="rowIndex"
+            >
+              <div *ngIf="dataItem.loader">
+                <div class="loader mx-auto"></div>
+              </div>
+              <div class="d-flex py-1 align-items-center">
+                <span
+                  *ngIf="dataItem.initials && dataItem.lastloginuser"
+                  class="avatar mr-2 rounded"
+                  [ngClass]="{
+                    'avatar-green': (rowIndex + 1) % 7 == 0,
+                    'avatar-orange': (rowIndex + 1) % 7 == 1,
+                    'avatar-blue': (rowIndex + 1) % 7 == 2,
+                    'avatar-pink': (rowIndex + 1) % 7 == 3,
+                    'avatar-purple': (rowIndex + 1) % 7 == 4,
+                    'avatar-aqua': (rowIndex + 1) % 7 == 5,
+                    'avatar-yellow': (rowIndex + 1) % 7 == 6
+                  }"
+                  >{{ dataItem.initials }}</span
+                >
+                <div class="flex-fill">
+                  <div class="font-weight-medium">
+                    {{ dataItem.lastloginuser }}
+                  </div>
+                  <div class="text-muted">
+                    {{
+                      dataItem.lastlogindate
+                        | date: "EEE LLL dd yyyy hh:mm:ss a"
+                    }}
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="contactname"
+            title="Contact Details"
+            [width]="60"
+            [headerStyle]="{
+              'font-weight': 'bold',
+              'text-align': 'center'
+            }"
+            [filterable]="false"
+            [sortable]="false"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div class="d-flex py-1 align-items-center">
+                <!-- <span
+                *ngIf="dataItem.contactinitials && dataItem.contactname"
+                class="avatar mr-2 bg-azure text-white"
+                ><label *ngIf="dataItem.contactname">{{
+                  dataItem.contactinitials
+                }}</label></span
+              > -->
+                <div class="flex-fill">
+                  <div class="font-weight-medium">
+                    {{ dataItem.contactname }}
+                  </div>
+                  <div class="text-muted" style="font-size: 0.77rem">
+                    <a
+                      href="mailto:{{ dataItem.contactemail }}"
+                      [title]="'Mail to: ' + dataItem.contactemail"
+                      ><em
+                        *ngIf="!!dataItem.contactemail"
+                        class="fas fa-envelope text-primary pointer mr-1"
+                      ></em></a
+                    >{{ dataItem.contactemail }}
+                  </div>
+                  <div class="text-muted" style="font-size: 0.77rem">
+                    <em
+                      *ngIf="dataItem.phoneno1 || dataItem.phoneno2"
+                      class="fas fa-phone text-success pointer mr-1"
+                    ></em>
+                    {{ dataItem.phoneno1 }}
+                    <label *ngIf="dataItem.phoneno2 && dataItem.phoneno1"
+                      >/</label
+                    >{{ dataItem.phoneno2 }}
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="loader" class="k-i-loading"></div>
+</form>

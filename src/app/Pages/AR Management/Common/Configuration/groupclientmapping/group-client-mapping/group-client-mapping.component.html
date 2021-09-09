@@ -1,0 +1,162 @@
+<div class="card">
+  <div class="card-header pl-2">
+    <h4 class="mb-0">Group Client Mapping</h4>
+    <div class="row ml-auto">
+      <div>
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#addEditGroupClientMappingModal"
+          (click)="onAddClick()"
+        >
+          Add Group Client Mapping
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body p-2" style="height: 72vh">
+    <div class="grid-wrapper">
+      <kendo-grid
+        [data]="groupClientMappingGridView"
+        style="max-height: 70vh"
+        class="w-100"
+        [pageSize]="pageSize"
+        [pageable]="true"
+        [skip]="pageSkip"
+        (pageChange)="onPageChange($event)"
+        [sortable]="{
+          mode: 'multiple'
+        }"
+        [sort]="sort"
+        (sortChange)="onSortChange($event)"
+        (edit)="onEditGroupClientMapping($event)"
+        [loading]="gridLoader"
+      >
+        <kendo-grid-column
+          field="groupname"
+          title="Group Name"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="mappingtypename"
+          title="Group Type"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="count"
+          title="No of Client"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="groupstatus"
+          title="Status"
+          width="20"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.groupstatus == true" class="text-success">
+              Active
+            </div>
+            <div *ngIf="dataItem.groupstatus == false" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="30"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editConfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <button
+              *ngIf="dataItem.groupstatus == false"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              title="Activate"
+              (click)="updateGroupClientMappingStatus(dataItem, true)"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.groupstatus == true"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              title="Deactivate"
+              (click)="updateGroupClientMappingStatus(dataItem, false)"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+            <button
+              kendoButton
+              title="Mapping Details"
+              data-toggle="modal"
+              data-target="#addEditGroupClientMappingModal"
+              (click)="onViewMappingDetails(dataItem)"
+            >
+              <i class="fe fe-info"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+        <ng-template kendoGridNoRecordsTemplate>
+          No records available.
+        </ng-template>
+      </kendo-grid>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addEditGroupClientMappingModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-add-edit-group-client-mapping
+      #addEditGroupClientMapping
+      (OnSaveGroupClientMapping)="onSaveGroupClientMapping($event)"
+    ></app-add-edit-group-client-mapping>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editConfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="'Do you want to edit group client mapping ?'"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->

@@ -1,0 +1,318 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Export</h4>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-filters
+          [CallingPage]="'OrderExport'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="text-right text-muted">
+          {{ totalElements }} records found
+        </div>
+        <kendo-grid
+          [data]="OrderGridView"
+          [height]="650"
+          class="w-100 wrap-grid"
+          [loading]="loadingOrderGrid"
+        >
+          <ng-template kendoGridToolbarTemplate>
+            <button
+              class="pull-right mr-1"
+              type="button"
+              (click)="exportToExcelLog()"
+              kendoGridExcelCommand
+            >
+              Export to Excel
+            </button>
+          </ng-template>
+          <kendo-grid-column
+            field="assignmenttype"
+            title=""
+            width="15"
+            class="text-center"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+            [sortable]="false"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <i
+                [title]="
+                  dataItem.assignmenttype == 1
+                    ? 'Group Assignment'
+                    : 'Individual Assignment'
+                "
+                class="fas"
+                [ngClass]="{
+                  'fa-user text-teal': dataItem.assignmenttype == 0,
+                  'fa-users text-cyan': dataItem.assignmenttype == 1
+                }"
+              ></i>
+              <i
+                class="fas ml-1"
+                [ngClass]="{
+                  'fa-file-pdf text-red':
+                    dataItem.encountersource?.toLowerCase() == 'rcm encounter',
+                  'fa-flask text-indigo':
+                    dataItem.encountersource?.toLowerCase() ==
+                    'biotech encounter'
+                }"
+                [title]="dataItem.encountersource"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            *ngIf="!isHidden('orderqueuegroupid')"
+            field="orderqueuegroupid"
+            title="Work Group #"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderyear"
+            title="Year"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderday"
+            title="Folder"
+            width="35"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordercategory"
+            title="Category"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientname"
+            title="Client"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="orderqueuegroupcode"
+            title="Accession #"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="assignedtoname"
+            title="Current User"
+            [filterable]="false"
+            width="38"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.assignedtoname }}">{{
+                dataItem.assignedtoname
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="status"
+            title="Current Status"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordersubstatus"
+            title="Sub-Status"
+            [filterable]="false"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.ordersubstatus }}">{{
+                dataItem.ordersubstatus
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="ordernote"
+            title="Note"
+            [filterable]="false"
+            width="60"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <span title="{{ dataItem.ordernote }}">{{
+                dataItem.ordernote
+              }}</span>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="comment"
+            title="Comment"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <!-- <kendo-grid-column
+            field="hl7present"
+            title="HL7"
+            width="20"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div
+                *ngIf="dataItem.hl7present"
+                class="text-success"
+                title="HL7 is present"
+              >
+                Yes
+              </div>
+            </ng-template>
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="clientbilling"
+            title="Client Billing"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <div
+                *ngIf="dataItem.clientbilling"
+                class="text-success"
+                title="Client billing is present"
+              >
+                Yes
+              </div>
+            </ng-template>
+          </kendo-grid-column> -->
+          <kendo-grid-column
+            field="documentcount"
+            title=""
+            [sortable]="false"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+            <ng-template kendoGridCellTemplate let-dataItem>
+              <!-- <a
+                [href]=""
+                (click)="onOpenViewdetails(dataItem)"
+                data-toggle="modal"
+                data-target="#viewdetailsModal"
+                class="text-info pointer view-btn pr-1"
+                >View</a
+              >
+              <span
+                *ngIf="dataItem.hl7present"
+                class="text-danger font-weight-bold pr-1"
+                title="HL7 is available"
+              >
+                HL7
+              </span>
+              <span
+                *ngIf="dataItem.clientbilling"
+                class="text-success"
+                title="Client billed encounter"
+              >
+                Client Billed
+              </span> -->
+              <i
+                (click)="onOpenViewdetails(dataItem)"
+                data-toggle="modal"
+                data-target="#viewdetailsModal"
+                class="fas fa-eye mr-2 pointer text-primary"
+                title="View"
+              ></i>
+              <i
+                *ngIf="dataItem.hl7present"
+                class="fas fa-notes-medical mr-2 text-orange"
+                title="HL7 is available"
+              ></i>
+              <i
+                *ngIf="dataItem.clientbilling"
+                class="fas fa-file-invoice-dollar text-success"
+                title="Client billed encounter"
+              ></i>
+            </ng-template>
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+          <kendo-grid-excel fileName="{{ exportFilename }}.xlsx">
+            <kendo-excelexport-column
+              field="encountersource"
+              title="Encounter Type"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderyear" title="Year">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="orderday" title="Folder">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordercategory" title="Category">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="clientname" title="Client">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="orderqueuegroupcode"
+              title="Accession #"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="assignedtoname"
+              title="Current User"
+            >
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="status" title="Current Status">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordersubstatus" title="Sub-Status">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="ordernote" title="Note">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="comment" title="Comment">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column field="hl7present" title="HL7">
+            </kendo-excelexport-column>
+            <kendo-excelexport-column
+              field="clientbilling"
+              title="Client Billing"
+            >
+            </kendo-excelexport-column>
+          </kendo-grid-excel>
+        </kendo-grid>
+      </div>
+    </div>
+    <!-- <div class="row mt-2">
+      <div class="ml-auto mr-3">{{ totalElements }} orders</div>
+    </div> -->
+    <!--View Details Model GRID---  -->
+    <div
+      class="modal bd-example-modal-lg"
+      data-backdrop="static"
+      data-keyboard="false"
+      id="viewdetailsModal"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-xl">
+        <app-order-details #OrderDetailsComponent></app-order-details>
+      </div>
+    </div>
+    <!--View Details Model -->
+  </div>
+</div>
+
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>

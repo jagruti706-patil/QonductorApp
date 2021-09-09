@@ -1,0 +1,555 @@
+<div class="modal-content">
+  <div class="modal-header p-2 pl-3">
+    <h5 class="modal-title">Generate Report</h5>
+    <button
+      type="button"
+      class="close pr-5"
+      (click)="onClose()"
+      data-dismiss="modal"
+      aria-label="Close"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <kendo-tabstrip #kendoTabstripTab>
+      <kendo-tabstrip-tab title="Main" selected="true">
+        <ng-template kendoTabContent>
+          <!-- <app-main-report></app-main-report> -->
+          <kendo-grid class="w-100" [data]="mainGridData" [hideHeader]="true">
+            <!-- <ng-template kendoGridToolbarTemplate>
+              <button
+                class="pull-right mr-1"
+                type="button"
+                kendoGridExcelCommand
+              >
+                Export to Excel
+              </button>
+              <button class="pull-right mr-1" type="button" kendoGridPDFCommand>
+                Export to pdf
+              </button>
+            </ng-template> -->
+            <kendo-grid-column>
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div class="row" id="mainReportId">
+                  <ng-container *ngIf="dataItem.folderAccessionsCountGridData">
+                    <div
+                      class="col-md-12"
+                      *ngFor="
+                        let item of dataItem.folderAccessionsCountGridData
+                      "
+                    >
+                      <div class="card">
+                        <div class="card-header pl-2 border-0">
+                          <h5 class="mb-0">
+                            <span class="mr-3">Date: {{ item.date }}</span
+                            ><span> Julian Date: {{ item.juliandate }}</span>
+                          </h5>
+                        </div>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Folder</th>
+                              <th>DocsVault File Count</th>
+                              <th>Unique Accession#</th>
+                              <th>Cover-sheet Count</th>
+                              <th>Qonductor Order Count</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              *ngFor="let ele of item.folderAccessionsCountData"
+                            >
+                              <td>{{ ele.folder }}</td>
+                              <td>{{ ele.docsvaultfilecount }}</td>
+                              <td>{{ ele.uniqueaccession }}</td>
+                              <td>{{ ele.coversheetcount }}</td>
+                              <td>{{ ele.qonductorordercount }}</td>
+                            </tr>
+                            <tr>
+                              <td><b>Total</b></td>
+                              <td>
+                                <b>
+                                  {{
+                                    getSumByFieldName(
+                                      item.folderAccessionsCountData,
+                                      "docsvaultfilecount"
+                                    )
+                                  }}</b
+                                >
+                              </td>
+                              <td>
+                                <b>
+                                  {{
+                                    getSumByFieldName(
+                                      item.folderAccessionsCountData,
+                                      "uniqueaccession"
+                                    )
+                                  }}</b
+                                >
+                              </td>
+                              <td>
+                                <b>
+                                  {{
+                                    getSumByFieldName(
+                                      item.folderAccessionsCountData,
+                                      "coversheetcount"
+                                    )
+                                  }}</b
+                                >
+                              </td>
+                              <td>
+                                <b>
+                                  {{
+                                    getSumByFieldName(
+                                      item.folderAccessionsCountData,
+                                      "qonductorordercount"
+                                    )
+                                  }}</b
+                                >
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="dataItem.orderByCategoryGridData">
+                    <div class="card">
+                      <div class="card-header pl-3 border-0">
+                        <h5 class="mb-0">Qonductor Order by Category</h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="row">
+                          <div
+                            class="col-md-4"
+                            *ngFor="
+                              let item of dataItem.orderByCategoryGridData
+                            "
+                          >
+                            <div class="card-header pl-2 border-0">
+                              <h5 class="mb-0">{{ item.folder }}</h5>
+                            </div>
+                            <table>
+                              <thead>
+                                <tr>
+                                  <th>Category</th>
+                                  <th>Count</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr
+                                  *ngFor="let ele of item.orderByCategoryData"
+                                >
+                                  <td>{{ ele.category }}</td>
+                                  <td>{{ ele.count }}</td>
+                                </tr>
+                                <tr>
+                                  <td><b>Total</b></td>
+                                  <td>
+                                    <b>{{
+                                      getSumByFieldName(
+                                        item.orderByCategoryData,
+                                        "count"
+                                      )
+                                    }}</b>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div class="col-md-12" *ngIf="dataItem.hl7DftsGridData">
+                    <div class="card">
+                      <div class="card-header pl-2 border-0">
+                        <h5 class="mb-0">HL7 DFT's</h5>
+                      </div>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Category</th>
+                            <th>Count</th>
+                            <th>Comments</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let item of dataItem.hl7DftsGridData">
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.count }}</td>
+                            <td>{{ item.comments }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <!-- <kendo-grid-excel fileName="Products.xlsx"></kendo-grid-excel>
+            <kendo-grid-pdf fileName="Products.pdf"> </kendo-grid-pdf> -->
+          </kendo-grid>
+        </ng-template>
+      </kendo-tabstrip-tab>
+      <kendo-tabstrip-tab title="Missing HL7 DFT's">
+        <ng-template kendoTabContent>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card border-0">
+                <div class="card-body p-2">
+                  <button
+                    *ngIf="calledFrom == 'submitreport'"
+                    type="button"
+                    class="mb-2"
+                    kendoButton
+                    [primary]="true"
+                    [disabled]="selectedMissingHL7Accessions.length == 0"
+                    data-toggle="modal"
+                    data-target="#updateReasonModal"
+                  >
+                    Update Status
+                  </button>
+                  <div class="card-header pl-2 border-0">
+                    <h5 class="mb-0">HL7 DFT's missing for Order</h5>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <kendo-grid
+                        class="w-100 filter-grid disableDropdownOperator wrap-grid"
+                        [data]="missingHL7AccessionGridView"
+                        [selectable]="selectableSettings"
+                        [kendoGridSelectBy]="selectedCallback"
+                        [selectedKeys]="selectedMissingHL7Accessions"
+                        [sortable]="true"
+                        [filterable]="true"
+                        [sort]="missingHL7AccessionGridState.sort"
+                        [filter]="missingHL7AccessionGridState.filter"
+                        (dataStateChange)="missingHL7DataStateChange($event)"
+                        [loading]="loader"
+                        (cellClick)="cellClickHandler($event)"
+                        (cellClose)="cellCloseHandler($event)"
+                        [navigable]="true"
+                      >
+                        <kendo-grid-checkbox-column
+                          *ngIf="calledFrom == 'submitreport'"
+                          width="5"
+                          showSelectAll="true"
+                        >
+                        </kendo-grid-checkbox-column>
+                        <kendo-grid-column
+                          width="10"
+                          field="srno"
+                          title="#"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                          [filterable]="false"
+                        >
+                          <ng-template
+                            kendoGridCellTemplate
+                            let-rowIndex="rowIndex"
+                          >
+                            {{ rowIndex + 1 }}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="20"
+                          field="folder"
+                          title="Folder"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="30"
+                          field="category"
+                          title="Category"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="30"
+                          field="accession"
+                          title="Accession #"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          *ngIf="calledFrom == 'submitreport'"
+                          width="30"
+                          field="comment"
+                          title="Comment"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                          [footerClass]="'text-right'"
+                          [filterable]="false"
+                        >
+                        </kendo-grid-column>
+                      </kendo-grid>
+                    </div>
+                    <div class="col-md-4">
+                      <kendo-grid
+                        class="w-100"
+                        [data]="categoryWiseAccessionCountsGridView"
+                        [sort]="categoryWiseAccessionCountGridState.sort"
+                        [sortable]="true"
+                      >
+                        <kendo-grid-column
+                          width="10"
+                          field="category"
+                          title="Category"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                          <ng-template kendoGridFooterTemplate let-column>
+                            Grand Total
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="10"
+                          field="countofaccession"
+                          title="Count of Accession #"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                          <ng-template kendoGridFooterTemplate let-column>
+                            {{
+                              getSumByFieldName(
+                                categoryWiseAccessionCountsGridView?.data,
+                                column.field
+                              )
+                            }}
+                          </ng-template>
+                        </kendo-grid-column>
+                      </kendo-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="modal fade bd-example-modal-lg"
+            data-backdrop="static"
+            data-keyboard="false"
+            id="updateReasonModal"
+            role="dialog"
+            aria-labelledby="buttonLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg">
+              <app-add-reason
+                [calledFrom]="'missinghl7'"
+                [selectedAccessions]="selectedMissingHL7Accessions"
+                (missingReportSaved)="onReportSaved($event)"
+              ></app-add-reason>
+            </div>
+          </div>
+        </ng-template>
+      </kendo-tabstrip-tab>
+      <kendo-tabstrip-tab title="Missing Order Document for HL7">
+        <ng-template kendoTabContent>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="card border-0">
+                <div class="card-body p-2">
+                  <button
+                    *ngIf="calledFrom == 'submitreport'"
+                    type="button"
+                    class="mb-2"
+                    kendoButton
+                    [primary]="true"
+                    [disabled]="selectedMissingDocAccessions.length == 0"
+                    data-toggle="modal"
+                    data-target="#updateReasonModal"
+                  >
+                    Update Status
+                  </button>
+                  <div class="small text-danger">
+                    Note: This includes files received till date 09/09/2020 We
+                    are not able to locate the order document for this HL7
+                    messages that we received.
+                  </div>
+                  <div class="small text-success">
+                    NOTE: We have now skipped orders prior to 343 from the
+                    report
+                  </div>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <kendo-grid
+                        class="w-100 filter-grid disableDropdownOperator wrap-grid"
+                        [data]="missingDocAccesssionGridView"
+                        [selectable]="selectableSettings"
+                        [kendoGridSelectBy]="selectedCallback"
+                        [selectedKeys]="selectedMissingDocAccessions"
+                        [sortable]="true"
+                        [filterable]="true"
+                        [sort]="missingDocAccessionGridState.sort"
+                        [filter]="missingDocAccessionGridState.filter"
+                        (dataStateChange)="missingDocDataStateChange($event)"
+                        [loading]="loader"
+                        (cellClick)="cellClickHandler($event)"
+                        (cellClose)="cellCloseHandler($event)"
+                        [navigable]="true"
+                      >
+                        <kendo-grid-checkbox-column
+                          *ngIf="calledFrom == 'submitreport'"
+                          width="5"
+                          showSelectAll="true"
+                        >
+                        </kendo-grid-checkbox-column>
+                        <kendo-grid-column
+                          width="10"
+                          field="srno"
+                          title="#"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                          [filterable]="false"
+                        >
+                          <ng-template
+                            kendoGridCellTemplate
+                            let-rowIndex="rowIndex"
+                          >
+                            {{ rowIndex + 1 }}
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="10"
+                          field="filter"
+                          title="Filter"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                          [filterable]="false"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="20"
+                          field="juliandate"
+                          title="Julian Date"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="30"
+                          field="accession"
+                          title="Accession #"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="30"
+                          field="hl7filename"
+                          title="HL7 Filename"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="30"
+                          field="hl7filenamedate"
+                          title="HL7 Filename Date"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          *ngIf="calledFrom == 'submitreport'"
+                          width="30"
+                          field="comment"
+                          title="Comment"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                          [footerClass]="'text-right'"
+                          [filterable]="false"
+                        >
+                        </kendo-grid-column>
+                      </kendo-grid>
+                    </div>
+                    <div class="col-md-4">
+                      <kendo-grid class="w-100" [data]="accessionRowLabels">
+                        <kendo-grid-column
+                          width="10"
+                          field="rowlabel"
+                          title="Row Labels"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                          <ng-template kendoGridFooterTemplate let-column>
+                            Grand Total
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="10"
+                          field="countofaccession"
+                          title="Count of Accession #"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                          <ng-template kendoGridFooterTemplate let-column>
+                            {{
+                              getSumByFieldName(
+                                accessionRowLabels,
+                                column.field
+                              )
+                            }}
+                          </ng-template>
+                        </kendo-grid-column>
+                      </kendo-grid>
+                      <hr class="mb-2" />
+                      <kendo-grid class="w-100" [data]="folderRowLabels">
+                        <kendo-grid-column
+                          width="10"
+                          field="rowlabel"
+                          title="Row Labels"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                          <ng-template kendoGridFooterTemplate let-column>
+                            Grand Total
+                          </ng-template>
+                        </kendo-grid-column>
+                        <kendo-grid-column
+                          width="10"
+                          field="countofaccession"
+                          title="Count of Accession #"
+                          [headerStyle]="{ 'font-weight': 'bold' }"
+                        >
+                          <ng-template kendoGridFooterTemplate let-column>
+                            {{
+                              getSumByFieldName(folderRowLabels, column.field)
+                            }}
+                          </ng-template>
+                        </kendo-grid-column>
+                      </kendo-grid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="modal fade bd-example-modal-lg"
+            data-backdrop="static"
+            data-keyboard="false"
+            id="updateReasonModal"
+            role="dialog"
+            aria-labelledby="buttonLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog modal-lg">
+              <app-add-reason
+                [calledFrom]="'missingdocument'"
+                [selectedAccessions]="selectedMissingDocAccessions"
+                (missingReportSaved)="onReportSaved($event)"
+              ></app-add-reason>
+            </div>
+          </div>
+        </ng-template>
+      </kendo-tabstrip-tab>
+    </kendo-tabstrip>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-sm btn-secondary"
+      (click)="resetAll()"
+      data-dismiss="modal"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-primary"
+      (click)="resetAll()"
+      data-dismiss="modal"
+    >
+      {{ calledFrom == "submitreport" ? "Submit" : "Generate" }}
+    </button>
+  </div>
+</div>

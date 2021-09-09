@@ -1,0 +1,484 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">AR Inventory</h4>
+  </div>
+  <div class="card-body">
+    <div class="row mb-3">
+      <!-- <button type="button" data-target="#assigntaskModal" data-toggle="modal" kendoButton [primary]="true"
+        (click)="onAssignClick()" [disabled]="isbtnAssignedtask">Assign Workitem</button>{{isAssignedtask}} -->
+      <!-- <button type="button" data-target="#button" data-toggle="modal" kendoButton [primary]="true"
+        (click)="onAssignClick()">Assign Workitem</button> -->
+      <button
+        *ngIf="ShowAssignWorkItem"
+        type="button"
+        data-target="#assigntaskModal"
+        data-toggle="modal"
+        kendoButton
+        [primary]="true"
+        (click)="onAssignClick()"
+        [disabled]="loadingWorkqueue"
+      >
+        Assign Workitem
+      </button>
+      <button
+        *ngIf="ShowDeferWorkItem"
+        type="button"
+        class="ml-3"
+        data-target="#deferredModal"
+        data-toggle="modal"
+        kendoButton
+        [primary]="true"
+        (click)="CheckWorkQueueSelected()"
+        [disabled]="loadingWorkqueue"
+      >
+        Defer Workitem
+      </button>
+    </div>
+    <div class="row mb-1">
+      <div *ngIf="WorkgroupGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+
+      <!-- <div *ngIf="sFilters != null && sFilters != undefined" class="ml-1">
+        Client :{{sFilters|json}}
+        <span *ngIf="sFilters.client == []">All</span>
+        <span *ngIf="sFilters.client != []">{{sFilters.client}}</span>
+      </div> -->
+
+      <i
+        *ngIf="!filterApplied && !loadingWorkqueue"
+        class="fe fe-filter ml-auto pointer"
+        title="Default filter is applied.."
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      ></i>
+      <i
+        *ngIf="filterApplied && !loadingWorkqueue"
+        class="fa fa-filter ml-auto pointer"
+        title="Some filter is applied.."
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      ></i>
+      <div class="collapse col-md-12 collapse-overlay" id="collapseExample">
+        <app-filters
+          [CallingPage]="'WorkQueue'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row">
+      <kendo-grid
+        [data]="WorkgroupGridView"
+        [skip]="WorkgroupSkip"
+        [height]="650"
+        style="width: 100%"
+        [selectable]="selectableSettings"
+        [kendoGridSelectBy]="selectedCallback"
+        [selectedKeys]="WorkGroupSelected"
+        [sortable]="true"
+        [sort]="WorkgroupSort"
+        (sortChange)="WorkgroupSortChange($event)"
+        [loading]="loadingWorkqueueGrid"
+      >
+        <kendo-grid-checkbox-column width="12" showSelectAll="true">
+        </kendo-grid-checkbox-column>
+        <!-- <kendo-grid-checkbox-column width="12" showSelectAll="true">
+          <ng-template kendoGridCellTemplate let-idx="rowIndex" let-dataItem>
+            <span *ngIf="dataItem.workitemstatus==false">
+              <input [kendoGridSelectionCheckbox]="idx" />
+            </span>
+          </ng-template>
+        </kendo-grid-checkbox-column> -->
+        <kendo-grid-column
+          *ngIf="!isHidden('nworkqueuegroupid')"
+          field="nworkqueuegroupid"
+          title="Work Group #"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="workitemstatus"
+          title=""
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <!-- {{dataItem.isassigned==false ? "asd":"qwe"}} -->
+            <span *ngIf="dataItem.workitemstatus"
+              ><i
+                title="Assigned. Open task present against this workitem"
+                class="fe fe-user-x"
+              ></i
+            ></span>
+            <!-- <i *ngIf="dataItem.isassigned=false" class="fe fe-user-x"></i> -->
+          </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column
+          field="sworkqueuegroupcode"
+          title="Work Group #"
+          width="100"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        > -->
+        <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            <a
+              [href]=""
+              (click)="onOpenViewdetails(dataItem)"
+              data-toggle="modal"
+              data-target="#viewdetailsModal"
+              >{{ dataItem.sworkqueuegroupcode }}</a
+            > -->
+        <!-- <a (click)="openWorkQueueDetails">{{dataItem.workgroupno}}</a> -->
+        <!-- </ng-template> -->
+        <!-- </kendo-grid-column> -->
+        <!-- <kendo-grid-column field="clientcode" title="Client Code" width="40" [headerStyle]="{'font-weight': 'bold'}">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{dataItem.sclientname}}">{{dataItem.clientcode}}</span>
+          </ng-template>
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          field="sclientname"
+          title="Client"
+          width="60"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.sclientname }}">{{
+              dataItem.sclientname
+            }}</span>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column
+          field="planname"
+          title="Insurance"
+          width="80"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <!-- <kendo-grid-column *ngIf="!isHidden('patientcode')" field="patientcode" title="Pat. Code" width="60"
+          [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column>
+        <kendo-grid-column *ngIf="!isHidden('accountcode')" field="accountcode" title="Account #" width="60"
+          [headerStyle]="{'font-weight': 'bold'}">
+        </kendo-grid-column> -->
+        <kendo-grid-column
+          field="patientcode"
+          title="Account #"
+          width="35"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimno"
+          title="Claim #"
+          width="40"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <a
+              [href]=""
+              (click)="onOpenViewdetails(dataItem)"
+              data-toggle="modal"
+              data-target="#viewdetailsModal"
+              class="text-info mr-3 pointer view-btn"
+              >{{ dataItem.claimno }}</a
+            >
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="dos"
+          title="DOS"
+          width="45"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.dos | date: "MM-dd-yyyy" }}
+          </ng-template>
+          <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.agentStatus}}
+          </ng-template> -->
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="remainingbalance"
+          title="Ins. Due"
+          width="40"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.remainingbalance }}
+            <!-- {{dataItem.remainingbalance|currency}} -->
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="claimage"
+          title="Claim Age"
+          type="number"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <!-- <ng-template kendoGridCellTemplate let-dataItem="dataItem.subclientsplitparameters[0]">
+              {{dataItem.automationStatus}}
+          </ng-template> -->
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="lastworkeddate"
+          title="QPM Last Worked"
+          width="70"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.lastworkeddate | date: "MM-dd-yyyy" }}
+          </ng-template>
+          <!-- <ng-template kendoGridCellTemplate let-dataItem>
+              {{dataItem.automationDate}}
+          </ng-template> -->
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="autolastworkeddate"
+          title="Follow-Up Date"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.nextactiondate | date: "MM-dd-yyyy" }}
+          </ng-template>
+          <!-- <ng-template kendoGridCellTemplate let-dataItem>
+              {{dataItem.automationDate}}
+          </ng-template> -->
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="automationstatus"
+          title="Auto Last Status"
+          width="50"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span title="{{ dataItem.autolastworkeddate }}">{{
+              dataItem.automationstatus
+            }}</span>
+          </ng-template>
+          <!-- <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.automationstatus=='Paid'" class="text-success">PAID</div>
+            <div *ngIf="dataItem.automationstatus=='Denied'" class="text-danger">DENIED</div>
+            <div *ngIf="dataItem.automationstatus=='In Progress'" class="text-info">INPROCESS</div>
+            <div *ngIf="dataItem.automationstatus=='Rejected'" class="text-secondary">REJECTED</div>
+            <div *ngIf="dataItem.automationstatus=='Pending'" class="text-warning">PENDING</div>
+            <div *ngIf="dataItem.automationstatus=='Pending'" class="text-warning">PENDING</div>
+          </ng-template> -->
+        </kendo-grid-column>
+        <ng-template kendoGridNoRecordsTemplate>
+          No records available.
+        </ng-template>
+      </kendo-grid>
+      <!-- <div
+        *ngIf="!this.WorkgroupGridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px; "
+      ></div> -->
+    </div>
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+<!--View Details Model GRID---  -->
+<div
+  class="modal bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-viewdetails #ViewdetailsComponent></app-viewdetails>
+  </div>
+</div>
+<!--View Details Model -->
+
+<!-- BUTTON -->
+<div
+  class="modal fade bd-example-modal-lg"
+  *ngIf="WorkGroupSelected.length > 0"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="assigntaskModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <!-- <div class="modal fade bd-example-modal-lg" *ngIf="WorkGroupSelected.length>0 && isAssignedtask!='true'" id="assigntaskModal"
+  role="dialog" aria-labelledby="buttonLabel" aria-hidden="true"> -->
+  <div class="modal-dialog modal-lg">
+    <!-- <app-workqueueassignment [workGroup]="WorkGroupSelected" (TaskAssigned)="TaskAssingmentDone($event)">
+    </app-workqueueassignment> -->
+    <app-workqueueassignment
+      (TaskAssigned)="TaskAssingmentDone($event)"
+      #WorkqueueassignmentComponent
+    >
+    </app-workqueueassignment>
+  </div>
+</div>
+<div
+  class="modal fade bd-example-modal-lg"
+  *ngIf="WorkGroupSelected.length > 0"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deferredModal"
+  role="dialog"
+  aria-labelledby="buttonLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <app-note-modal #DeferNoteComponent></app-note-modal>
+  </div>
+</div>
+<!-- <div class="black-box" *ngIf="loadingWorkqueue">
+  <div class="k-i-loading"></div>
+</div> -->
+
+<!-- <div *ngIf="WorkGroupSelected.length>0" data-backdrop="static" id="" class="modal fade bd-example-modal-lg" 
+    id="#button">
+  <div class="modal-dialog modal-lg">
+    <app-workqueueassignment [workGroup]="WorkGroupSelected" (TaskAssigned)="TaskAssingmentDone($event)">
+    </app-workqueueassignment>
+  </div>
+</div> -->
+
+<!--  -->
+
+<!-- <kendo-dialog id="viewWorkGroupModal" [width]="600" class="modal" title="Work Queue Details" *ngIf="openedView"
+  (close)="close()">
+  
+  <div class="card" style="width: 100%">
+  
+    <div class="card-body">
+      <div class="row ">
+        <div class="col-md-6">
+          <div class="row ">
+            <div class="col-md-6 font-weight-bold">Work Group # : </div>
+            <div class="col-md-6">{{workitem.workgroupno}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Client Code : </div>
+            <div class="col-md-6">{{workitem.clientcode}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Insurance : </div>
+            <div class="col-md-6">{{workitem.insurance}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Patient Code : </div>
+            <div class="col-md-6">{{workitem.patientcode}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Account # : </div>
+            <div class="col-md-6">{{workitem.accountcode}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Claim # : </div>
+            <div class="col-md-6">{{workitem.claimnumber}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">DOS : </div>
+            <div class="col-md-6">{{workitem.dos}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Insurance Due : </div>
+            <div class="col-md-6">{{workitem.insurancedue}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Claim Age in Days : </div>
+            <div class="col-md-6">{{workitem.claimageindays}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Last Worked : </div>
+            <div class="col-md-6">{{workitem.lastworked}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Automation Date : </div>
+            <div class="col-md-6">{{workitem.auto_lastworked}}</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6 font-weight-bold">Automation Status : </div>
+            <div class="col-md-6">{{workitem.auto_laststatus}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</kendo-dialog> -->
+
+<!-- <kendo-dialog id="AssingWorkGroupModal" [height]="420" [width]="700" class="modal" title="Assignment Work Group" *ngIf="openedAssign"
+  (close)="closeAssign()">
+  <app-workqueueassignment [workGroup]="WorkGroupSelected"></app-workqueueassignment>
+  <div class="row">
+      <button class="ml-auto" type="button" kendoButton [primary]="true" (click)="GenerateWorkitemAssignment()">Assign</button>
+      <button class=" ml-3" type="button" kendoButton (click) = "closeAssign()" >Cancel</button>
+   </div> -->
+<!-- <kendo-dialog-actions>
+      <button kendoButton (click)="onDeleteData()" [primary]="true">Assign</button>
+      <button kendoButton (click)="onDialogClose()">Cancel</button>
+    </kendo-dialog-actions> -->
+<!-- </kendo-dialog> -->

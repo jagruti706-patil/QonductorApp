@@ -1,0 +1,8 @@
+.view-btn:hover {
+  text-decoration: underline !important;
+}
+
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

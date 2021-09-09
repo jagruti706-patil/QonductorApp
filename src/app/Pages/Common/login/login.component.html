@@ -1,0 +1,187 @@
+<div class="limiter">
+  <div class="container-login100">
+    <div class="wrap-login100">
+      <form [formGroup]="LoginGroup" class="login100-form validate-form">
+        <div class="text-center mb-5">
+          <img src="./assets/img/Triarq_Logo.png" width="180" class="mb-3" />
+        </div>
+        <h2 class="text-center mb-3" style="color: #e7762c;">Qonductor</h2>
+        <div class="card">
+          <div class="card-header text-white bg-color">
+            <p class="login-text">LOGIN</p>
+          </div>
+          <div class="card-body p-5">
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <!-- <input type="text" class="form-control" formControlName="username"> -->
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  LoginUsername.invalid && LoginUsername.touched
+                "
+                formControlName="fcUsername"
+                type="text"
+                id="Username"
+                class="form-control"
+                autofocus
+              />
+              <div
+                *ngIf="LoginUsername.invalid && LoginUsername.touched"
+                class="text-danger"
+              >
+                <small
+                  *ngIf="LoginUsername.errors?.required"
+                  class="text-danger"
+                  >Username is required</small
+                >
+                <small *ngIf="LoginUsername.errors?.email" class="text-danger"
+                  >Username is not valid</small
+                >
+                <small
+                  *ngIf="LoginUsername.errors?.maxlength"
+                  class="text-danger"
+                  >Username allows 50 characters</small
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">
+                Password
+              </label>
+              <!-- <input type="password" class="form-control  " formControlName="password"> -->
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  LoginPassword.invalid && LoginPassword.touched
+                "
+                formControlName="fcPassword"
+                type="password"
+                id="Password"
+                class="form-control"
+              />
+              <div
+                *ngIf="LoginPassword.invalid && LoginPassword.touched"
+                class="text-danger"
+              >
+                <small *ngIf="LoginPassword.errors?.required"
+                  >Password is required.</small
+                >
+                <small *ngIf="LoginPassword.errors?.minlength"
+                  >Password must have 8 characters</small
+                >
+                <small *ngIf="LoginPassword.errors?.maxlength"
+                  >Password allows 50 characters</small
+                >
+              </div>
+            </div>
+            <!-- <div class="form-group">
+              <label class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" />
+                <span class="custom-control-label">Remember me</span>
+              </label>
+            </div> -->
+
+            <div>
+              <!-- <button type="submit" class="button">Sign in</button> -->
+              <button
+                class="button"
+                type="submit"
+                id="Login"
+                [disabled]="!validateLogin()"
+                (click)="onLogin()"
+              >
+                Sign in
+              </button>
+            </div>
+            <div class="text-center text-mute mt-4">
+              Don't have account yet? |
+              <a class="sign-up">Sign up</a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="login100-more"></div>
+    </div>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadinglogin">
+  <div class="k-i-loading"></div>
+</div>
+<!-- <div class="card">
+  <div class="card-body">
+    <form [formGroup]="LoginGroup">
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="form-label"><strong class="text-danger">*</strong>Username</label>
+          <input kendoTextBox [class.is-invalid]="LoginUsername.invalid && LoginUsername.touched"
+            formControlName="fcUsername" type="text" id="Username" class="form-control"
+            placeholder="RonaldJMartinez@dayrep.com" />
+          <div *ngIf="LoginUsername.invalid && LoginUsername.touched" class="text-danger">
+            <small *ngIf="LoginUsername.errors?.required" class="text-danger">Login is required</small>
+            <small *ngIf="LoginUsername.errors?.email" class="text-danger">Login is not valid</small>
+            <small *ngIf="LoginUsername.errors?.maxlength" class="text-danger">Login allows 50 characters</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+          <label class="form-label"><strong class="text-danger">*</strong>Password</label>
+          <input kendoTextBox [class.is-invalid]="LoginPassword.invalid && LoginPassword.touched"
+            formControlName="fcPassword" type="password" id="Password" class="form-control" />
+          <div *ngIf="LoginPassword.invalid && LoginPassword.touched" class="text-danger">
+            <small *ngIf="LoginPassword.errors?.required">Password is required.</small>
+            <small *ngIf="LoginPassword.errors?.minlength">Password must have 8 characters</small>
+            <small *ngIf="LoginPassword.errors?.maxlength">Password allows 50 characters</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row ml-auto">
+        <button class="ml-auto" type="button" id="Login" kendoButton [primary]="true" [disabled]="!validateLogin()"
+          (click)="onLogin()">Login</button>
+      </div>
+    </form>
+  </div>
+</div> -->
+
+<!-- Roles Model -->
+<!-- <div class="modal fade" data-backdrop="static" data-keyboard="false" id="addrolesModal" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="exampleModalLabel">Roles</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form [formGroup]="RoleGroup">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label">Roles</label>
+                <kendo-dropdownlist class="form-control form-control-sm" formControlName="fcRoles" id="ddRoles"
+                  [class.is-invalid]="Roles.invalid && Roles.touched" [data]="sMasterRoles" [textField]="'srolename'"
+                  [valueField]="'nroleid'" [(ngModel)]="selectedStatusValue" [valuePrimitive]="true"
+                  (ngModelChange)='onRolesChange($event)'>
+                </kendo-dropdownlist>
+                <div *ngIf="Roles.invalid && Roles.touched">
+                  <small *ngIf="Roles.errors?.required" class="text-danger">Roles is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-sm" id="SelectRole" [disabled]="!validateRoles()"
+          (click)="saveRoles()" data-dismiss="modal">Save</button>
+      </div>
+    </div>
+  </div>
+</div> -->
+<!-- Roles Model -->

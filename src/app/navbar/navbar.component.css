@@ -1,0 +1,106 @@
+.nav-tabs .nav-link.active {
+  border: none !important;
+}
+
+.logo-text {
+  position: absolute;
+  top: 10px;
+  font-weight: normal;
+  font-size: 22px;
+}
+
+.header-brand-img {
+  /* height: 2rem; */
+  line-height: 2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  width: 180px;
+  height: auto;
+}
+
+.second-menu {
+  display: none;
+}
+
+.menu:hover .second-menu {
+  display: block;
+}
+
+/* Navbar hover */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  top: 35px;
+}
+
+.badge {
+  padding: 5px 17px !important;
+  font-size: 13px;
+}
+
+/* Animated Pulse Button */
+
+.pulse-btn {
+  animation: glowing 1500ms infinite;
+}
+
+@keyframes glowing {
+  0% {
+    background-color: #fd9644;
+    box-shadow: 0 0 3px #fd9644;
+  }
+  50% {
+    background-color: #e76800;
+    box-shadow: 0 0 20px #e76800;
+  }
+  100% {
+    background-color: #fd9644;
+    box-shadow: 0 0 3px #fd9644;
+  }
+}
+
+/* End */
+
+.close-icon {
+  position: absolute;
+  top: -10px;
+  right: -9px;
+  z-index: 1000;
+}
+
+/* Animated Search box */
+
+.inputsearch {
+  width: 130px;
+  -webkit-transition: 0.4s ease-in-out;
+  transition: 0.4s ease-in-out;
+}
+
+.inputsearch:focus {
+  width: 30%;
+}
+
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+  position: absolute;
+  /* z-index: 2; */
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
+}

@@ -1,0 +1,193 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">View Task</h4>
+  </div>
+  <div class="card-body">
+    <form [formGroup]="DropDownGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Agent
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcRepName"
+              id="ddAgents"
+              [class.is-invalid]="RepName.invalid && RepName.touched"
+              [data]="lstClients"
+              textField="agentname"
+              valueField="agentid"
+              [defaultItem]="AgentDefaultValue"
+              [valuePrimitive]="true"
+              [disabled]="loadingviewtask"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="RepName.invalid && RepName.touched">
+              <small *ngIf="RepName.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Status
+            </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              formControlName="fcTaskStatus"
+              id="ddStatus"
+              [class.is-invalid]="TaskStatus.invalid && TaskStatus.touched"
+              [data]="sTaskStatus"
+              textField="text"
+              valueField="value"
+              [(ngModel)]="TaskDefaultStatusValue"
+              [valuePrimitive]="true"
+              [disabled]="loadingviewtask"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="TaskStatus.invalid && TaskStatus.touched">
+              <small *ngIf="TaskStatus.errors?.required" class="text-danger"
+                >Status is required</small
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <div class="row mb-1">
+      <div *ngIf="ViewTaskGridView != undefined">
+        {{ displaytotalrecordscount }} records found
+      </div>
+    </div>
+
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridViewTaskdetails"
+        [data]="ViewTaskGridView"
+        style="width:100%"
+        [height]="350"
+        [sortable]="true"
+        [sort]="ViewTaskSort"
+        (sortChange)="sortAgentChange($event)"
+        [selectable]="true"
+        [loading]="loadingviewtaskGrid"
+      >
+        <kendo-grid-column
+          field="staskcode"
+          title="Task Code"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sassignedtousername"
+          title="Agent"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sworkqueuegroupcode"
+          title="Work Group#"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="modifiedon"
+          title="Date"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.modifiedon | date: "MM-dd-yyyy hh:mm:ss a" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          title="Is Synced"
+          width="4"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.bistasksyncinqpm == true">
+              TRUE
+            </div>
+            <div *ngIf="dataItem.bistasksyncinqpm == false">
+              FALSE
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          width="2"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="View Details"
+              data-toggle="modal"
+              data-target="#viewtaskdetailsModal"
+              (click)="
+                OnViewDetails(dataItem.ntaskid, dataItem.nworkqueuegroupid)
+              "
+            >
+              <i class="fe fe-info"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <!-- <div *ngIf="!this.ViewTaskGridView" class="k-icon k-i-loading" style="font-size: 64px; ">
+      </div> -->
+    </div>
+
+    <div class="row mt-2">
+      <button
+        id="btnprevious"
+        class="btn btn-secondary btn-sm float-left mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickPrevious()"
+        [disabled]="Ispreviousdisabled"
+      >
+        Previous
+      </button>
+      <button
+        id="btnnext"
+        class="btn btn-primary btn-sm float-right mr-2"
+        kendoButton
+        [primary]="true"
+        (click)="onClickNext()"
+        [disabled]="Isnextdisabled"
+      >
+        Next
+      </button>
+
+      <div class="ml-auto">
+        {{ displaycurrentpages }} of {{ displaytotalpages }} pages
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade bd-example-modal-lg"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="viewtaskdetailsModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <app-view-task-details
+      (OutputViewTaskDetailResult)="OutputViewTaskDetailResult($event)"
+      #ViewTaskdetailsComponent
+    ></app-view-task-details>
+  </div>
+</div>

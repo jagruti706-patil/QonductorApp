@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-3 border-right">
+    <span class="mb-0">
+      {{PatientDetails.patientlname}} {{PatientDetails.patientfname}}
+    </span>
+  </div>
+  <div class="col-md-3 border-right">
+    <small class="mr-2 text-muted">DOB</small>
+    <span class="mb-0">{{PatientDetails.patientdob| date:'MM-dd-yyyy'}}</span>
+  </div>
+  <div class="col-md-3 border-right">
+    <small class="mr-2 text-muted">Gender</small>
+    <span class="mb-0">{{PatientDetails.patientgender}}</span>
+  </div>
+  <div class="col-md-3">
+    <small class="mr-2 text-muted">Code</small>
+    <span class="mb-0">{{PatientDetails.patientcode}}</span>
+  </div>
+    <!-- Status<span class="font-weight-bold ml-1 mr-2">{{PatientDetails.patientstatus}}</span> -->
+</div>
+<!-- <div class="row">
+  <div class="col-md-6"><span class="font-weight-bold">Code </span>{{PatientDetails.patientcode}}</div>
+  <div class="col-md-6"><span class="font-weight-bold">Name </span>{{PatientDetails.patientfname}} {{PatientDetails.patientlname}}</div>
+</div>
+<div class="row">
+    <div class="col-md-6"><span class="font-weight-bold">DOB </span>{{PatientDetails.patientdob}}</div>
+    <div class="col-md-6"><span class="font-weight-bold">Gender </span>{{PatientDetails.patientgender}}</div>
+  </div>
+<div class="row">
+    <div class="col-md-6"><span class="font-weight-bold">Status </span>{{PatientDetails.patientstatus}}</div>
+    <div class="col-md-6"><span class="font-weight-bold"></span></div>
+</div> -->

@@ -1,0 +1,304 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4
+      class="modal-title mb-0"
+      id="exampleModalLabel"
+      *ngIf="newClientConfiguration"
+    >
+      Add Client
+    </h4>
+    <h4
+      class="modal-title mb-0"
+      id="exampleModalLabel"
+      *ngIf="!newClientConfiguration"
+    >
+      Update Client
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="AddClientGroup">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">* </strong>Client Code</label
+            >
+            <input
+              kendoTextBox
+              [class.is-invalid]="clientCode.invalid && clientCode.touched"
+              formControlName="fcClientCode"
+              type="text"
+              id="clientCode"
+              class="form-control form-control-sm"
+              readonly
+            />
+            <div
+              *ngIf="submitted || (clientCode.invalid && clientCode.touched)"
+            >
+              <small *ngIf="!!clientCode.errors?.required" class="text-danger"
+                >Code is required</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>QLive Date
+            </label>
+            <kendo-datepicker
+              id="dtqliveDate"
+              formControlName="fcQlivedate"
+              [(value)]="qliveDate"
+              (valueChange)="onDateChange($event)"
+            >
+            </kendo-datepicker>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>AR Start Date
+            </label>
+            <kendo-datepicker
+              id="dtarstartDate"
+              formControlName="fcStartdate"
+              [(value)]="arstartDate"
+              (valueChange)="onDateChange($event)"
+            >
+            </kendo-datepicker>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client Name
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="clientName.invalid && clientName.touched"
+              formControlName="fcClientName"
+              type="text"
+              id="clientName"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="submitted || (clientName.invalid && clientName.touched)"
+            >
+              <small *ngIf="!!clientName.errors?.required" class="text-danger"
+                >Client name is required</small
+              >
+              <small *ngIf="!!clientName.errors?.maxlength" class="text-danger"
+                >Client name allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Address
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="
+                clientAddress.invalid && clientAddress.touched
+              "
+              formControlName="fcClientAddress"
+              type="text"
+              id="clientAddress"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (clientAddress.invalid && clientAddress.touched)
+              "
+            >
+              <small *ngIf="clientAddress.errors?.required" class="text-danger"
+                >Address is required</small
+              >
+              <small *ngIf="clientAddress.errors?.maxlength" class="text-danger"
+                >Address allows 100 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>AUSID
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="AUSID.invalid && AUSID.touched"
+              formControlName="fcAUSID"
+              type="text"
+              id="AUSID"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (AUSID.invalid && AUSID.touched)">
+              <small *ngIf="!!AUSID.errors?.required" class="text-danger"
+                >AUSID is required</small
+              >
+              <small *ngIf="!!AUSID.errors?.maxlength" class="text-danger"
+                >AUSID allows 10 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Database Name
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="DatabaseName.invalid && DatabaseName.touched"
+              formControlName="fcDatabaseName"
+              type="text"
+              id="DatabaseName"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="
+                submitted || (DatabaseName.invalid && DatabaseName.touched)
+              "
+            >
+              <small *ngIf="!!DatabaseName.errors?.required" class="text-danger"
+                >Database name is required</small
+              >
+              <small
+                *ngIf="!!DatabaseName.errors?.maxlength"
+                class="text-danger"
+                >Database name allows 50 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">TIN </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="TIN.invalid && TIN.touched"
+              formControlName="fcTIN"
+              type="text"
+              id="TIN"
+              class="form-control form-control-sm"
+              maxlength="20"
+            />
+            <div *ngIf="submitted || (TIN.invalid && TIN.touched)">
+              <small *ngIf="TIN.errors?.maxlength" class="text-danger"
+                >TIN allows 20 characters</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">NPI </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="NPI.invalid && NPI.touched"
+              formControlName="fcNPI"
+              type="text"
+              id="NPI"
+              class="form-control form-control-sm"
+              maxlength="15"
+            />
+            <div *ngIf="submitted || (NPI.invalid && NPI.touched)">
+              <small *ngIf="!!NPI.errors?.maxlength" class="text-danger"
+                >NPI allows 15 characters</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <label class="form-label">
+            <strong class="text-danger">*</strong>
+            Client Service
+          </label>
+        </div>
+      </div>
+    </form>
+
+    <kendo-grid
+      [data]="clientServiceData"
+      class="w-100"
+      [loading]="loadingGrid"
+    >
+      <kendo-grid-column
+        field="servicecode"
+        title="Code"
+        width="20"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="servicename"
+        title="Name"
+        width="40"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="servicedescription"
+        title="Description"
+        width="60"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="clientservicestatus"
+        title="Status"
+        width="30"
+        [headerStyle]="{ 'font-weight': 'bold' }"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <kendo-switch
+            [(ngModel)]="dataItem.clientservicestatus"
+            (ngModelChange)="switchChange($event, dataItem)"
+          ></kendo-switch>
+        </ng-template>
+      </kendo-grid-column>
+    </kendo-grid>
+    <div *ngIf="submitted && !validateClientServices()">
+      <small class="text-danger"
+        >Please switch on at least one client service</small
+      >
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      id="AddClient"
+      (click)="saveClient()"
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div class="black-box" *ngIf="loadingClient">
+  <div class="k-i-loading"></div>
+</div>

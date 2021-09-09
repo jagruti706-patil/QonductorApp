@@ -1,0 +1,15 @@
+.button-secondary.active {
+  color: #fff;
+  background-color: #fc7a12;
+  border-color: #fc7305;
+}
+.button-secondary.completed {
+  color: #fff;
+  background-color: red;
+  border-color: red;
+}
+.button-secondary {
+  background-color: #e6e5e5;
+  border-color: rgba(0, 15, 36, 0.12);
+  color: #495057;
+}

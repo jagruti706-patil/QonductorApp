@@ -1,0 +1,444 @@
+<div class="row mt-4">
+  <div class="card col-2 p-0">
+    <div>
+      <div class="card-header bg-header">
+        <h4 class="mb-0 text-white">Configurations</h4>
+      </div>
+      <div class="card-body p-0 o-auto" style="height: 78vh">
+        <div
+          class="nav flex-column nav-pills"
+          id="v-pills-tab"
+          role="tablist"
+          aria-orientation="vertical"
+        >
+          <a
+            *ngIf="ShowClientConfiguration"
+            class="nav-link"
+            id="v-pills-client-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-client"
+            aria-selected="true"
+            routerLink="/Configuration/client"
+            routerLinkActive="active"
+            >Client</a
+          >
+          <a
+            *ngIf="ShowInterfaceConfiguration"
+            class="nav-link"
+            id="v-pills-interface-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-interface"
+            aria-selected="true"
+            routerLink="/Configuration/interfaces"
+            routerLinkActive="active"
+            >Client Interface</a
+          >
+          <a
+            *ngIf="ShowClientLoginsConfiguration"
+            class="nav-link"
+            id="v-pills-clientlogin-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-clientlogin"
+            aria-selected="false"
+            routerLink="/Configuration/clientlogins"
+            routerLinkActive="active"
+            >Client Logins</a
+          >
+          <a
+            *ngIf="ShowPayerConfiguration"
+            class="nav-link"
+            id="v-pills-payer-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-payer"
+            aria-selected="false"
+            routerLink="/Configuration/payer"
+            routerLinkActive="active"
+            >Payer</a
+          >
+          <a
+            *ngIf="ShowPayerCrosswalkConfiguration"
+            class="nav-link"
+            id="v-pills-payercrosswalk-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-payercrosswalk"
+            aria-selected="false"
+            routerLink="/Configuration/payercrosswalk"
+            routerLinkActive="active"
+            >Payer Cross Walk</a
+          >
+          <a
+            *ngIf="ShowNoteTemplateConfiguration"
+            class="nav-link"
+            id="v-pills-notetemplate-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-notetemplate"
+            aria-selected="false"
+            routerLink="/Configuration/notetemplate"
+            routerLinkActive="active"
+            >Note Template</a
+          >
+          <a
+            *ngIf="ShowStatusConfiguration"
+            class="nav-link"
+            id="v-pills-status-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-status"
+            aria-selected="false"
+            routerLink="/Configuration/status"
+            routerLinkActive="active"
+            >Status</a
+          >
+          <a
+            *ngIf="ShowSubStatusConfiguration"
+            class="nav-link"
+            id="v-pills-substatus-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-substatus"
+            aria-selected="false"
+            routerLink="/Configuration/substatus"
+            routerLinkActive="active"
+            >Sub-Status</a
+          >
+          <a
+            *ngIf="ShowActionConfiguration"
+            class="nav-link"
+            id="v-pills-actions-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-actions"
+            aria-selected="false"
+            routerLink="/Configuration/actions"
+            routerLinkActive="active"
+            >Actions</a
+          >
+          <a
+            *ngIf="ShowErrorTypeConfiguration"
+            class="nav-link"
+            id="v-pills-errortype-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-errortype"
+            aria-selected="false"
+            routerLink="/Configuration/errortype"
+            routerLinkActive="active"
+            >Error Type</a
+          >
+          <a
+            *ngIf="ShowAutomationErrorConfiguration"
+            class="nav-link"
+            id="v-pills-automation-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-automation"
+            aria-selected="false"
+            routerLink="/Configuration/automation"
+            routerLinkActive="active"
+            >Automation Error</a
+          >
+
+          <a
+            *ngIf="ShowGroupClientMapping"
+            class="nav-link"
+            id="v-pills-groupclientmapping-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-groupclientmapping"
+            aria-selected="true"
+            routerLink="/Configuration/groupclientmapping"
+            routerLinkActive="active"
+            >Group Client Mapping</a
+          >
+          <a
+            *ngIf="ShowClientProviderMapping"
+            class="nav-link"
+            id="v-pills-clientprovidermapping-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-clientprovidermapping"
+            aria-selected="true"
+            routerLink="/Configuration/practicemapping"
+            routerLinkActive="active"
+            >Practice Mapping</a
+          >
+          <a
+            *ngIf="ShowClientUserMappingConfiguration"
+            class="nav-link"
+            id="v-pills-clientusermapping-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-clientusermapping"
+            aria-selected="false"
+            routerLink="/Configuration/clientusermapping"
+            routerLinkActive="active"
+            >Client User Mapping</a
+          >
+          <a
+            *ngIf="ShowQsuiteUserMappingConfiguration"
+            class="nav-link"
+            id="v-pills-qsuiteusermapping-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-qsuiteusermapping"
+            aria-selected="false"
+            routerLink="/Configuration/qsuiteusermapping"
+            routerLinkActive="active"
+            >Qsuite User Mapping</a
+          >
+          <a
+            *ngIf="ShowFTPDetailsConfiguration"
+            class="nav-link"
+            id="v-pills-ftpdetails-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-ftpdetails"
+            aria-selected="false"
+            routerLink="/Configuration/ftpdetails"
+            routerLinkActive="active"
+            >FTP Details</a
+          >
+          <a
+            *ngIf="ShowFollowupActionConfiguration"
+            class="nav-link"
+            id="v-pills-followup-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-followup"
+            aria-selected="false"
+            routerLink="/Configuration/followup"
+            routerLinkActive="active"
+            >Follow-up Actions</a
+          >
+          <a
+            *ngIf="ShowMailConfigurationConfiguration"
+            class="nav-link"
+            id="v-pills-followup-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-followup"
+            aria-selected="false"
+            routerLink="/Configuration/mail"
+            routerLinkActive="active"
+            >Mail Configuration</a
+          >
+          <a
+            *ngIf="ShowInventoryRuleConfiguration"
+            class="nav-link"
+            id="v-pills-followup-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-followup"
+            aria-selected="false"
+            routerLink="/Configuration/inventoryrules"
+            routerLinkActive="active"
+            >Inventory Rules</a
+          >
+
+          <!-- ---------------------------------------- -->
+
+          <a
+            *ngIf="ShowEdocsManagerConfiguration"
+            class="nav-link"
+            id="v-pills-followup-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-followup"
+            aria-selected="false"
+            routerLink="/Configuration/docsvault"
+            routerLinkActive="active"
+            >Edocs Manager</a
+          >
+          <a
+            *ngIf="ShowOrderSubStatusConfiguration"
+            class="nav-link"
+            id="v-pills-followup-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-followup"
+            aria-selected="false"
+            routerLink="/Configuration/ordersubstatus"
+            routerLinkActive="active"
+            >Encounter Sub-Status</a
+          >
+          <a
+            *ngIf="ShowOrderNoteConfiguration"
+            class="nav-link"
+            id="v-pills-followup-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-followup"
+            aria-selected="false"
+            routerLink="/Configuration/ordernote"
+            routerLinkActive="active"
+            >Encounter Note</a
+          >
+
+          <!-- ======================================= -->
+          <a
+            class="nav-link"
+            id="v-pills-smartassignment-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-smartassignment"
+            aria-selected="false"
+            routerLink="/Configuration/smartassignment"
+            routerLinkActive="active"
+            hidden
+            >Smart Assignment</a
+          >
+          <a
+            class="nav-link"
+            id="v-pills-production-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-production"
+            aria-selected="false"
+            routerLink="/Configuration/productionconfiguration"
+            routerLinkActive="active"
+            hidden
+            >Production</a
+          >
+          <a
+            class="nav-link"
+            id="v-pills-announcement-tab"
+            data-toggle="pill"
+            href="#v-pills-tabContent"
+            role="tab"
+            aria-controls="v-pills-announcement"
+            aria-selected="false"
+            routerLink="/Configuration/announcement"
+            routerLinkActive="active"
+            hidden
+            >Announcement</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-10">
+    <div class="card" style="height: 84vh; overflow-y: auto">
+      <div class="card-body">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-10">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-pills-client" role="tabpanel" aria-labelledby="v-pills-client-tab">
+    
+        <router-outlet></router-outlet>
+      </div>
+      <div class="tab-pane fade" id="v-pills-pages" role="tabpanel" aria-labelledby="v-pills-pages-tab">
+        <div class="card">
+          <div class="card-header ">
+            Pages
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="v-pills-payercrossuser" role="tabpanel"
+        aria-labelledby="v-pills-payercrossuser-tab">
+        <div class="card">
+          <div class="card-header ">
+            Payer Cross User
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="v-pills-clientlogin" role="tabpanel" aria-labelledby="v-pills-clientlogin-tab">
+        <div class="card">
+          <div class="card-header ">
+            Client Logins
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="v-pills-production" role="tabpanel" aria-labelledby="v-pills-production-tab">
+        <div class="card">
+          <div class="card-header ">
+            Production
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="v-pills-smallassignment" role="tabpanel"
+        aria-labelledby="v-pills-smallassignment-tab">
+        <div class="card">
+          <div class="card-header ">
+            Small Assignment
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="v-pills-announcement" role="tabpanel" aria-labelledby="v-pills-announcement-tab">
+        <div class="card">
+          <div class="card-header ">
+            Announcement
+          </div>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="v-pills-notetemplate" role="tabpanel" aria-labelledby="v-pills-notetemplate-tab">
+        <app-notetemplate></app-notetemplate>
+      </div>
+      <div class="tab-pane fade" id="v-pills-status" role="tabpanel" aria-labelledby="v-pills-status-tab">
+        <app-status></app-status>
+      </div>
+      <div class="tab-pane fade" id="v-pills-substatus" role="tabpanel" aria-labelledby="v-pills-substatus-tab">
+        <app-substatus></app-substatus>
+      </div>
+      <div class="tab-pane fade" id="v-pills-actions" role="tabpanel" aria-labelledby="v-pills-actions-tab">
+        <app-actions></app-actions>
+      </div>
+    </div>
+  </div> -->
+</div>
+
+<!-- 
+<div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+      <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
+      <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+      <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+      <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+    </div>
+  </div>
+  <div class="col-9">
+    <div class="tab-content" id="v-pills-tabContent">
+      <div class="tab-pane fade show active" id="v-pills-home" 
+      role="tabpanel" aria-labelledby="v-pills-home-tab">Home
+    </div>
+      <div class="tab-pane fade" id="v-pills-profile" 
+      role="tabpanel" aria-labelledby="v-pills-profile-tab">profile</div>
+      <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">...</div>
+      <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+    </div>
+  </div>
+</div> -->

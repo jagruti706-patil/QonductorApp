@@ -1,0 +1,464 @@
+<div *ngIf="MyTaskCardShow" class="row row-cards">
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ AR_TodayAssignedTask }}</div>
+        <!-- Todays assign task -->
+        <div class="text-muted mb-2">Today Assinged Tasks</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ AR_TodayTotalAR }}</div>
+        <div class="text-muted mb-2">Today Total AR</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ AR_PendingTask }}</div>
+        <!-- Total Pending task -->
+        <div class="text-muted mb-2">Pending Tasks</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ AR_PendingTaskAR }}</div>
+        <!-- daily completed task -->
+        <div class="text-muted mb-2">Pending Total AR</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ AR_OverdueTask }}</div>
+        <div class="text-muted mb-2">Overdue Task</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-sm-4 col-lg-2">
+    <div class="card">
+      <div class="card-body p-3 text-center">
+        <div class="h4 m-0">{{ AR_HighPriorityAR }}</div>
+        <div class="text-muted mb-2">High Priority Task AR</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="ClientFilterShow">
+  <form [formGroup]="DropDownGroup">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label class="form-label"
+            ><strong class="text-danger">*</strong>Client
+          </label>
+          <kendo-dropdownlist
+            class="form-control"
+            formControlName="fcClientName"
+            id="ddClients"
+            [class.is-invalid]="fbcClientName.invalid && fbcClientName.touched"
+            [data]="lstClients"
+            textField="clientcodename"
+            valueField="nclientid"
+            [defaultItem]="ClientDefaultValue"
+            [valuePrimitive]="true"
+          >
+          </kendo-dropdownlist>
+          <div *ngIf="fbcClientName.invalid && fbcClientName.touched">
+            <small *ngIf="!!fbcClientName.errors?.required" class="text-danger"
+              >Client is required</small
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="ManagerCardShow" class="row">
+  <div class="col-sm-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-blue mr-3">
+          <em class="fa fa-institution"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_netWorkItem }}</h4>
+          <small class="text-muted">Net Work Items</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-blue mr-3">
+          <em class="fe fe-dollar-sign"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_netTotalAR }}</h4>
+          <small class="text-muted">Net Total AR</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp  bg-green mr-3">
+          <em class="fa fa-institution"></em>
+        </span>
+        <div>
+          <h4 class="m-0">
+            {{ MGR_WorkItem }}
+          </h4>
+          <small class="text-muted">Work Items</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp  bg-green mr-3">
+          <em class="fe fe-dollar-sign"></em>
+        </span>
+        <div>
+          <h4 class="m-0">
+            {{ MGR_TotalAR }}
+          </h4>
+          <small class="text-muted">Total AR</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-red mr-3">
+          <em class="fa fa-institution"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_deferWorkItem }}</h4>
+          <small class="text-muted">Defer Work Items</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-red mr-3">
+          <em class="fe fe-dollar-sign"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_deferTotalAR }}</h4>
+          <small class="text-muted">Defer Total AR</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp  bg-red mr-3">
+          <em class="fa fa-institution"></em>
+        </span>
+        <div>
+          <h4 class="m-0">
+            {{ MGR_UntouchWorkItem }}
+          </h4>
+          <small class="text-muted">Untouched Work Items</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp  bg-red mr-3">
+          <em class="fe fe-pie-chart"></em>
+        </span>
+        <div>
+          <h4 class="m-0">
+            {{ MGR_AvgProd }}
+          </h4>
+          <!--  compare last week productivity with last before week productivity task-->
+          <small class="text-muted">Average Productivity/day</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-orange mr-3">
+          <em class="fa fa-tasks"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_PendingTask }}</h4>
+          <small class="text-muted">Pending Tasks</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp bg-blue mr-3">
+          <em class="fe fe-dollar-sign"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_NegetiveWorkItemCount }}</h4>
+          <small class="text-muted">Negative Work Items Count</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp  bg-red mr-3">
+          <em class="fa fa-tasks"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_OverdueTask }}</h4>
+          <small class="text-muted">Overdue Task</small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-3">
+    <div class="card p-3">
+      <div class="d-flex align-items-center">
+        <span class="stamp  bg-red mr-3">
+          <em class="fe fe-dollar-sign"></em>
+        </span>
+        <div>
+          <h4 class="m-0">{{ MGR_HighPriorityAR }}</h4>
+          <small class="text-muted">High Priority AR</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div *ngIf="AgingBucketShow" class="col-md-12">
+    <div class="card">
+      <div class="card-status bg-cyan"></div>
+      <div class="card-header pl-2 border-0">
+        <h6 class="mb-0">Aging Bucket</h6>
+      </div>
+      <div class="table-responsive p-1">
+        <table class="table table-bordered mb-0 border-top">
+          <thead class="text-center">
+            <th class="p-1">0-15</th>
+            <th class="p-1">16-30</th>
+            <th class="p-1">31-60</th>
+            <th class="p-1">61-90</th>
+            <th class="p-1">91-120</th>
+            <th class="p-1">121-180</th>
+            <th class="p-1">180+</th>
+          </thead>
+          <tbody class="text-center font-weight-bold">
+            <tr>
+              <td>
+                {{ MGR_bucket_1 }}
+              </td>
+              <td>
+                {{ MGR_bucket_2 }}
+              </td>
+              <td>
+                {{ MGR_bucket_3 }}
+              </td>
+              <td>
+                {{ MGR_bucket_4 }}
+              </td>
+              <td>
+                {{ MGR_bucket_5 }}
+              </td>
+              <td>
+                {{ MGR_bucket_6 }}
+              </td>
+              <td>
+                {{ MGR_bucket_7 }}
+              </td>
+            </tr>
+            <tr class="font-weight-normal" title="Claim Count">
+              <td class="p-1">
+                {{ MGR_bucket_1_ClaimCount }}
+              </td>
+              <td class="p-1">
+                {{ MGR_bucket_2_ClaimCount }}
+              </td>
+              <td class="p-1">
+                {{ MGR_bucket_3_ClaimCount }}
+              </td>
+              <td class="p-1">
+                {{ MGR_bucket_4_ClaimCount }}
+              </td>
+              <td class="p-1">
+                {{ MGR_bucket_5_ClaimCount }}
+              </td>
+              <td class="p-1">
+                {{ MGR_bucket_6_ClaimCount }}
+              </td>
+              <td class="p-1">
+                {{ MGR_bucket_7_ClaimCount }}
+              </td>
+            </tr>
+            <tr class="font-weight-normal" title="Defer AR (Claim Count)">
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_1 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_1_ClaimCount }})</span
+                >
+              </td>
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_2 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_2_ClaimCount }})</span
+                >
+              </td>
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_3 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_3_ClaimCount }})</span
+                >
+              </td>
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_4 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_4_ClaimCount }})</span
+                >
+              </td>
+
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_5 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_5_ClaimCount }})</span
+                >
+              </td>
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_6 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_6_ClaimCount }})</span
+                >
+              </td>
+              <td class="p-1">
+                <span class="font-weight-bold">{{ MGR_deferbucket_7 }}</span>
+                <span class="font-weight-normal">
+                  ({{ MGR_deferbucket_7_ClaimCount }})</span
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="StatusCardShow" class="col-sm-6 col-lg-3">
+    <div class="card status">
+      <div class="card-status bg-info"></div>
+      <div class="card-header">
+        <h4 class="card-title mx-auto">Worked AR Status</h4>
+      </div>
+
+      <div class="card-body p-0 o-auto" style="height: 340px;">
+        <div
+          class="d-flex justify-content-between border-bottom"
+          *ngFor="let status of MGR_TopStatus"
+        >
+          <span class="p-1 pl-3" style="width: 80%;">{{
+            status.statusdescription
+          }}</span>
+          <span class="p-1 pr-3 text-info">{{ status.statuscount }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="StatusCardShow" class="col-sm-6 col-lg-3">
+    <div class="card status">
+      <div class="card-status bg-orange"></div>
+      <div class="card-header">
+        <h4 class="card-title mx-auto">Worked AR Action</h4>
+      </div>
+      <div class="card-body p-0 o-auto" style="height: 340px;">
+        <div
+          class="d-flex justify-content-between border-bottom"
+          *ngFor="let action of MGR_TopAction"
+        >
+          <span
+            *ngIf="action.actiondescription != null"
+            class="p-1 pl-3"
+            style="width: 80%;"
+            >{{ action.actiondescription }}</span
+          >
+          <span
+            *ngIf="action.actiondescription != null"
+            class="p-1 pr-3 text-warning"
+            >{{ action.actioncount }}</span
+          >
+        </div>
+      </div>
+
+      <!-- 
+    <div class="card-footer text-center text-gray">
+      <p class="mb-0">Top 10 records</p>
+    </div> -->
+    </div>
+  </div>
+
+  <div *ngIf="StatusCardShow" class="col-sm-6 col-lg-3">
+    <div class="card status">
+      <div class="card-status bg-teal"></div>
+      <div class="card-header">
+        <h4 class="card-title mx-auto">AR by Payer</h4>
+      </div>
+
+      <div class="card-body p-0 o-auto" style="height: 340px;">
+        <div
+          class="d-flex justify-content-between border-bottom"
+          *ngFor="let payer of MGR_TopPayerByAR"
+        >
+          <span class="p-1 pl-3" style="width: 75%;">{{
+            payer.payername
+          }}</span>
+          <span class="p-1 pr-3 text-teal">{{ payer.remainingbalance }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="StatusCardShow" class="col-sm-6 col-lg-3">
+    <div class="card status">
+      <div class="card-status bg-success"></div>
+      <div class="card-header">
+        <h4 class="card-title mx-auto">AR by Client</h4>
+      </div>
+
+      <div class="card-body p-0 o-auto" style="height: 340px;">
+        <div
+          class="d-flex justify-content-between border-bottom"
+          *ngFor="let client of MGR_TopClientByAR"
+        >
+          <span class="p-1 pl-3" style="width: 75%;">
+            {{ client.sclientname }}</span
+          >
+          <span class="p-1 pr-3 text-green">{{ client.remainingbalance }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

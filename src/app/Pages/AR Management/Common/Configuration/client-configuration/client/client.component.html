@@ -1,0 +1,268 @@
+<div class="card">
+  <div class="card-header">
+    <h4 class="mb-0">Client</h4>
+    <div class="row ml-auto">
+      <div>
+        <!-- <button class="ml-auto" kendoButton [primary]="true" (click)="onAddClientClick()" data-toggle="modal" data-target="#addclientModal">Add Client</button> -->
+        <button
+          class="ml-auto"
+          kendoButton
+          [primary]="true"
+          data-toggle="modal"
+          data-target="#addclientModal"
+          (click)="AddClient()"
+        >
+          Add Client
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body pt-1" style="height: 72vh;">
+    <!-- <h4 class="text-center text-success"> Client </h4> -->
+    <form [formGroup]="formGroup">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label">Client </label>
+            <kendo-dropdownlist
+              class="form-control form-control-sm"
+              [data]="Clientdetail"
+              formControlName="fcClient"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [valuePrimitive]="true"
+              [defaultItem]="ClientDefaultValue"
+              [filterable]="true"
+              (filterChange)="handleFilter($event)"
+            >
+            </kendo-dropdownlist>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="grid-wrapper">
+      <kendo-grid
+        id="gridClient"
+        [data]="ClientgridView"
+        style="width: 100%; max-height: 60vh;"
+        [pageSize]="ClientpageSize"
+        [pageable]="true"
+        [skip]="Clientskip"
+        (pageChange)="pageChangeClient($event)"
+        [sortable]="{
+          mode: 'multiple'
+        }"
+        [sort]="Clientsort"
+        (sortChange)="sortClientChange($event)"
+        [selectable]="true"
+        (edit)="EditClientTemplate($event)"
+        (remove)="DeleteClientTemplate($event)"
+        [loading]="loadingGrid"
+      >
+        <kendo-grid-column
+          field="clientcode"
+          title="Code"
+          width="8"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sclientname"
+          title="Client Name"
+          width="15"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="address"
+          title="Address"
+          width="15"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sausid"
+          title="AUSID"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="sdatabasename"
+          title="Database"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="qlivedt"
+          title="QLive Date"
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.qlivedt | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="arstartdt"
+          title="AR Start Date"
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ dataItem.arstartdt | date: "MM-dd-yyyy" }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column
+          field="nstatus"
+          title="Status"
+          width="10"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <div *ngIf="dataItem.nstatus == 1" class="text-success">Active</div>
+            <div *ngIf="dataItem.nstatus == 0" class="text-danger">
+              Inactive
+            </div>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column
+          title="Action"
+          width="12"
+          [headerStyle]="{ 'font-weight': 'bold' }"
+        >
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button
+              kendoGridEditCommand
+              [primary]="true"
+              title="Edit"
+              data-toggle="modal"
+              data-target="#editclientconfirmationModal"
+            >
+              <i class="fe fe-edit-2"></i>
+            </button>
+            <!-- <button kendoGridRemoveCommand title="Delete" data-toggle="modal"
+              data-target="#deleteclientconfirmationModal"><i class="fe fe-x"></i></button> -->
+            <button
+              *ngIf="dataItem.nstatus == 0"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              class="k-button"
+              (click)="OnClientStatus(dataItem.nclientid, 1)"
+              title="Activate"
+            >
+              <i class="fe fe-zap"></i>
+            </button>
+            <button
+              *ngIf="dataItem.nstatus == 1"
+              class="k-button"
+              data-toggle="modal"
+              data-target=".bd-example-modal-lg"
+              (click)="OnClientStatus(dataItem.nclientid, 0)"
+              title="Deactivate"
+            >
+              <i class="fe fe-zap-off"></i>
+            </button>
+          </ng-template>
+        </kendo-grid-command-column>
+      </kendo-grid>
+      <div
+        *ngIf="!this.ClientgridView"
+        class="k-icon k-i-loading"
+        style="font-size: 64px;"
+      ></div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addclientModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-addclient
+      [InputClientEditid]="EditClientid"
+      (OutputClientEditResult)="OutputClientConfigurationEditResult($event)"
+      #AddClientChild
+    ></app-addclient>
+  </div>
+</div>
+
+<!--Edit Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="editclientconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-editconfirmation
+      [InputEditMessage]="InputEditMessage"
+      (OutputEditResult)="OutputEditResult($event)"
+    >
+    </app-editconfirmation>
+  </div>
+</div>
+<!--Edit Confirmation Model -->
+
+<!--Delete Confirmation Model -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="deleteclientconfirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-deleteconfirmation
+      [InputDeleteMessage]="InputDeleteMessage"
+      (OutputDeleteResult)="OutputDeleteResult($event)"
+    >
+    </app-deleteconfirmation>
+  </div>
+</div>
+<!--Delete Confirmation Model -->
+
+<!-- <div id="addclientModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <app-addclient (outClient)="outClient($event)"></app-addclient>
+  </div>
+</div> -->
+
+<!--Confirmation Model -->
+<div
+  *ngIf="showInterfaceConfirmation"
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <app-action-confirmation
+      [InputConfirmationTitle]="inputConfirmationTitle"
+      [InputConfirmationMessage]="confirmationMsg"
+      [isAlert]="
+        inputConfirmationTitle.toLowerCase() == 'confirmation' ? false : true
+      "
+      (OutputConfirmationResult)="OutputStatusResult($event)"
+    >
+    </app-action-confirmation>
+    <!-- this.ConfirmationForProcess.toLowerCase()=='uploadtodocsvault'?'Upload to Docsvault':'Download from Docsvault' -->
+  </div>
+</div>
+<!--Confirmation Model -->

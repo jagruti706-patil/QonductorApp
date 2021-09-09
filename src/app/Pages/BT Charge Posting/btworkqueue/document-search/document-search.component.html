@@ -1,0 +1,88 @@
+<div class="card">
+  <div class="card-header font-weight-bold">
+    <h4 class="mb-0">Biotech Document Search</h4>
+  </div>
+  <div class="card-body p-4">
+    <div class="row">
+      <div class="col-md-12">
+        <app-filters
+          [CallingPage]="'OrderDocumentSearch'"
+          (FilterData)="ApplyFilter($event)"
+        ></app-filters>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <kendo-grid
+          [data]="OrderGridView"
+          class="w-100"
+          style="height: 60vh;"
+          [sortable]="{
+            mode: 'multiple'
+          }"
+          [sort]="OrderSort"
+          (sortChange)="OrderSortChange($event)"
+          [skip]="OrderSkip"
+          [pageable]="true"
+          [pageSize]="pagesize"
+          (pageChange)="OrderPageChange($event)"
+        >
+          <!-- <ng-template *ngIf="vwExportButton" kendoGridToolbarTemplate>
+          <button class="pull-right mr-1" type="button" kendoGridExcelCommand>
+            Export to Excel
+          </button>
+        </ng-template> -->
+
+          <kendo-grid-column
+            field="cabinet"
+            title="Year"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="folder"
+            title="Folder"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="docname"
+            title="Document Name"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <kendo-grid-column
+            field="category"
+            title="Accession #"
+            width="30"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="subcategory"
+            title="Category"
+            width="40"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+          <kendo-grid-column
+            field="docextension"
+            title="Extension"
+            width="25"
+            [headerStyle]="{ 'font-weight': 'bold' }"
+          >
+          </kendo-grid-column>
+
+          <ng-template kendoGridNoRecordsTemplate>
+            No records available.
+          </ng-template>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>

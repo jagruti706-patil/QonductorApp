@@ -1,0 +1,672 @@
+<div class="modal-content" [ngClass]="{ 'pointer-evt-none': disableModal }">
+  <div class="modal-header">
+    <h4 class="modal-title mb-0" id="exampleModalLabel" *ngIf="newInterface">
+      Add Interface
+    </h4>
+    <h4 class="modal-title mb-0" id="exampleModalLabel" *ngIf="!newInterface">
+      Update Interface
+    </h4>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      aria-label="Close"
+      (click)="OnClose()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="InterfaceGroup" autocomplete="off">
+      <div class="row">
+        <div [ngClass]="newInterface ? 'col-md-6' : 'col-md-4'">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Client
+            </label>
+            <kendo-dropdownlist
+              *ngIf="newInterface"
+              class="form-control form-control-sm"
+              formControlName="fcClient"
+              id="ddClient"
+              [class.is-invalid]="fbcClient.invalid && fbcClient.touched"
+              [data]="Clientdetail"
+              [textField]="'clientcodename'"
+              [valueField]="'nclientid'"
+              [valuePrimitive]="true"
+              (selectionChange)="clientChange($event)"
+              [filterable]="true"
+              (filterChange)="handleFilter($event)"
+            >
+            </kendo-dropdownlist>
+            <div *ngIf="submitted || (fbcClient.invalid && fbcClient.touched)">
+              <small *ngIf="!!fbcClient.errors?.required" class="text-danger"
+                >Client is required</small
+              >
+            </div>
+            <b class="ml-2" *ngIf="!newInterface && interFaceMasterDetails">{{
+              this.interFaceMasterDetails.clientname
+            }}</b>
+          </div>
+        </div>
+        <div class="col-md-3" *ngIf="!newInterface">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Interface
+            </label>
+            <b class="ml-2">{{ this.interfaceName }}</b>
+          </div>
+        </div>
+        <div class="col-md-7" *ngIf="newInterface">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Interface
+            </label>
+            <ng-container *ngFor="let item of InterfaceForData">
+              <input
+                type="radio"
+                name="fcInterfaceFor"
+                id="{{ item.value }}"
+                class="k-radio"
+                value="{{ item.value }}"
+                formControlName="fcInterfaceFor"
+              />
+              <label for="{{ item.value }}" class="k-radio-label">
+                {{ item.displayname }}
+              </label>
+              &nbsp;&nbsp;
+            </ng-container>
+            <div *ngIf="submitted">
+              <small
+                *ngIf="!!fbcInterfaceFor.errors?.required"
+                class="text-danger"
+                >Interface is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5" *ngIf="fbcInterfaceFor.value == 'SFTP'">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Source Process Folder
+            </label>
+            <input
+              type="radio"
+              [value]="0"
+              formControlName="fcSrcProcessFolder"
+              id="byDate"
+              kendoRadioButton
+            />
+            <label for="byDate" class="k-radio-label"> By Date </label
+            >&nbsp;&nbsp;
+            <input
+              type="radio"
+              [value]="1"
+              formControlName="fcSrcProcessFolder"
+              id="byCategory"
+              kendoRadioButton
+            />
+            <label for="byCategory" class="k-radio-label">
+              By Category
+            </label>
+            <div *ngIf="submitted">
+              <small
+                *ngIf="!!fbcSrcProcessFolder.errors?.required"
+                class="text-danger"
+                >Source Process Folder is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>URL
+            </label>
+            <input
+              kendoTextBox
+              [class.is-invalid]="fbcUrl.invalid && fbcUrl.touched"
+              formControlName="fcUrl"
+              type="text"
+              class="form-control form-control-sm"
+            />
+            <div *ngIf="submitted || (fbcUrl.invalid && fbcUrl.touched)">
+              <small *ngIf="fbcUrl.errors?.required" class="text-danger"
+                >URL is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Username
+            </label>
+            <!-- this hidden input added to avoid autocomplete username & password fron chrome -->
+            <input
+              kendoTextBox
+              [class.is-invalid]="fbcUsername.invalid && fbcUsername.touched"
+              formControlName="fcUsername"
+              type="text"
+              id="UserName"
+              class="form-control form-control-sm"
+              hidden
+            />
+            <input
+              kendoTextBox
+              [class.is-invalid]="fbcUsername.invalid && fbcUsername.touched"
+              formControlName="fcUsername"
+              type="text"
+              id="txtUserName"
+              class="form-control form-control-sm"
+            />
+            <div
+              *ngIf="submitted || (fbcUsername.invalid && fbcUsername.touched)"
+            >
+              <small *ngIf="fbcUsername.errors?.required" class="text-danger"
+                >Username is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label"
+              ><strong class="text-danger">*</strong>Password
+            </label>
+            <span class="position-relative">
+              <input
+                kendoTextBox
+                [class.is-invalid]="fbcPassword.invalid && fbcPassword.touched"
+                formControlName="fcPassword"
+                [type]="hide ? 'password' : 'text'"
+                id="Password"
+                class="w-100 custom-padding"
+                hidden
+              />
+              <input
+                kendoTextBox
+                [class.is-invalid]="fbcPassword.invalid && fbcPassword.touched"
+                formControlName="fcPassword"
+                [type]="hide ? 'password' : 'text'"
+                id="txtPassword"
+                class="w-100 custom-padding"
+              />
+              <i
+                (click)="hide = !hide"
+                class="fa eye-icon pointer"
+                [ngClass]="hide ? 'fa-eye-slash' : 'fa-eye'"
+                [ngbTooltip]="hide ? 'Show Password' : 'Hide Password'"
+              ></i>
+            </span>
+            <div
+              *ngIf="submitted || (fbcPassword.invalid && fbcPassword.touched)"
+            >
+              <small *ngIf="fbcPassword.errors?.required" class="text-danger"
+                >Password is required</small
+              >
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf="fbcInterfaceFor.value == 'SFTP'">
+          <div class="col-md-9">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">*</strong>Root Folder
+              </label>
+              <input
+                kendoTextBox
+                [class.is-invalid]="
+                  fbcRootFolder.invalid && fbcRootFolder.touched
+                "
+                formControlName="fcRootFolder"
+                type="text"
+                class="form-control form-control-sm"
+              />
+              <div
+                *ngIf="
+                  submitted || (fbcRootFolder.invalid && fbcRootFolder.touched)
+                "
+              >
+                <small
+                  *ngIf="fbcRootFolder.errors?.required"
+                  class="text-danger"
+                  >Root Folder is required</small
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label class="form-label"
+                ><strong class="text-danger">*</strong>Port No.
+              </label>
+              <div class="row">
+                <div class="col-md-9">
+                  <input
+                    kendoTextBox
+                    [class.is-invalid]="fbcPort.invalid && fbcPort.touched"
+                    formControlName="fcPort"
+                    type="text"
+                    class="form-control form-control-sm"
+                  />
+                  <div
+                    *ngIf="submitted || (fbcPort.invalid && fbcPort.touched)"
+                  >
+                    <small *ngIf="fbcPort.errors?.required" class="text-danger"
+                      >Port No. is required</small
+                    >
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <button
+                    id="btnCheckFTPConnection"
+                    kendoButton
+                    [primary]="true"
+                    [title]="'Check SFTP Connection'"
+                    (click)="OnCheckFTPConnection()"
+                  >
+                    <i class="fe fe-check-square"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="row" *ngIf="this.fbcInterfaceFor.value == 'SFTP'">
+        <div class="col-md-6">
+          <strong class="text-danger">*</strong>
+          <label class="h6"
+            >Folder Details&nbsp;<span class="text-muted"
+              >(count:
+              {{ categoryGridView ? categoryGridView.data.length : 0 }})</span
+            ></label
+          >
+        </div>
+        <div class="col-md-6">
+          <button
+            class="float-right btn btn-sm btn-kendo mb-2"
+            (click)="onAddCategory()"
+            data-toggle="modal"
+            data-target="#addcategory"
+          >
+            Add
+          </button>
+        </div>
+        <div class="col-md-12">
+          <kendo-grid
+            [data]="categoryGridView"
+            (edit)="editCategory($event)"
+            [loading]="loadingCategoryGrid"
+            style="max-height: 35vh;"
+            class="w-100 wrap-grid"
+            [sortable]="true"
+            [sort]="foldersort"
+            (sortChange)="folderSortChange($event)"
+          >
+            <kendo-grid-column
+              field="categoryname"
+              title="Category"
+              width="18"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="doctype"
+              title="Type"
+              width="15"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="path"
+              title="Path"
+              width="45"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="generateencounterperpage"
+              title="Generate Encounter"
+              width="30"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template let-dataItem kendoGridCellTemplate>
+                <ng-container *ngIf="dataItem.encounterpage >= 1"
+                  >By Document Page &nbsp;
+                  <span class="custom-badge"
+                    ><label class="mb-0 ml-1 mr-1">{{
+                      dataItem.encounterpage
+                    }}</label></span
+                  ></ng-container
+                >
+                <ng-container *ngIf="dataItem.encounterpage == 0"
+                  >By Document</ng-container
+                >
+                <ng-container *ngIf="dataItem.encounterpage == -1"
+                  >No Encounter</ng-container
+                >
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column
+              field="isactive"
+              title="Status"
+              width="16"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <div *ngIf="dataItem.isactive == true" class="text-success">
+                  Active
+                </div>
+                <div *ngIf="dataItem.isactive == false" class="text-danger">
+                  Inactive
+                </div>
+              </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-command-column
+              title="Action"
+              width="23"
+              [headerStyle]="{ 'font-weight': 'bold' }"
+            >
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <button
+                  kendoGridEditCommand
+                  [primary]="true"
+                  title="Edit"
+                  data-toggle="modal"
+                  data-target="#addcategory"
+                >
+                  <i class="fe fe-edit-2"></i>
+                </button>
+                <ng-container *ngIf="dataItem.accountid">
+                  <button
+                    *ngIf="dataItem.isactive == false"
+                    data-toggle="modal"
+                    data-target=".bd-example-modal-lg"
+                    class="k-button"
+                    title="Activate"
+                    (click)="onUpdateStatus(dataItem)"
+                  >
+                    <i class="fe fe-zap"></i>
+                  </button>
+                  <button
+                    *ngIf="dataItem.isactive == true"
+                    class="k-button"
+                    data-toggle="modal"
+                    data-target=".bd-example-modal-lg"
+                    title="Deactivate"
+                    (click)="onUpdateStatus(dataItem)"
+                  >
+                    <i class="fe fe-zap-off"></i>
+                  </button>
+                </ng-container>
+              </ng-template>
+            </kendo-grid-command-column>
+          </kendo-grid>
+          <div *ngIf="submitted && this.categoryGridData.length == 0">
+            <small class="text-danger"
+              >Please add atleast one folder details</small
+            >
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-secondary btn-sm"
+      data-dismiss="modal"
+      (click)="OnClose()"
+    >
+      Close
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm"
+      (click)="saveInterface()"
+      appNoDblClick
+    >
+      Save
+    </button>
+  </div>
+</div>
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="addcategory"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content box-shadow">
+      <div class="modal-header p-2">
+        <h5 class="modal-title mb-0" *ngIf="newCategory">
+          Add Folder Details
+        </h5>
+        <h5 class="modal-title mb-0" *ngIf="!newCategory">
+          Edit Folder Details
+        </h5>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="onCategoryClose()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="categoryGroup">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">*</strong>Category
+                </label>
+                <ng-container *ngFor="let item of categoryMaster">
+                  <input
+                    type="radio"
+                    name="fcCategory"
+                    id="{{ item.categorycode }}"
+                    class="k-radio"
+                    value="{{ item.categorycode }}"
+                    formControlName="fcCategory"
+                  />
+                  <label for="{{ item.categorycode }}" class="k-radio-label">
+                    {{ item.description }}
+                  </label>
+                  &nbsp;&nbsp;
+                </ng-container>
+                <div *ngIf="categorySubmitted">
+                  <small
+                    *ngIf="!!fbcCategory.errors?.required"
+                    class="text-danger"
+                    >Category is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">*</strong>Type
+                </label>
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="fbcType.invalid && fbcType.touched"
+                  formControlName="fcType"
+                  type="text"
+                  class="form-control form-control-sm"
+                />
+                <div
+                  *ngIf="
+                    categorySubmitted || (fbcType.invalid && fbcType.touched)
+                  "
+                >
+                  <small *ngIf="fbcType.errors?.required" class="text-danger"
+                    >Type is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">*</strong>Path
+                </label>
+                <input
+                  kendoTextBox
+                  [class.is-invalid]="fbcPath.invalid && fbcPath.touched"
+                  formControlName="fcPath"
+                  type="text"
+                  class="form-control form-control-sm"
+                />
+                <div
+                  *ngIf="
+                    categorySubmitted || (fbcPath.invalid && fbcPath.touched)
+                  "
+                >
+                  <small *ngIf="fbcPath.errors?.required" class="text-danger"
+                    >Path is required</small
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="form-label"
+                  ><strong class="text-danger">*</strong>Generate Encounter
+                </label>
+                <div>
+                  <input
+                    type="radio"
+                    [value]="0"
+                    formControlName="fcIsGenerateEntrPerPage"
+                    id="byDoc"
+                    kendoRadioButton
+                  />
+                  <label for="byDoc" class="k-radio-label">
+                    By Document
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    [value]="1"
+                    formControlName="fcIsGenerateEntrPerPage"
+                    id="byDocPage"
+                    kendoRadioButton
+                  />
+                  <label for="byDocPage" class="k-radio-label">
+                    By Document Page
+                  </label>
+                  &nbsp;&nbsp;
+                  <kendo-numerictextbox
+                    formControlName="fcPagesPerEntr"
+                    [min]="1"
+                    autoCorrect="true"
+                    format="n"
+                    style="width: 80px;"
+                    [disabled]="fbcIsGenerateEntrPerPage.value != 1"
+                  >
+                  </kendo-numerictextbox>
+                  &nbsp;&nbsp;
+                  <label
+                    [ngClass]="{
+                      'text-muted': fbcIsGenerateEntrPerPage.value != 1
+                    }"
+                  >
+                    page/encounter
+                  </label>
+                </div>
+                <div>
+                  <input
+                    type="radio"
+                    [value]="-1"
+                    formControlName="fcIsGenerateEntrPerPage"
+                    id="noEnc"
+                    kendoRadioButton
+                  />
+                  <label for="noEnc" class="k-radio-label">
+                    No Encounter
+                  </label>
+                </div>
+                <div *ngIf="categorySubmitted">
+                  <small
+                    *ngIf="!!fbcIsGenerateEntrPerPage.errors?.required"
+                    class="text-danger"
+                    >Generate Encounter is required</small
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="onCategoryClose()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="addUpdateCategory()"
+          appNoDblClick
+        >
+          <ng-container *ngIf="newCategory">Add</ng-container>
+          <ng-container *ngIf="!newCategory">Update</ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="black-box" *ngIf="loader">
+  <div class="k-i-loading"></div>
+</div>
+<!--Confirmation Modal -->
+<div
+  class="modal fade"
+  data-backdrop="static"
+  data-keyboard="false"
+  id="confirmationStatusModal"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content box-shadow">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmation</h5>
+        <button
+          type="button"
+          class="close"
+          aria-label="Close"
+          (click)="onCloseClick()"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Newly Added/Updated changes will be discarded. Do you want to continue ?
+      </div>
+      <div class="modal-footer">
+        <ng-container>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="onCloseClick()"
+          >
+            No
+          </button>
+          <button type="button" class="btn btn-primary" (click)="onYesClick()">
+            <!-- appNoDblClick -->
+            Yes
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Confirmation Modal -->
